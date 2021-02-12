@@ -1,0 +1,19 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Python button script{% endblock title %}
+
+{% block content %}  
+<! -- -->
+<! -- <button onclick="location.href='{% url 'dashboard:external' %}'"> Execute Script</button> <hr> -->
+<! -- {% if data %} -->
+<! -- {{data | safe}} --> <! -- indique qu'on peut écrire le contenu de la variable tel quel -->
+<! --{% endif %}-->
+<form action=“/external/“ method=“post“>
+{% csrf_token %} <! -- balises de gabarit CSRF permettent de se protéger facilement contre les attaques de type Cross Site Request Forgeries. -->
+Input Text:
+<input type=“text“ name=“param“ required><br><br>
+{{data_external}}<br><br>
+{{data1}}
+<br><br>
+<input type=“submit“ value=“Execute External Python Script“>
+</form>
+{% endblock content %}

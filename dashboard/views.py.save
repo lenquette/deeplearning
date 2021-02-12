@@ -1,0 +1,36 @@
+*from django.shortcuts import render
+
+import sys
+from subprocess import run,PIPE
+
+# add executables' folder path
+sys.path.append('/home/ludovic/python3_stuff/test_website/dashboard/static/script/')
+
+# Create your views here.
+
+def home_page(request):
+	return render(request,'dashboard/home/home.html',{})
+	
+def external(request):
+	inp= request.POST#	out= run([sys.executable,'/home/ludovic/python3_stuff/test_website/dashboard/static/script/test.py',inp],shell=False,stdout=PIPE)
+#	print(out)
+
+
+	if request.method == 'POST' and 'run_script' in request.POST:
+
+		# import function to run
+		from test_script import main
+		
+		#test section
+		print(inp)
+
+		# call function
+		main(inp) 
+
+		# return user to required page
+		# return HttpResponseRedirect(reverse(dashboard:external))
+		render(request,'dashboard/home/test.html')
+
+	return render(request,'dashboard/home/test.html')
+	
+

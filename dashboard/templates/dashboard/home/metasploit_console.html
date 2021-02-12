@@ -1,0 +1,73 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Metasploit script{% endblock title %}
+
+{% block content %}  
+<div class="row">
+<div class="col">
+<form method="post" class="form-group text-left">
+	
+	<div class="mt-5 py-2">
+	<h1>Console Metasploit</h1>
+	</div>
+	
+	<div class="mt-2 py-2">
+	<p class="py-2">Status console Metasploit : {{flag_connection}}</p>
+	</div>
+	
+	<div class="mt-1 py-2">
+	{% csrf_token %}
+	<button type="submit" name="run_script" class="btn btn-primary btn-lg">Run connection</button>
+	</div>
+	
+{% if flag_connection %}		
+</form>
+<form method="post" class="form-group text-left">	
+	
+	
+	<div class="mt-2 py-2">
+	<h1>Navigation Metasploit</h1>
+	<p class="py-2">Pour voir l'ensemble des exploits disponibles, cliqué sur le bouton ci-dessous</p>
+	{% csrf_token %}
+	<button type="submit" name="run_script_second" class="btn btn-primary btn-lg">Run list display exploit</button>
+</form>
+<form method="post" class="form-group text-left">
+	<div class="mt-5 py-2">
+	{% csrf_token %}
+	{{champ_de_recherche}}  <button type="submit" name="run_search" class="btn btn-primary btn-lg">Recherche</button>
+	</div>
+</form>	
+	
+	<p class="py-2 mt-5">Exploits disponibles : </p>
+	<div class="overflow-auto" style="max-width: 50%; max-height: 400px;">
+	{% if flag_search %}
+	{% for exploit in new_list %}
+	<li>{{exploit}}</li>
+	{% endfor %}
+	{% else %}
+	{% for exploit in list_of_exploit %}
+	<li>{{exploit}}</li>
+	{% endfor %}
+	{% endif %}
+	</div>
+</div>
+{% endif %}	
+	
+	
+
+</div>
+
+<div class="col">
+
+{%if run%}
+
+
+
+
+
+
+{% endif %}
+ </div>
+
+{% endblock content %}
+
+

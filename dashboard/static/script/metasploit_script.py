@@ -1,6 +1,7 @@
 from pymetasploit3.msfrpc import MsfRpcClient
 
 def main_connection() :
+	global client
 	#ip = "127.0.0.1"
 	#user = "msf"
 	passwd = 'Oirlbiz5'
@@ -14,5 +15,5 @@ def main_display_exploit():
 
 
 def main_run_exploit(choosen_exploit):
-	exploit = client.modules.use('exploit',choosen_exploit)
+	exploit = client.modules.use('exploit', choosen_exploit)
 	return exploit, exploit.description, exploit.options, exploit.missing_required

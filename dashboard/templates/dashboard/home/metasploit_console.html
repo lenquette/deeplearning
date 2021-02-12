@@ -29,6 +29,7 @@
 	<p class="py-2">Pour voir l'ensemble des exploits disponibles, cliqué sur le bouton ci-dessous</p>
 	{% csrf_token %}
 	<button type="submit" name="run_script_second" class="btn btn-primary btn-lg">Run list display exploit</button>
+	</div>
 </form>
 <form method="post" class="form-group text-left">
 	<div class="mt-5 py-2">
@@ -51,23 +52,41 @@
 	</div>
 </div>
 {% endif %}	
-	
-	
 
-</div>
 
 <div class="col">
+{% if flag_search %}
 
-{%if run%}
+<form method="post" class="form-group text-left">
+	<div class="mt-2 py-2">
+	<h1>Exploit choisi</h1>
+	<p class="py-2">Veuillez indiquer le chemin absolu de l'exploit à utiliser</p>
+	{% csrf_token %}
+	{{champ_du_run}} <button type="submit" name="run_run" class="btn btn-primary btn-lg">Run exploit</button>
+	</div>
+</form>
 
+{% endif %}
+{% if flag_run %}
 
+	<div class="mt-5 py-2">
+	<h1>Détails de l'exploit</h1>
+	{{exploit_description}}
+	</div>
 
+	<div class="mt-5 py-2">
+	<h1>Options possibles</h1>
+	{{exploit_options}}
+	</div>
 
-
+	<div class="mt-5 py-2">
+	<h1>Options manquantes</h1>
+	{{exploit_missing_required}}
+	</div>
 
 {% endif %}
  </div>
-
+</div>
 {% endblock content %}
 
 

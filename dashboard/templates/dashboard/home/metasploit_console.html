@@ -31,11 +31,14 @@
 	<button type="submit" name="run_script_second" class="btn btn-primary btn-lg">Run list display exploit</button>
 	</div>
 </form>
-<form method="post" class="form-group text-left">
-	<div class="mt-5 py-2">
+<form method="post" class="form-group text-left form-group">
+	<div class="mt-2 py-2" style="max-width: 50%">
+	<p class="py-2"> Champ de recherche :</p>
 	{% csrf_token %}
-	{{champ_de_recherche}}  <button type="submit" name="run_search" class="btn btn-primary btn-lg">Recherche</button>
+	{{champ_de_recherche}}
 	</div>
+	<button type="submit" name="run_search" class="btn btn-primary btn-lg col mt-2" >Recherche</button>
+
 </form>	
 	
 	<p class="py-2 mt-5">Exploits disponibles : </p>
@@ -57,12 +60,15 @@
 <div class="col">
 {% if flag_search %}
 
-<form method="post" class="form-group text-left">
+<form method="post" class="form-group text-left inline">
 	<div class="mt-2 py-2">
 	<h1>Exploit choisi</h1>
 	<p class="py-2">Veuillez indiquer le chemin absolu de l'exploit à utiliser</p>
+	<div class="mt-2 py-2" style="max-width: 50%">
 	{% csrf_token %}
-	{{champ_du_run}} <button type="submit" name="run_run" class="btn btn-primary btn-lg">Run exploit</button>
+	{{champ_du_run}}
+	</div>
+	<button type="submit" name="run_run" class="btn btn-primary btn-lg mt-2">Run exploit</button>
 	</div>
 </form>
 
@@ -97,18 +103,26 @@
 	<div class="mt-2 py-2">
 	<h1>Option à modifier</h1>
 	<p class="py-2">Entrez le nom de l'option</p>
+	<div class="mt-2 py-2" style="max-width: 50%">
 	{% csrf_token %}
 	{{champ_de_l_option}}
+	</div>
 
 	<p class="py-2 mt-2">Entrez sa nouvelle valeur</p>
+	<div class="mt-2 py-2" style="max-width: 50%">
 	{% csrf_token %}
 	{{champ_de_l_arg_de_option}}
+	</div>
+
 
 	<p class="py-2 mt-2">Entrez son type (par défaut, si rien n'est coché : STR)</p>
+	<div class="form-check mt-2">
 	{% csrf_token %}
 	{{type_de_var}}
+	</div>
 		<br>
 	<button type="submit" name="run_option" class="btn btn-primary btn-lg mt-2">Change option</button>
+
 	</div>
 </form>
 
@@ -119,7 +133,7 @@
 
 <div class="col">
 {% if flag_option %}
-<form method="post" class="form-group text-left">
+
 	<div class="mt-5 py-2">
 	<h1>Payloads disponibles</h1>
 	<div class="overflow-auto" style="max-width: 80%; max-height: 200px;">
@@ -129,15 +143,17 @@
 	</div>
 	</div>
 
+<form method="post" class="form-group text-left inline">
 	<div class="mt-5 py-2">
 	<h1>Choisir le payload</h1>
+	<div class="mt-2 py-2" style="max-width: 50%">
 	{% csrf_token %}
 	{{champ_du_payload}}
+	</div>
 	</div>
 
 	<br>
 	<button type="submit" name="run_payload_choice" class="btn btn-primary btn-lg mt-2">Run Payload</button>
-
 </form>
 
 {% endif %}
@@ -160,12 +176,16 @@
 	<div class="mt-5 py-2">
 	<h1>Option à modifier</h1>
 	<p class="py-2">Entrez le nom de l'option</p>
+	<div class="mt-2 py-2" style="max-width: 50%">
 	{% csrf_token %}
 	{{champ_de_la_config_payload}}
+	</div>
 
 	<p class="py-2 mt-2">Entrez sa nouvelle valeur</p>
+	<div class="mt-2 py-2" style="max-width: 50%">
 	{% csrf_token %}
 	{{champ_de_la_val_de_la_config_payload}}
+	</div>
 
 	<p class="py-2 mt-2">Entrez son type (par défaut, si rien n'est coché : STR)</p>
 	{% csrf_token %}

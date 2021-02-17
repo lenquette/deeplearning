@@ -3,7 +3,7 @@ from .forms import Input_for_Test, Formulaire_entree, Selection_entree, Checkbox
     Formulaire_entree_search_metasploit, Formulaire_entree_run_metasploit, Formulaire_entree_options_metasploit, \
     Formulaire_entree_options_arg_metasploit, Formulaire_entree_payload_metasploit, Type_var_metasploit, \
     Formulaire_entree_prompt_metasploit, Type_var_payload_metasploit, Formulaire_entree_payload_option_metasploit, \
-    Formulaire_entree_payload_option_val_metasploit
+    Formulaire_entree_payload_option_val_metasploit, Choice_module
 
 import sys
 
@@ -82,18 +82,22 @@ def metasploit_visu(request):
     global flag_run
     global flag_option
     global flag_payload
-    global flag_payload_error
+    global flag_error
+    global flag_auxiliary_ready_to_run
+    global flag_choice
 
     # global var
-    global list_of_exploit
+    global module_choice
+
+    global list_of_module
     global new_list
-    global exploit_run
-    global exploit_description
-    global exploit_options
-    global exploit_missing_required
-    global exploit_running_config
-    global exploit_running_config_save
-    global exploit_targetpayload
+    global module_run
+    global module_description
+    global module_options
+    global module_missing_required
+    global module_running_config
+    global module_running_config_save
+    global module_targetpayload
     global payload_chosen
     global payload_runoptions
     global payload_runoptions_save
@@ -109,11 +113,13 @@ def metasploit_visu(request):
     champ_de_la_config_payload = Formulaire_entree_payload_option_metasploit(request.POST)
     champ_de_la_val_de_la_config_payload = Formulaire_entree_payload_option_val_metasploit(request.POST)
 
+    type_module = Choice_module(request.POST)
     type_de_var = Type_var_metasploit(request.POST)
-    type_de_var_payload = Type_var_metasploit(request.POST)
+    type_de_var_payload = Type_var_payload_metasploit(request.POST)
 
     champ_du_prompt = Formulaire_entree_prompt_metasploit(request.POST)
 
+    #############################CONNECTION RPC CLIENT ################################
     if request.method == 'POST' and 'run_script' in request.POST:
 
         # import function to run
@@ -129,139 +135,302 @@ def metasploit_visu(request):
 
         # renderer
         return render(request, 'dashboard/home/metasploit_console.html',
-                      {'flag_connection': flag_connection, 'champ_de_recherche': champ_de_recherche})
+                      {'flag_connection': flag_connection, 'champ_de_recherche': champ_de_recherche,
+                       'type_module': type_module})
 
-    if request.method == 'POST' and 'run_script_second' in request.POST:
-        from metasploit_script import main_display_exploit
+    ##############################PRE-SELECTION MODULE'S TYPE ###############################
+    if request.method == 'POST' and 'run_display_module' in request.POST:
 
         # checked pseudo~~~flag
-
+        flag_choice = "True"
         # test section
 
         # call function
-        list_of_exploit = main_display_exploit()
+        module_choice = request.POST.get('module_wanted')
+
+        print(module_choice)
+
+        if module_choice == "EXPLOIT":
+            from metasploit_script import main_display_exploit
+
+            list_of_module = main_display_exploit()
+
+        elif module_choice == "AUXILIARY":
+            from metasploit_script import main_display_auxiliary
+
+            list_of_module = main_display_auxiliary()
 
         # renderer
         return render(request, 'dashboard/home/metasploit_console.html',
-                      {'flag_connection': flag_connection, 'list_of_exploit': list_of_exploit,
-                       'champ_de_recherche': champ_de_recherche})
+                      {'flag_connection': flag_connection, 'list_of_module': list_of_module,
+                       'champ_de_recherche': champ_de_recherche, 'type_module': type_module,
+                       'flag_choice': flag_choice})
 
+    #################################SELECTION OF ATTACK'S MOODULE###################
     if champ_de_recherche.is_valid() and request.method == 'POST' and 'run_search' in request.POST:
 
-        from metasploit_script import main_display_exploit
+        ######################################EXPLOIT SECTION####################################
+        if module_choice == "EXPLOIT":
 
-        word_wanted = request.POST.get('search_str')
+            from metasploit_script import main_display_exploit
 
-        # checked pseudo~~~flag
-        flag_search = "True"
+            word_wanted = request.POST.get('search_str')
 
-        # test section
+            # checked pseudo~~~flag
+            flag_search = "True"
 
-        # call function
-        list_of_exploit = main_display_exploit()
+            # test section
 
-        # create new list
-        new_list = []
+            # call function
+            list_of_exploit = main_display_exploit()
 
-        for i in range(0, len(list_of_exploit), 1):
+            # create new list
+            new_list = []
 
-            if word_wanted in list_of_exploit[i]:
-                new_list.append(list_of_exploit[i])
+            for i in range(0, len(list_of_exploit), 1):
 
-        # render
-        return render(request, 'dashboard/home/metasploit_console.html',
-                      {'flag_connection': flag_connection, 'new_list': new_list,
-                       'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
-                       'champ_du_run': champ_du_run})
+                if word_wanted in list_of_exploit[i]:
+                    new_list.append(list_of_exploit[i])
 
+            # render
+            return render(request, 'dashboard/home/metasploit_console.html',
+                          {'flag_connection': flag_connection, 'new_list': new_list,
+                           'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
+                           'champ_du_run': champ_du_run, 'type_module': type_module,
+                           'flag_choice': flag_choice})
+
+        ######################################AUXILIARY SECTION##################################
+        elif module_choice == "AUXILIARY":
+
+            from metasploit_script import main_display_auxiliary
+
+            word_wanted = request.POST.get('search_str')
+
+            # checked pseudo~~~flag
+            flag_search = "True"
+
+            # test section
+
+            # call function
+            list_of_auxiliary = main_display_auxiliary()
+
+            # create new list
+            new_list = []
+
+            for i in range(0, len(list_of_auxiliary), 1):
+
+                if word_wanted in list_of_auxiliary[i]:
+                    new_list.append(list_of_auxiliary[i])
+
+            # render
+            return render(request, 'dashboard/home/metasploit_console.html',
+                          {'flag_connection': flag_connection, 'new_list': new_list,
+                           'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
+                           'champ_du_run': champ_du_run, 'type_module': type_module,
+                           'flag_choice': flag_choice})
+
+    #######################################CHOICE MODULE IN LIST###############################
     if champ_de_recherche.is_valid() and champ_du_run.is_valid() and type_de_var.is_valid() and request.method == 'POST' and 'run_run' in request.POST:
-        from metasploit_script import main_run_exploit
 
-        exploit_wanted = request.POST.get('run_str')
+        ######################################EXPLOIT SECTION####################################
+        if module_choice == "EXPLOIT":
 
-        exploit_run = main_run_exploit(exploit_wanted)
+            from metasploit_script import main_run_exploit
 
-        if exploit_run == -1:
-            # checked pseudo~~~flag
-            flag_run = None
+            module_wanted = request.POST.get('run_str')
 
-            return render(request, 'dashboard/home/metasploit_console.html',
-                          {'flag_connection': flag_connection, 'new_list': new_list,
-                           'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
-                           'champ_du_run': champ_du_run})
+            module_run = main_run_exploit(module_wanted)
 
-        else:
-            # checked pseudo~~~flag
-            flag_run = "True"
+            print(module_run.description)
+            print(module_wanted)
 
-            exploit_description, exploit_options, exploit_missing_required, exploit_running_config, exploit_targetpayload = exploit_run.description, exploit_run.options, exploit_run.missing_required, exploit_run.runoptions, exploit_run.targetpayloads
+            if module_run == -1:
+                # checked pseudo~~~flag
+                flag_run = None
 
-            #save in an other var the current config
-            exploit_running_config_save = exploit_running_config
+                return render(request, 'dashboard/home/metasploit_console.html',
+                              {'flag_connection': flag_connection, 'new_list': new_list,
+                               'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
+                               'champ_du_run': champ_du_run, 'type_module': type_module,
+                               'flag_choice': flag_choice})
 
-            return render(request, 'dashboard/home/metasploit_console.html',
-                          {'flag_connection': flag_connection, 'new_list': new_list,
-                           'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
-                           'champ_du_run': champ_du_run, 'exploit_description': exploit_description,
-                           'exploit_options': exploit_options, 'exploit_missing_required': exploit_missing_required,
-                           'flag_run': flag_run, 'exploit_running_config': exploit_running_config,
-                           'champ_de_l_option': champ_de_l_option,
-                           'champ_de_l_arg_de_option': champ_de_l_arg_de_option, 'type_de_var': type_de_var})
+            else:
+                # checked pseudo~~~flag
+                flag_run = "True"
 
+                module_description, module_options, module_missing_required, module_running_config, module_targetpayload = module_run.description, module_run.options, module_run.missing_required, module_run.runoptions, module_run.targetpayloads
+
+                # save in an other var the current config
+                module_running_config_save = module_running_config
+
+                return render(request, 'dashboard/home/metasploit_console.html',
+                              {'flag_connection': flag_connection, 'new_list': new_list,
+                               'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
+                               'champ_du_run': champ_du_run, 'module_description': module_description,
+                               'module_options': module_options, 'module_missing_required': module_missing_required,
+                               'flag_run': flag_run, 'module_running_config': module_running_config,
+                               'champ_de_l_option': champ_de_l_option,
+                               'champ_de_l_arg_de_option': champ_de_l_arg_de_option, 'type_de_var': type_de_var,
+                               'type_module': type_module,
+                               'flag_choice': flag_choice})
+
+        ######################################AUXILIARY SECTION##################################
+        elif module_choice == "AUXILIARY":
+
+            from metasploit_script import main_run_auxiliary
+
+            module_wanted = request.POST.get('run_str')
+
+            module_run = main_run_auxiliary(module_wanted)
+
+            if module_run == -1:
+                # checked pseudo~~~flag
+                flag_run = None
+
+                return render(request, 'dashboard/home/metasploit_console.html',
+                              {'flag_connection': flag_connection, 'new_list': new_list,
+                               'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
+                               'champ_du_run': champ_du_run,
+                               'type_module': type_module,
+                               'flag_choice': flag_choice})
+
+            else:
+                # checked pseudo~~~flag
+                flag_run = "True"
+
+                module_description, module_options, module_missing_required, module_running_config = module_run.description, module_run.options, module_run.missing_required, module_run.runoptions
+
+                # save in an other var the current config
+                module_running_config_save = module_running_config
+
+                return render(request, 'dashboard/home/metasploit_console.html',
+                              {'flag_connection': flag_connection, 'new_list': new_list,
+                               'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
+                               'champ_du_run': champ_du_run, 'module_description': module_description,
+                               'module_options': module_options, 'module_missing_required': module_missing_required,
+                               'flag_run': flag_run, 'module_running_config': module_running_config,
+                               'champ_de_l_option': champ_de_l_option,
+                               'champ_de_l_arg_de_option': champ_de_l_arg_de_option, 'type_de_var': type_de_var,
+                               'type_module': type_module,
+                               'flag_choice': flag_choice})
+
+    #######################################CONFIG MODULE###############################
     if champ_de_recherche.is_valid() and champ_du_run.is_valid() and type_de_var.is_valid() and champ_de_l_option.is_valid() and request.method == 'POST' and 'run_option' in request.POST:
-        from metasploit_script import main_change_option, main_see_payload
 
-        option_wanted = request.POST.get('option_str')
-        option_arg_wanted = request.POST.get('option_arg_str')
-        type_wanted_arg = request.POST.get('type_wanted')
+        ######################################EXPLOIT SECTION####################################
+        if module_choice == "EXPLOIT":
 
-        flag_option = None
+            from metasploit_script import main_change_option_exploit, main_see_payload
 
-        exploit_running_config = main_change_option(option_wanted, option_arg_wanted, type_wanted_arg)
+            option_wanted = request.POST.get('option_str')
+            option_arg_wanted = request.POST.get('option_arg_str')
+            type_wanted_arg = request.POST.get('type_wanted')
 
-        if exploit_running_config == -1:
+            flag_option = None
 
-            #reattribute the previous value
-            exploit_running_config = exploit_running_config_save
+            module_running_config = main_change_option_exploit(option_wanted, option_arg_wanted, type_wanted_arg)
 
-            return render(request, 'dashboard/home/metasploit_console.html',
-                          {'flag_connection': flag_connection, 'new_list': new_list,
-                           'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
-                           'champ_du_run': champ_du_run, 'exploit_description': exploit_description,
-                           'exploit_options': exploit_options, 'exploit_missing_required': exploit_missing_required,
-                           'flag_run': flag_run, 'exploit_running_config': exploit_running_config,
-                           'champ_de_l_option': champ_de_l_option,
-                           'champ_de_l_arg_de_option': champ_de_l_arg_de_option, 'type_de_var': type_de_var})
+            if module_running_config == -1:
 
-        else:
+                # reattribute the previous value
+                module_running_config = module_running_config_save
 
-            #save in an other var the current config
-            exploit_running_config_save = exploit_running_config
+                return render(request, 'dashboard/home/metasploit_console.html',
+                              {'flag_connection': flag_connection, 'new_list': new_list,
+                               'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
+                               'champ_du_run': champ_du_run, 'module_description': module_description,
+                               'module_options': module_options, 'module_missing_required': module_missing_required,
+                               'flag_run': flag_run, 'module_running_config': module_running_config,
+                               'champ_de_l_option': champ_de_l_option,
+                               'champ_de_l_arg_de_option': champ_de_l_arg_de_option, 'type_de_var': type_de_var,
+                               'type_module': type_module,
+                               'flag_choice': flag_choice})
 
+            else:
 
-            exploit_targetpayload = main_see_payload()
+                # save in an other var the current config
+                module_running_config_save = module_running_config
 
-            # refresh data about the exploit
-            if option_wanted in exploit_missing_required:
-                exploit_missing_required.remove(option_wanted)
+                # refresh data about the exploit
+                if option_wanted in module_missing_required:
+                    module_missing_required.remove(option_wanted)
 
-            # checked pseudo~~~flag
-            if len(exploit_missing_required) == 0:
-                #     # checked pseudo~~~flag
-                flag_option = "True"
+                # checked pseudo~~~flag
+                if len(module_missing_required) == 0:
+                    #     # checked pseudo~~~flag
+                    flag_option = "True"
+                    module_targetpayload = main_see_payload()
 
-            return render(request, 'dashboard/home/metasploit_console.html',
-                          {'flag_connection': flag_connection, 'new_list': new_list,
-                           'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
-                           'champ_du_run': champ_du_run, 'exploit_description': exploit_description,
-                           'exploit_options': exploit_options, 'flag_run': flag_run,
-                           'exploit_missing_required': exploit_missing_required,
-                           'exploit_running_config': exploit_running_config,
-                           'champ_de_l_option': champ_de_l_option,
-                           'champ_de_l_arg_de_option': champ_de_l_arg_de_option, 'flag_option': flag_option,
-                           'type_de_var': type_de_var, 'exploit_targetpayload': exploit_targetpayload,
-                           'champ_du_payload': champ_du_payload})
+                return render(request, 'dashboard/home/metasploit_console.html',
+                              {'flag_connection': flag_connection, 'new_list': new_list,
+                               'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
+                               'champ_du_run': champ_du_run, 'module_description': module_description,
+                               'module_options': module_options, 'flag_run': flag_run,
+                               'module_missing_required': module_missing_required,
+                               'module_running_config': module_running_config,
+                               'champ_de_l_option': champ_de_l_option,
+                               'champ_de_l_arg_de_option': champ_de_l_arg_de_option, 'flag_option': flag_option,
+                               'type_de_var': type_de_var, 'module_targetpayload': module_targetpayload,
+                               'champ_du_payload': champ_du_payload,
+                               'type_module': type_module,
+                               'flag_choice': flag_choice})
 
+        ######################################AUXILIARY SECTION####################################
+        elif module_choice == "AUXILIARY":
+
+            from metasploit_script import main_change_option_auxiliary
+
+            option_wanted = request.POST.get('option_str')
+            option_arg_wanted = request.POST.get('option_arg_str')
+            type_wanted_arg = request.POST.get('type_wanted')
+
+            module_running_config = main_change_option_auxiliary(option_wanted, option_arg_wanted, type_wanted_arg)
+
+            if module_running_config == -1:
+
+                # reattribute the previous value
+                module_running_config = module_running_config_save
+
+                return render(request, 'dashboard/home/metasploit_console.html',
+                              {'flag_connection': flag_connection, 'new_list': new_list,
+                               'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
+                               'champ_du_run': champ_du_run, 'module_description': module_description,
+                               'module_options': module_options, 'module_missing_required': module_missing_required,
+                               'flag_run': flag_run, 'module_running_config': module_running_config,
+                               'champ_de_l_option': champ_de_l_option,
+                               'champ_de_l_arg_de_option': champ_de_l_arg_de_option,
+                               'type_de_var': type_de_var,
+                               'type_module': type_module,
+                               'flag_choice': flag_choice})
+
+            else:
+
+                # save in an other var the current config
+                module_running_config_save = module_running_config
+
+                # refresh data about the exploit
+                if option_wanted in module_missing_required:
+                    module_missing_required.remove(option_wanted)
+
+                # checked pseudo~~~flag
+                if len(module_missing_required) == 0:
+                    #     # checked pseudo~~~flag
+                    flag_auxiliary_ready_to_run = "True"
+
+                return render(request, 'dashboard/home/metasploit_console.html',
+                              {'flag_connection': flag_connection, 'new_list': new_list,
+                               'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
+                               'champ_du_run': champ_du_run, 'module_description': module_description,
+                               'module_options': module_options, 'flag_run': flag_run,
+                               'module_missing_required': module_missing_required,
+                               'module_running_config': module_running_config,
+                               'champ_de_l_option': champ_de_l_option,
+                               'champ_de_l_arg_de_option': champ_de_l_arg_de_option,
+                               'flag_auxiliary_ready_to_run': flag_auxiliary_ready_to_run,
+                               'type_module': type_module,
+                               'flag_choice': flag_choice})
+
+    #######################################PAYLOAD CHOICE###############################
     if champ_de_recherche.is_valid() and champ_du_run.is_valid() and type_de_var.is_valid() and champ_de_l_option.is_valid() and type_de_var_payload.is_valid() and champ_de_la_config_payload.is_valid() and champ_de_la_val_de_la_config_payload.is_valid() and request.method == 'POST' and 'run_payload_choice' in request.POST:
         from metasploit_script import main_choose_payload
 
@@ -273,14 +442,16 @@ def metasploit_visu(request):
             return render(request, 'dashboard/home/metasploit_console.html',
                           {'flag_connection': flag_connection, 'new_list': new_list,
                            'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
-                           'champ_du_run': champ_du_run, 'exploit_description': exploit_description,
-                           'exploit_options': exploit_options, 'flag_run': flag_run,
-                           'exploit_missing_required': exploit_missing_required,
-                           'exploit_running_config': exploit_running_config,
+                           'champ_du_run': champ_du_run, 'module_description': module_description,
+                           'module_options': module_options, 'flag_run': flag_run,
+                           'module_missing_required': module_missing_required,
+                           'module_running_config': module_running_config,
                            'champ_de_l_option': champ_de_l_option,
                            'champ_de_l_arg_de_option': champ_de_l_arg_de_option, 'flag_option': flag_option,
-                           'type_de_var': type_de_var, 'exploit_targetpayload': exploit_targetpayload,
-                           'champ_du_payload': champ_du_payload})
+                           'type_de_var': type_de_var, 'module_targetpayload': module_targetpayload,
+                           'champ_du_payload': champ_du_payload,
+                           'type_module': type_module,
+                           'flag_choice': flag_choice})
 
         else:
             # checked pseudo~~~flag
@@ -288,26 +459,29 @@ def metasploit_visu(request):
             payload_runoptions = payload_chosen.runoptions
             payload_missing_required = payload_chosen.missing_required
 
-            #save in an other var the current config
+            # save in an other var the current config
             payload_runoptions_save = payload_runoptions
 
             return render(request, 'dashboard/home/metasploit_console.html',
                           {'flag_connection': flag_connection, 'new_list': new_list,
                            'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
-                           'champ_du_run': champ_du_run, 'exploit_description': exploit_description,
-                           'exploit_options': exploit_options, 'flag_run': flag_run,
-                           'exploit_missing_required': exploit_missing_required,
-                           'exploit_running_config': exploit_running_config,
+                           'champ_du_run': champ_du_run, 'module_description': module_description,
+                           'module_options': module_options, 'flag_run': flag_run,
+                           'module_missing_required': module_missing_required,
+                           'module_running_config': module_running_config,
                            'champ_de_l_option': champ_de_l_option,
                            'champ_de_l_arg_de_option': champ_de_l_arg_de_option, 'flag_option': flag_option,
-                           'type_de_var': type_de_var, 'exploit_targetpayload': exploit_targetpayload,
+                           'type_de_var': type_de_var, 'module_targetpayload': module_targetpayload,
                            'champ_du_payload': champ_du_payload, 'payload_chosen': payload_chosen,
                            'champ_de_la_config_payload': champ_de_la_config_payload,
                            'champ_de_la_val_de_la_config_payload': champ_de_la_val_de_la_config_payload,
                            'payload_runoptions': payload_runoptions,
                            'payload_missing_required': payload_missing_required,
-                           'type_de_var_payload': type_de_var_payload, 'flag_payload': flag_payload})
+                           'type_de_var_payload': type_de_var_payload, 'flag_payload': flag_payload,
+                           'type_module': type_module,
+                           'flag_choice': flag_choice})
 
+    #######################################CONFIG PAYLOAD###############################
     if champ_de_recherche.is_valid() and champ_du_run.is_valid() and type_de_var.is_valid() and champ_de_l_option.is_valid() and type_de_var_payload.is_valid() and champ_de_la_config_payload.is_valid() and champ_de_la_val_de_la_config_payload.is_valid() and request.method == 'POST' and 'run_payload_option' in request.POST:
         from metasploit_script import main_config_payload
 
@@ -321,29 +495,31 @@ def metasploit_visu(request):
 
         if payload_runoptions == -1:
 
-            #reattribute the previous value
+            # reattribute the previous value
             payload_runoptions = payload_runoptions_save
 
             return render(request, 'dashboard/home/metasploit_console.html',
                           {'flag_connection': flag_connection, 'new_list': new_list,
                            'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
-                           'champ_du_run': champ_du_run, 'exploit_description': exploit_description,
-                           'exploit_options': exploit_options, 'flag_run': flag_run,
-                           'exploit_missing_required': exploit_missing_required,
-                           'exploit_running_config': exploit_running_config,
+                           'champ_du_run': champ_du_run, 'module_description': module_description,
+                           'module_options': module_options, 'flag_run': flag_run,
+                           'module_missing_required': module_missing_required,
+                           'module_running_config': module_running_config,
                            'champ_de_l_option': champ_de_l_option,
                            'champ_de_l_arg_de_option': champ_de_l_arg_de_option, 'flag_option': flag_option,
-                           'type_de_var': type_de_var, 'exploit_targetpayload': exploit_targetpayload,
+                           'type_de_var': type_de_var, 'module_targetpayload': module_targetpayload,
                            'champ_du_payload': champ_du_payload, 'payload_chosen': payload_chosen,
                            'champ_de_la_config_payload': champ_de_la_config_payload,
                            'champ_de_la_val_de_la_config_payload': champ_de_la_val_de_la_config_payload,
                            'payload_runoptions': payload_runoptions,
                            'payload_missing_required': payload_missing_required,
-                           'type_de_var_payload': type_de_var_payload, 'flag_payload': flag_payload})
+                           'type_de_var_payload': type_de_var_payload, 'flag_payload': flag_payload,
+                           'type_module': type_module,
+                           'flag_choice': flag_choice})
 
         else:
 
-            #save in an other var the current config
+            # save in an other var the current config
             payload_runoptions_save = payload_runoptions
 
             # refresh data about the exploit
@@ -358,31 +534,34 @@ def metasploit_visu(request):
             return render(request, 'dashboard/home/metasploit_console.html',
                           {'flag_connection': flag_connection, 'new_list': new_list,
                            'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
-                           'champ_du_run': champ_du_run, 'exploit_description': exploit_description,
-                           'exploit_options': exploit_options, 'flag_run': flag_run,
-                           'exploit_missing_required': exploit_missing_required,
-                           'exploit_running_config': exploit_running_config,
+                           'champ_du_run': champ_du_run, 'module_description': module_description,
+                           'module_options': module_options, 'flag_run': flag_run,
+                           'module_missing_required': module_missing_required,
+                           'module_running_config': module_running_config,
                            'champ_de_l_option': champ_de_l_option,
                            'champ_de_l_arg_de_option': champ_de_l_arg_de_option, 'flag_option': flag_option,
-                           'type_de_var': type_de_var, 'exploit_targetpayload': exploit_targetpayload,
+                           'type_de_var': type_de_var, 'module_targetpayload': module_targetpayload,
                            'champ_du_payload': champ_du_payload, 'payload_chosen': payload_chosen,
                            'champ_de_la_config_payload': champ_de_la_config_payload,
                            'champ_de_la_val_de_la_config_payload': champ_de_la_val_de_la_config_payload,
                            'type_de_var_payload': type_de_var_payload, 'payload_runoptions': payload_runoptions,
                            'payload_missing_required': payload_missing_required,
-                           'flag_payload': flag_payload, 'flag_payload_value': flag_payload_value})
+                           'flag_payload': flag_payload, 'flag_payload_value': flag_payload_value,
+                           'type_module': type_module,
+                           'flag_choice': flag_choice})
 
+    #######################################RUN EXPLOIT AND HACK###############################
     if champ_de_recherche.is_valid() and champ_du_run.is_valid() and type_de_var.is_valid() and champ_de_l_option.is_valid() and request.method == 'POST' and 'run_exploit' in request.POST:
         from metasploit_script import main_exe_exploit
 
-        payload_wanted = request.POST.get('payload_str')
-
         # checked pseudo~~~flag
-        flag_payload_error = "True"
+        flag_error = "True"
 
         json_payload = main_exe_exploit()
 
         # json_payload = True
+
+        print(json_payload)
 
         if json_payload == -1:
             error = "Echec de la création de la session"
@@ -390,22 +569,56 @@ def metasploit_visu(request):
             return render(request, 'dashboard/home/metasploit_console.html',
                           {'flag_connection': flag_connection, 'new_list': new_list,
                            'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
-                           'champ_du_run': champ_du_run, 'exploit_description': exploit_description,
-                           'exploit_options': exploit_options, 'flag_run': flag_run,
-                           'exploit_missing_required': exploit_missing_required,
-                           'exploit_running_config': exploit_running_config,
+                           'champ_du_run': champ_du_run, 'module_description': module_description,
+                           'module_options': module_options, 'flag_run': flag_run,
+                           'module_missing_required': module_missing_required,
+                           'module_running_config': module_running_config,
                            'champ_de_l_option': champ_de_l_option,
                            'champ_de_l_arg_de_option': champ_de_l_arg_de_option, 'flag_option': flag_option,
-                           'type_de_var': type_de_var, 'exploit_targetpayload': exploit_targetpayload,
+                           'type_de_var': type_de_var, 'module_targetpayload': module_targetpayload,
                            'champ_du_payload': champ_du_payload, 'payload_chosen': payload_chosen,
                            'champ_de_la_config_payload': champ_de_la_config_payload,
                            'champ_de_la_val_de_la_config_payload': champ_de_la_val_de_la_config_payload,
                            'type_de_var_payload': type_de_var_payload, 'payload_runoptions': payload_runoptions,
-                           'flag_payload': flag_payload, 'error': error, 'flag_payload_error': flag_payload_error})
+                           'flag_payload': flag_payload, 'error': error, 'flag_error': flag_error,
+                           'type_module': type_module,
+                           'flag_choice': flag_choice})
         else:
-            return render(request, 'dashboard/home/metasploit_console_prompt.html', {'champ_du_prompt': champ_du_prompt,
-                                                                                     })
+            return render(request, 'dashboard/home/metasploit_console_prompt.html',
+                          {'champ_du_prompt': champ_du_prompt})
 
+    #######################################RUN AUXILIARY AND HACK###############################
+    if champ_de_recherche.is_valid() and champ_du_run.is_valid() and type_de_var.is_valid() and champ_de_l_option.is_valid() and request.method == 'POST' and 'run_auxiliary' in request.POST:
+        from metasploit_script import main_exe_auxiliary
+
+        json = main_exe_auxiliary()
+
+        print(json)
+        if json == -1:
+            error = "Echec de la création de la session"
+
+            # checked pseudo~~~flag
+            flag_error = "True"
+
+            return render(request, 'dashboard/home/metasploit_console.html',
+                      {'flag_connection': flag_connection, 'new_list': new_list,
+                       'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
+                       'champ_du_run': champ_du_run, 'module_description': module_description,
+                       'module_options': module_options, 'flag_run': flag_run,
+                       'module_missing_required': module_missing_required,
+                       'module_running_config': module_running_config,
+                       'champ_de_l_option': champ_de_l_option,
+                       'champ_de_l_arg_de_option': champ_de_l_arg_de_option,
+                       'flag_auxiliary_ready_to_run': flag_auxiliary_ready_to_run,
+                       'error': error, 'flag_error': flag_error,
+                       'type_module': type_module,
+                       'flag_choice': flag_choice})
+
+        else:
+            return render(request, 'dashboard/home/metasploit_console_prompt.html',
+                          {'champ_du_prompt': champ_du_prompt })
+
+    #######################################PROMPT COMMANDE###############################
     if champ_du_prompt.is_valid() and request.method == 'POST' and 'run_cmd' in request.POST:
         from metasploit_script import main_run_prompt
 

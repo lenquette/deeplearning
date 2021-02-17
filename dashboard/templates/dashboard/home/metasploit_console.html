@@ -19,19 +19,26 @@
 	<button type="submit" name="run_script" class="btn btn-primary btn-lg">Run connection</button>
 	</div>
 	
-{% if flag_connection %}		
+
 </form>
-<form method="post" class="form-group text-left">	
-	
+{% if flag_connection %}
+
+<form method="post" class="form-group text-left">
+	<div class="mt-5 py-2">
+	<h1>Choisissez le type de module</h1>
+	{{type_module}}
+	</div>
 	
 	<div class="mt-2 py-2">
 	<h1>Navigation Metasploit</h1>
-	<p class="py-2">Pour voir l'ensemble des exploits disponibles, cliqué sur le bouton ci-dessous</p>
+	<p class="py-2">Pour voir l'ensemble des modules associé à la sélection précédente, cliquez sur le bouton ci-dessous</p>
 	{% csrf_token %}
-	<button type="submit" name="run_script_second" class="btn btn-primary btn-lg">Run list display exploit</button>
+	<button type="submit" name="run_display_module" class="btn btn-primary btn-lg">Run list display</button>
 	</div>
 </form>
-<form method="post" class="form-group text-left form-group">
+
+{% if flag_choice %}
+<form method="post" class="form-group text-left">
 	<div class="mt-2 py-2" style="max-width: 50%">
 	<p class="py-2"> Champ de recherche :</p>
 	{% csrf_token %}
@@ -39,36 +46,39 @@
 	</div>
 	<button type="submit" name="run_search" class="btn btn-primary btn-lg col mt-2" >Recherche</button>
 
-</form>	
-	
-	<p class="py-2 mt-5">Exploits disponibles : </p>
-	<div class="overflow-auto" style="max-width: 80%; max-height: 400px;">
-	{% if flag_search %}
-	{% for exploit in new_list %}
-	<li>{{exploit}}</li>
+</form>
+	<div class="mt-2 py-2">
+	<p class="py-2 mt-2">Modules disponibles : </p>
+	</div>
+{% endif %}
+	<div class="overflow-auto" style="max-width: 80%; max-height: 350px;">
+{% if flag_search %}
+	{% for module in new_list %}
+	<li>{{module}}</li>
 	{% endfor %}
 	{% else %}
-	{% for exploit in list_of_exploit %}
-	<li>{{exploit}}</li>
+	{% for module in list_of_module %}
+	<li>{{module}}</li>
 	{% endfor %}
-	{% endif %}
+{% endif %}
 	</div>
+{% endif %}
 </div>
-{% endif %}	
+
 
 
 <div class="col">
 {% if flag_search %}
 
-<form method="post" class="form-group text-left inline">
+<form method="post" class="form-group text-left ">
 	<div class="mt-2 py-2">
-	<h1>Exploit choisi</h1>
-	<p class="py-2">Veuillez indiquer le chemin absolu de l'exploit à utiliser</p>
+	<h1>Module choisi</h1>
+	<p class="py-2">Veuillez indiquer le chemin absolu du module à utiliser</p>
 	<div class="mt-2 py-2" style="max-width: 50%">
 	{% csrf_token %}
 	{{champ_du_run}}
 	</div>
-	<button type="submit" name="run_run" class="btn btn-primary btn-lg mt-2">Run exploit</button>
+	<button type="submit" name="run_run" class="btn btn-primary btn-lg mt-2">Run module</button>
 	</div>
 </form>
 
@@ -77,22 +87,22 @@
 
 	<div class="mt-5 py-2">
 	<h1>Détails de l'exploit</h1>
-	{{exploit_description}}
+	{{module_description}}
 	</div>
 
 	<div class="mt-5 py-2">
 	<h1>Options possibles</h1>
-	{{exploit_options}}
+	{{module_options}}
 	</div>
 
 	<div class="mt-5 py-2">
 	<h1>Options manquantes</h1>
-	{{exploit_missing_required}}
+	{{module_missing_required}}
 	</div>
 
 	<div class="mt-5 py-2">
 	<h1>Options paramétrées</h1>
-	<pre>{{exploit_running_config | pprint}}</pre>
+	<pre>{{module_running_config | pprint}}</pre>
 	</div>
 
 {% endif %}
@@ -128,6 +138,16 @@
 
 {% endif %}
 
+{% if flag_auxiliary_ready_to_run %}
+<form method="post" class="form-group text-left ">
+	<div class="mt-5 py-2">
+	<br>
+	{% csrf_token %}
+	<button type="submit" name="run_auxiliary" class="btn btn-primary btn-lg mt-2">HACK !!!</button>
+	</div>
+</form>
+{% endif %}
+
 </div>
 
 
@@ -137,7 +157,7 @@
 	<div class="mt-5 py-2">
 	<h1>Payloads disponibles</h1>
 	<div class="overflow-auto" style="max-width: 80%; max-height: 200px;">
-	{% for payload in exploit_targetpayload %}
+	{% for payload in module_targetpayload %}
 	<li>{{payload}}</li>
 	{% endfor %}
 	</div>
@@ -205,9 +225,7 @@
 </div>
 </form>
 
-
-
-{% if flag_payload_error %}
+{% if flag_error %}
 
 	<div class="mt-5 py-2">
 	<h1>Message important</h1>
@@ -216,7 +234,11 @@
 
 {% endif %}
 </div>
+
 </div>
+
+
+
 
 {% endblock content %}
 

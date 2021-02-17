@@ -91,6 +91,17 @@ class Type_var_payload_metasploit(forms.Form):
                                             required=False)
 
 
+class Choice_module(forms.Form):
+    MODULES_CHOICES = (
+        ('EXPLOIT', 'EXPLOIT'),
+        ('AUXILIARY', 'AUXILIARY')
+    )
+
+    module_wanted = forms.ChoiceField(choices=MODULES_CHOICES, label=False,
+                                      widget=forms.RadioSelect(),
+                                      required=True)
+
+
 class Checkbox_args_entree(forms.Form):
     ARGUMENTS = (
         ('v4', 'IPv4'),

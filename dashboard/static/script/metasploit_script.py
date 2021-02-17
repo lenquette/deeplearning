@@ -15,16 +15,30 @@ def main_display_exploit():
     return list_of_exploit
 
 
-def main_run_exploit(choosen_exploit):
+def main_display_auxiliary():
+    list_of_auxiliary = client.modules.auxiliary
+    return list_of_auxiliary
+
+
+def main_run_exploit(chosen_exploit):
     global exploit
     try:
-        exploit = client.modules.use('exploit', choosen_exploit)
+        exploit = client.modules.use('exploit', chosen_exploit)
         return exploit
     except:
         return -1
 
 
-def main_change_option(choosen_option, arg, type_val):
+def main_run_auxiliary(chosen_auxiliary):
+    global auxiliary
+    try:
+        auxiliary = client.modules.use('auxiliary', chosen_auxiliary)
+        return auxiliary
+    except:
+        return -1
+
+
+def main_change_option_exploit(choosen_option, arg, type_val):
     try:
         if type_val == "INT":
             arg = int(arg)
@@ -36,6 +50,23 @@ def main_change_option(choosen_option, arg, type_val):
         exploit[choosen_option] = arg
 
         return exploit.runoptions
+
+    except:
+        return -1
+
+
+def main_change_option_auxiliary(choosen_option, arg, type_val):
+    try:
+        if type_val == "INT":
+            arg = int(arg)
+        elif type_val == "BOOL":
+            arg = bool(arg)
+        else:
+            auxiliary[choosen_option] = arg
+
+        auxiliary[choosen_option] = arg
+
+        return auxiliary.runoptions
 
     except:
         return -1
@@ -56,8 +87,7 @@ def main_choose_payload(chosen_payload):
 
 
 def main_config_payload(chosen_option, val, type_val):
-
-    try :
+    try:
         if type_val == "INT":
             val = int(val)
         elif type_val == "BOOL":
@@ -73,15 +103,30 @@ def main_config_payload(chosen_option, val, type_val):
 
 
 def main_exe_exploit():
-    global json
+    global json_exploit
     global session
     try:
-        json = exploit.execute(payload=payload)
+        json_exploit = exploit.execute(payload=payload)
         session_num_list = [*client.sessions.list]
         # print(session_num_list)
         session_id = session_num_list[0]
         session = client.sessions.session(str(session_id))
-        return json
+        return json_exploit
+    except:
+        return -1
+
+
+def main_exe_auxiliary():
+    global json_auxiliary
+    global session
+
+    print(auxiliary.execute())
+    try:
+        json_auxiliary = auxiliary.execute()
+        session_num_list = [*client.sessions.list]
+        session_id = session_num_list[0]
+        session = client.sessions.session(str(session_id))
+        return json_auxiliary
     except:
         return -1
 

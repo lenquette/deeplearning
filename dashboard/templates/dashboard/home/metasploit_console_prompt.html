@@ -1,0 +1,23 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Metasploit prompt{% endblock title %}
+
+{% block content %}
+<div class="mt-5 py-2">
+<form method="post" class="form-group text-left">
+<h1>Prompt de la console</h1>
+<p class="py-2">Indiquer le commande a rentrer</p>
+{% csrf_token %}
+{{champ_du_prompt}}
+    <br>
+
+<button type="submit" name="run_cmd" class="btn btn-primary btn-lg mt-2">Run Command</button>
+</form>
+</div>
+
+<div class="mt-5 py-2">
+<h1>Output de la console</h1>
+{{output}}
+</div>
+
+
+{% endblock content %}

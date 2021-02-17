@@ -39,7 +39,7 @@
 </form>	
 	
 	<p class="py-2 mt-5">Exploits disponibles : </p>
-	<div class="overflow-auto" style="max-width: 50%; max-height: 400px;">
+	<div class="overflow-auto" style="max-width: 80%; max-height: 400px;">
 	{% if flag_search %}
 	{% for exploit in new_list %}
 	<li>{{exploit}}</li>
@@ -84,9 +84,120 @@
 	{{exploit_missing_required}}
 	</div>
 
+	<div class="mt-5 py-2">
+	<h1>Options paramétrées</h1>
+	<pre>{{exploit_running_config | pprint}}</pre>
+	</div>
+
 {% endif %}
- </div>
+
+{% if flag_run %}
+
+<form method="post" class="form-group text-left">
+	<div class="mt-2 py-2">
+	<h1>Option à modifier</h1>
+	<p class="py-2">Entrez le nom de l'option</p>
+	{% csrf_token %}
+	{{champ_de_l_option}}
+
+	<p class="py-2 mt-2">Entrez sa nouvelle valeur</p>
+	{% csrf_token %}
+	{{champ_de_l_arg_de_option}}
+
+	<p class="py-2 mt-2">Entrez son type (par défaut, si rien n'est coché : STR)</p>
+	{% csrf_token %}
+	{{type_de_var}}
+		<br>
+	<button type="submit" name="run_option" class="btn btn-primary btn-lg mt-2">Change option</button>
+	</div>
+</form>
+
+{% endif %}
+
 </div>
+
+
+<div class="col">
+{% if flag_option %}
+<form method="post" class="form-group text-left">
+	<div class="mt-5 py-2">
+	<h1>Payloads disponibles</h1>
+	<div class="overflow-auto" style="max-width: 80%; max-height: 200px;">
+	{% for payload in exploit_targetpayload %}
+	<li>{{payload}}</li>
+	{% endfor %}
+	</div>
+	</div>
+
+	<div class="mt-5 py-2">
+	<h1>Choisir le payload</h1>
+	{% csrf_token %}
+	{{champ_du_payload}}
+	</div>
+
+	<br>
+	<button type="submit" name="run_payload_choice" class="btn btn-primary btn-lg mt-2">Run Payload</button>
+
+</form>
+
+{% endif %}
+
+{% if flag_payload %}
+
+<form method="post" class="form-group text-left">
+<div class="mt-2 py-2">
+
+	<div class="mt-5 py-2">
+	<h1>Options paramétrées</h1>
+	<pre>{{payload_runoptions | pprint}}</pre>
+	</div>
+
+	<div class="mt-5 py-2">
+	<h1>Options manquantes</h1>
+	{{payload_missing_required}}
+	</div>
+
+	<div class="mt-5 py-2">
+	<h1>Option à modifier</h1>
+	<p class="py-2">Entrez le nom de l'option</p>
+	{% csrf_token %}
+	{{champ_de_la_config_payload}}
+
+	<p class="py-2 mt-2">Entrez sa nouvelle valeur</p>
+	{% csrf_token %}
+	{{champ_de_la_val_de_la_config_payload}}
+
+	<p class="py-2 mt-2">Entrez son type (par défaut, si rien n'est coché : STR)</p>
+	{% csrf_token %}
+	{{type_de_var_payload}}
+		<br>
+	<button type="submit" name="run_payload_option" class="btn btn-primary btn-lg mt-2">Change option</button>
+	</div>
+
+{% endif %}
+
+{% if flag_payload_value %}
+	<div class="mt-5 py-2">
+	<br>
+	<button type="submit" name="run_exploit" class="btn btn-primary btn-lg mt-2">HACK !!!</button>
+	</div>
+{% endif %}
+</div>
+</form>
+
+
+
+{% if flag_payload_error %}
+
+	<div class="mt-5 py-2">
+	<h1>Message important</h1>
+	{{error}}
+	</div>
+
+{% endif %}
+</div>
+</div>
+
 {% endblock content %}
 
 

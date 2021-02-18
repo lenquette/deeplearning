@@ -3,6 +3,7 @@
 
 {% block content %}  
 <div class="row">
+
 <div class="col">
 <form method="post" class="form-group text-left">
 	
@@ -64,8 +65,6 @@
 	</div>
 {% endif %}
 </div>
-
-
 
 <div class="col">
 {% if flag_search %}
@@ -146,19 +145,18 @@
 
 </div>
 
-
 <div class="col">
 
 {% if flag_option %}
 
-	<div class="mt-5 py-2">
+<div class="mt-5 py-2">
 	<h1>Payloads disponibles</h1>
 	<div class="overflow-auto" style="max-width: 80%; max-height: 200px;">
 	{% for payload in module_targetpayload %}
 	<li>{{payload}}</li>
 	{% endfor %}
 	</div>
-	</div>
+</div>
 
 <form method="post" class="form-group text-left inline">
 	<div class="mt-5 py-2">
@@ -175,11 +173,11 @@
 
 {% endif %}
 
+
+
 {% if flag_payload %}
-
-<form method="post" class="form-group text-left">
 <div class="mt-2 py-2">
-
+<form method="post" class="form-group text-left">
 	<div class="mt-5 py-2">
 	<h1>Options paramétrées</h1>
 	<pre>{{payload_runoptions | pprint}}</pre>
@@ -210,7 +208,7 @@
 		<br>
 	<button type="submit" name="run_payload_option" class="btn btn-primary btn-lg mt-2">Change option</button>
 	</div>
-
+</form>
 {% endif %}
 
 {% if flag_payload_value %}
@@ -219,24 +217,25 @@
 	<button type="submit" name="run_exploit" class="btn btn-primary btn-lg mt-2">HACK !!!</button>
 	</div>
 {% endif %}
-</div>
-</form>
 
 {% if flag_error %}
 
-	<div class="mt-5 py-2">
-	<h1>Message important</h1>
-	{{error}}
-	</div>
+<div class="mt-5 py-2">
+<h1>Message important</h1>
+{{error}}
+</div>
 
 {% endif %}
 </div>
 
+
+
+
+
+
 </div>
-
-
-
-
+</div>
 {% endblock content %}
+
 
 

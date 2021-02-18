@@ -1,6 +1,5 @@
 from pymetasploit3.msfrpc import MsfRpcClient
-
-
+import time
 def main_connection():
     global client
     # ip = "127.0.0.1"
@@ -105,11 +104,13 @@ def main_config_payload(chosen_option, val, type_val):
 def main_exe_exploit():
     global json_exploit
     global session
+    json_exploit = exploit.execute(payload=payload)
+    time.sleep(15)
     try:
-        json_exploit = exploit.execute(payload=payload)
+
         session_num_list = [*client.sessions.list]
         # print(session_num_list)
-        session_id = session_num_list[0]
+        session_id = session_num_list[-1]
         session = client.sessions.session(str(session_id))
         return json_exploit
     except:
@@ -119,12 +120,12 @@ def main_exe_exploit():
 def main_exe_auxiliary():
     global json_auxiliary
     global session
-
-    print(auxiliary.execute())
+    json_auxiliary = auxiliary.execute()
+    time.sleep(15)
     try:
-        json_auxiliary = auxiliary.execute()
+
         session_num_list = [*client.sessions.list]
-        session_id = session_num_list[0]
+        session_id = session_num_list[-1]
         session = client.sessions.session(str(session_id))
         return json_auxiliary
     except:
@@ -132,6 +133,12 @@ def main_exe_auxiliary():
 
 
 def main_run_prompt(cmd):
-    terminating_strs = ['----END----']
-    return session.run_with_output(cmd, terminating_strs, timeout=10, timeout_exception=False)
-# 10 seconds max
+
+    if "Meterpreter" in str(type(session)) :
+        terminating_strs = ['----END----']
+        return session_exploit.run_with_output(cmd, terminating_strs, timeout=10, timeout_exception=False)
+    # 10 seconds max
+
+    elif "Shell" in str(type(session)):
+        session.write(cmd)
+        return session.read()

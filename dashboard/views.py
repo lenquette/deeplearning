@@ -405,6 +405,8 @@ def metasploit_visu(request):
 
             else:
 
+                flag_auxiliary_ready_to_run = None
+
                 # save in an other var the current config
                 module_running_config_save = module_running_config
 
@@ -427,6 +429,7 @@ def metasploit_visu(request):
                                'champ_de_l_option': champ_de_l_option,
                                'champ_de_l_arg_de_option': champ_de_l_arg_de_option,
                                'flag_auxiliary_ready_to_run': flag_auxiliary_ready_to_run,
+                               'type_de_var': type_de_var,
                                'type_module': type_module,
                                'flag_choice': flag_choice})
 

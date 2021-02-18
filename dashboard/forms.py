@@ -1,7 +1,6 @@
 from django import forms
 
 
-# both are same but one is used only for the test, guess who
 class Input_for_Test(forms.Form):
     test_str = forms.CharField(max_length=15, required=False, label=False,
                                widget=forms.TextInput(attrs={'class': 'form-control'}))  # label='test_str'

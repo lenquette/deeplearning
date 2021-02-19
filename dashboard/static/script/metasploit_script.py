@@ -136,7 +136,7 @@ def main_run_prompt(cmd):
 
     if "Meterpreter" in str(type(session)) :
         terminating_strs = ['----END----']
-        return session_exploit.run_with_output(cmd, terminating_strs, timeout=10, timeout_exception=False)
+        return session.run_with_output(cmd, terminating_strs, timeout=10, timeout_exception=False)
     # 10 seconds max
 
     elif "Shell" in str(type(session)):

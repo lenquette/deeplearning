@@ -26,3 +26,11 @@ Commande :
 * python3 manage.py runserver
 
 Puis connectez-vous à l'adresse suivante : 127.0.0.1:8000/dashboard
+
+## Metasploit
+
+Pour utiliser le module métasploit, au préalable, tapez les commandes suivantes :
+
+Commande :
+* sudo msfconsole
+* load msgrpc Pass=1234LOL (dans la msfconsole)

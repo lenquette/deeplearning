@@ -8,12 +8,12 @@ Commande :
 ## Création
 
 Commande :
-* python3 -m venv my_environment
+* python3 -m venv python3_env
 
 ## Activation de l'environnement
 
 Commande :
-* source my_environment/bin/activate
+* source python3_env/bin/activate
 	
 ## Installation des dépendances
 

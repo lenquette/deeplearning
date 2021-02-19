@@ -27,4 +27,4 @@ Then, connect yourself to : [127.0.0.1:8000/dashboard](127.0.0.1:8000/dashboard)
 To use metasploit's module, enter the following commands :
 
 		sudo msfconsole
-		load msgrpc Pass=1234LOL (dans la msfconsole)
+		load msgrpc Pass=1234LOL (in msfconsole)

@@ -6,10 +6,12 @@ from .forms import Input_for_Test, Formulaire_entree, Selection_entree, Checkbox
     Formulaire_entree_payload_option_val_metasploit, Choice_module
 
 import sys
+import os
 
 # add executables' folder path
-sys.path.append('/home/ludovic/python3_stuff/test_website/dashboard/static/script/')
-
+ProjectFileDir = os.path.dirname(os.path.abspath(__file__))
+DashboardScriptDir = os.path.join(ProjectFileDir, 'static/script/')
+sys.path.append(DashboardScriptDir)
 
 # Create your views here.
 

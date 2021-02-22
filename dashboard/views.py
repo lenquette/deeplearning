@@ -46,15 +46,21 @@ def external(request):
 
 
 def nmap_visu(request):
+
+    #save data module
+    global data_nmap
+    import pickle
+
     type_scan = Selection_entree(request.POST)
     ip_cible = Formulaire_entree(request.POST)
     arguments = Checkbox_args_entree(request.POST)
 
-    if type_scan.is_valid() and ip_cible.is_valid() and arguments.is_valid():
+    if type_scan.is_valid() and ip_cible.is_valid() and arguments.is_valid() and request.method == 'POST' and 'run_script' in request.POST:
 
         if request.method == 'POST' and 'run_script' in request.POST:
             # import function to run
             from nmap_script import main
+            from pass_crypt import crypted_json
 
             type_scan_val = request.POST.get('scan_wanted')
             ip_cible_val = request.POST.get('entry_str')
@@ -68,6 +74,11 @@ def nmap_visu(request):
             # call function
             data = main(type_scan_val, ip_cible_val, arguments_val)
 
+            data_nmap = data
+            # Store data (serialize)
+            with open('dashboard/static/.transit/filename.pickle', 'wb') as handle:
+                pickle.dump(crypted_json(data_nmap), handle, protocol=pickle.HIGHEST_PROTOCOL)
+
             # renderer
             return render(request, 'dashboard/home/nmap_console.html',
                           {'type_scan_val': type_scan_val, 'ip_cible_val': ip_cible_val, 'arguments_val': arguments_val,
@@ -78,7 +89,7 @@ def nmap_visu(request):
 
 
 def metasploit_visu(request):
-    # creation flag
+    # creation of flag
     global flag_connection
     global flag_search
     global flag_run

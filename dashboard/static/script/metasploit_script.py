@@ -118,6 +118,7 @@ def main_exe_exploit(payload, exploit, client):
         return -1, -1
 
 def main_enter_console_for_scan(auxiliary):
+    
     try :
         json_scan = auxiliary.execute()
         #print(json_scan)

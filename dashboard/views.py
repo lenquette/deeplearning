@@ -7,11 +7,15 @@ from .forms import Input_for_Test, Formulaire_entree, Selection_entree, Checkbox
 
 import sys
 import os
+import time
 
 # add executables' folder path
 ProjectFileDir = os.path.dirname(os.path.abspath(__file__))
 DashboardScriptDir = os.path.join(ProjectFileDir, 'static/script/')
 sys.path.append(DashboardScriptDir)
+
+print(DashboardScriptDir)
+
 
 # Create your views here.
 
@@ -46,8 +50,7 @@ def external(request):
 
 
 def nmap_visu(request):
-
-    #save data module
+    # save data module
     global data_nmap
     import pickle
 
@@ -165,7 +168,7 @@ def metasploit_visu(request):
         # call function
         module_choice = request.POST.get('module_wanted')
 
-        #print(module_choice)
+        # print(module_choice)
 
         if module_choice == "EXPLOIT":
             from metasploit_script import main_display_exploit
@@ -258,8 +261,8 @@ def metasploit_visu(request):
 
             module_run = main_run_exploit(module_wanted, client)
 
-            #print(module_run.description)
-            #print(module_wanted)
+            # print(module_run.description)
+            # print(module_wanted)
 
             if module_run == -1:
                 # checked pseudo~~~flag
@@ -345,7 +348,8 @@ def metasploit_visu(request):
 
             flag_option = None
 
-            module_running_config = main_change_option_exploit(option_wanted, option_arg_wanted, type_wanted_arg, module_run)
+            module_running_config = main_change_option_exploit(option_wanted, option_arg_wanted, type_wanted_arg,
+                                                               module_run)
 
             if module_running_config == -1:
 
@@ -401,7 +405,8 @@ def metasploit_visu(request):
             option_arg_wanted = request.POST.get('option_arg_str')
             type_wanted_arg = request.POST.get('type_wanted')
 
-            module_running_config = main_change_option_auxiliary(option_wanted, option_arg_wanted, type_wanted_arg, module_run)
+            module_running_config = main_change_option_auxiliary(option_wanted, option_arg_wanted, type_wanted_arg,
+                                                                 module_run)
 
             if module_running_config == -1:
 
@@ -511,7 +516,8 @@ def metasploit_visu(request):
 
         flag_payload_value = None
 
-        payload_runoptions = main_config_payload(payload_option_arg, payload_option_val, payload_option_type, payload_chosen)
+        payload_runoptions = main_config_payload(payload_option_arg, payload_option_val, payload_option_type,
+                                                 payload_chosen)
 
         if payload_runoptions == -1:
 
@@ -621,22 +627,22 @@ def metasploit_visu(request):
             flag_error = "True"
 
             return render(request, 'dashboard/home/metasploit_console.html',
-                      {'flag_connection': flag_connection, 'new_list': new_list,
-                       'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
-                       'champ_du_run': champ_du_run, 'module_description': module_description,
-                       'module_options': module_options, 'flag_run': flag_run,
-                       'module_missing_required': module_missing_required,
-                       'module_running_config': module_running_config,
-                       'champ_de_l_option': champ_de_l_option,
-                       'champ_de_l_arg_de_option': champ_de_l_arg_de_option,
-                       'flag_auxiliary_ready_to_run': flag_auxiliary_ready_to_run,
-                       'error': error, 'flag_error': flag_error,
-                       'type_module': type_module,
-                       'flag_choice': flag_choice})
+                          {'flag_connection': flag_connection, 'new_list': new_list,
+                           'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
+                           'champ_du_run': champ_du_run, 'module_description': module_description,
+                           'module_options': module_options, 'flag_run': flag_run,
+                           'module_missing_required': module_missing_required,
+                           'module_running_config': module_running_config,
+                           'champ_de_l_option': champ_de_l_option,
+                           'champ_de_l_arg_de_option': champ_de_l_arg_de_option,
+                           'flag_auxiliary_ready_to_run': flag_auxiliary_ready_to_run,
+                           'error': error, 'flag_error': flag_error,
+                           'type_module': type_module,
+                           'flag_choice': flag_choice})
 
         else:
             return render(request, 'dashboard/home/metasploit_console_prompt.html',
-                          {'champ_du_prompt': champ_du_prompt })
+                          {'champ_du_prompt': champ_du_prompt})
 
     #######################################PROMPT COMMANDE###############################
     if champ_du_prompt.is_valid() and request.method == 'POST' and 'run_cmd' in request.POST:
@@ -650,3 +656,34 @@ def metasploit_visu(request):
                                                                                  'output': output})
 
     return render(request, 'dashboard/home/metasploit_console.html', {})
+
+
+def crafter_visu(request):
+    import pdb
+
+    # global var
+    global client
+    global sessions_client
+
+    # global flag
+    global flag_error
+    global flag_success_session
+
+    if request.method == 'POST' and 'run_script' in request.POST:
+        from automate import script_automate
+        from json_data_processing_script import session_organised_exploit
+
+        #pdb.set_trace()
+
+        client, sessions_created = script_automate()
+        sessions_client = session_organised_exploit(sessions_created)
+
+        if sessions_client is not None:
+            flag_success_session = "True"
+            return render(request, 'dashboard/home/exploitcrafter_console.html', {'flag_success_session': flag_success_session,
+                                                                                 'sessions_client': sessions_client})
+        else:
+            flag_error = "True"
+            return render(request, 'dashboard/home/exploitcrafter_console.html', {flag_error: 'flag_error'})
+
+    return render(request, 'dashboard/home/exploitcrafter_console.html', {})

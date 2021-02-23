@@ -103,7 +103,9 @@ def main_config_payload(chosen_option, val, type_val, payload):
 def main_exe_exploit(payload, exploit, client):
     #print(payload.runoptions)
     #print(exploit.runoptions)
-    #print(client)
+    #import pdb
+    #pdb.set_trace()
+    print(client)
     json_exploit = exploit.execute(payload=payload)
     time.sleep(15)
     #print(client.sessions.list)
@@ -118,7 +120,6 @@ def main_exe_exploit(payload, exploit, client):
         return -1, -1
 
 def main_enter_console_for_scan(auxiliary):
-    
     try :
         json_scan = auxiliary.execute()
         #print(json_scan)

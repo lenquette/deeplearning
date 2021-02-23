@@ -36,6 +36,17 @@ def look_for_ip_associated_port(list_of_tuple, port):
             ip_vuln_spe_port.append(tuple[0])
     return ip_vuln_spe_port
 
+def session_organised_exploit(json_session):
+    organised_liste = []
+    for id in [*json_session]:
+        num = id
+        exploit = json_session[id]['via_exploit']
+        os = json_session[id]['platform']
+        ip = json_session[id]['session_host']
+        organised_liste.append('n° id '+num+' ; '+'exploit utilisé : '+exploit+' ; '+'type d\'OS : '+os+' ; '+'adresse ip : '+ip)
+    return organised_liste
+
+
 
 
 

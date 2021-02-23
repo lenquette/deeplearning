@@ -10,5 +10,6 @@ urlpatterns = [
         path('external/', views.external, name='external'),
         path('nmap_visu/', views.nmap_visu, name='nmap_visu'),
         path('apropos/', views.apropos, name='apropos'),
-        path('metasploit/', views.metasploit_visu, name='metasploit_visu')
+        path('metasploit/', views.metasploit_visu, name='metasploit_visu'),
+        path('crafter_exploit/', views.crafter_visu, name='crafter_visu')
         ]

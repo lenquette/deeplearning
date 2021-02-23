@@ -101,7 +101,11 @@ def metasploit_visu(request):
 
     # global var
     global module_choice
+    global session
+    global client
+    global console
 
+    # global form
     global list_of_module
     global new_list
     global module_run
@@ -141,9 +145,9 @@ def metasploit_visu(request):
         # test section
 
         # call function
-        data = main_connection()
+        client, console = main_connection()
 
-        if data is not None:
+        if client is not None:
             flag_connection = "connected"
 
         # renderer
@@ -161,17 +165,17 @@ def metasploit_visu(request):
         # call function
         module_choice = request.POST.get('module_wanted')
 
-        print(module_choice)
+        #print(module_choice)
 
         if module_choice == "EXPLOIT":
             from metasploit_script import main_display_exploit
 
-            list_of_module = main_display_exploit()
+            list_of_module = main_display_exploit(client)
 
         elif module_choice == "AUXILIARY":
             from metasploit_script import main_display_auxiliary
 
-            list_of_module = main_display_auxiliary()
+            list_of_module = main_display_auxiliary(client)
 
         # renderer
         return render(request, 'dashboard/home/metasploit_console.html',
@@ -195,7 +199,7 @@ def metasploit_visu(request):
             # test section
 
             # call function
-            list_of_exploit = main_display_exploit()
+            list_of_exploit = main_display_exploit(client)
 
             # create new list
             new_list = []
@@ -225,7 +229,7 @@ def metasploit_visu(request):
             # test section
 
             # call function
-            list_of_auxiliary = main_display_auxiliary()
+            list_of_auxiliary = main_display_auxiliary(client)
 
             # create new list
             new_list = []
@@ -252,10 +256,10 @@ def metasploit_visu(request):
 
             module_wanted = request.POST.get('run_str')
 
-            module_run = main_run_exploit(module_wanted)
+            module_run = main_run_exploit(module_wanted, client)
 
-            print(module_run.description)
-            print(module_wanted)
+            #print(module_run.description)
+            #print(module_wanted)
 
             if module_run == -1:
                 # checked pseudo~~~flag
@@ -294,7 +298,7 @@ def metasploit_visu(request):
 
             module_wanted = request.POST.get('run_str')
 
-            module_run = main_run_auxiliary(module_wanted)
+            module_run = main_run_auxiliary(module_wanted, client)
 
             if module_run == -1:
                 # checked pseudo~~~flag
@@ -341,7 +345,7 @@ def metasploit_visu(request):
 
             flag_option = None
 
-            module_running_config = main_change_option_exploit(option_wanted, option_arg_wanted, type_wanted_arg)
+            module_running_config = main_change_option_exploit(option_wanted, option_arg_wanted, type_wanted_arg, module_run)
 
             if module_running_config == -1:
 
@@ -372,7 +376,7 @@ def metasploit_visu(request):
                 if len(module_missing_required) == 0:
                     #     # checked pseudo~~~flag
                     flag_option = "True"
-                    module_targetpayload = main_see_payload()
+                    module_targetpayload = main_see_payload(module_run)
 
                 return render(request, 'dashboard/home/metasploit_console.html',
                               {'flag_connection': flag_connection, 'new_list': new_list,
@@ -397,7 +401,7 @@ def metasploit_visu(request):
             option_arg_wanted = request.POST.get('option_arg_str')
             type_wanted_arg = request.POST.get('type_wanted')
 
-            module_running_config = main_change_option_auxiliary(option_wanted, option_arg_wanted, type_wanted_arg)
+            module_running_config = main_change_option_auxiliary(option_wanted, option_arg_wanted, type_wanted_arg, module_run)
 
             if module_running_config == -1:
 
@@ -452,7 +456,7 @@ def metasploit_visu(request):
 
         payload_wanted = request.POST.get('payload_str')
 
-        payload_chosen = main_choose_payload(payload_wanted)
+        payload_chosen = main_choose_payload(payload_wanted, client)
 
         if payload_chosen == -1:
             return render(request, 'dashboard/home/metasploit_console.html',
@@ -507,7 +511,7 @@ def metasploit_visu(request):
 
         flag_payload_value = None
 
-        payload_runoptions = main_config_payload(payload_option_arg, payload_option_val, payload_option_type)
+        payload_runoptions = main_config_payload(payload_option_arg, payload_option_val, payload_option_type, payload_chosen)
 
         if payload_runoptions == -1:
 
@@ -573,7 +577,7 @@ def metasploit_visu(request):
         # checked pseudo~~~flag
         flag_error = "True"
 
-        json_payload = main_exe_exploit()
+        json_payload, session = main_exe_exploit(payload_chosen, module_run, client)
 
         # json_payload = True
 
@@ -607,7 +611,7 @@ def metasploit_visu(request):
     if champ_de_recherche.is_valid() and champ_du_run.is_valid() and type_de_var.is_valid() and champ_de_l_option.is_valid() and request.method == 'POST' and 'run_auxiliary' in request.POST:
         from metasploit_script import main_exe_auxiliary
 
-        json = main_exe_auxiliary()
+        json, session = main_exe_auxiliary(module_run, client)
 
         print(json)
         if json == -1:
@@ -640,7 +644,7 @@ def metasploit_visu(request):
 
         cmd_wanted = request.POST.get('prompt_str')
 
-        output = main_run_prompt(cmd_wanted)
+        output = main_run_prompt(cmd_wanted, session)
 
         return render(request, 'dashboard/home/metasploit_console_prompt.html', {'champ_du_prompt': champ_du_prompt,
                                                                                  'output': output})

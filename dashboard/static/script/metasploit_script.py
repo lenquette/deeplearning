@@ -103,8 +103,8 @@ def main_config_payload(chosen_option, val, type_val, payload):
 def main_exe_exploit(payload, exploit, client):
     #print(payload.runoptions)
     #print(exploit.runoptions)
-    #import pdb
-    #pdb.set_trace()
+    # import pdb
+    # pdb.set_trace()
     print(client)
     json_exploit = exploit.execute(payload=payload)
     time.sleep(15)
@@ -119,11 +119,15 @@ def main_exe_exploit(payload, exploit, client):
     except:
         return -1, -1
 
-def main_enter_console_for_scan(auxiliary):
+def main_enter_console_for_scan(auxiliary, ip, console):
+    # import pdb
+    # pdb.set_trace()
     try :
-        json_scan = auxiliary.execute()
-        #print(json_scan)
-        return json_scan
+        console.write('use ' + auxiliary)
+        console.write('set RHOSTS ' + ip)
+        console.write('run')
+        time.sleep(5)
+        return console.read()
     except:
         return -1
 
@@ -157,3 +161,6 @@ def main_enter_console_manual(list_of_string, console):
         while console.is_busy():
             time.sleep(1)
     return 0
+
+
+

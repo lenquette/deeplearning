@@ -663,27 +663,56 @@ def crafter_visu(request):
 
     # global var
     global client
+    global console
     global sessions_client
+    global data_scan
+    global data_exploit
 
     # global flag
-    global flag_error
-    global flag_success_session
+    global flag_error_scan
+    global flag_success_scan
+    global flag_success_exploit
 
-    if request.method == 'POST' and 'run_script' in request.POST:
-        from automate import script_automate
-        from json_data_processing_script import session_organised_exploit
+    if request.method == 'POST' and 'run_script_scan' in request.POST:
+        from automate import script_automate_scan
 
         #pdb.set_trace()
 
-        client, sessions_created = script_automate()
-        sessions_client = session_organised_exploit(sessions_created)
+        data_scan, client, console = script_automate_scan()
 
-        if sessions_client is not None:
-            flag_success_session = "True"
-            return render(request, 'dashboard/home/exploitcrafter_console.html', {'flag_success_session': flag_success_session,
-                                                                                 'sessions_client': sessions_client})
+        if data_scan is not None:
+            flag_success_scan = "True"
+            return render(request, 'dashboard/home/exploitcrafter_console.html', {'flag_success_scan': flag_success_scan,
+                                                                                 'data_scan': data_scan})
         else:
             flag_error = "True"
-            return render(request, 'dashboard/home/exploitcrafter_console.html', {flag_error: 'flag_error'})
+            error = 'Error or nothing can be exploited'
+            return render(request, 'dashboard/home/exploitcrafter_console.html', {flag_error: 'flag_error', error: 'error'})
+
+    if request.method == 'POST' and 'run_script_exploit' in request.POST:
+        from automate import script_automate_exploit
+        from json_data_processing_script import session_organised_exploit
+
+        client, sessions_created = script_automate_exploit(data_scan, client, console)
+
+        if client.sessions.list is not None:
+
+            #pdb.set_trace()
+
+            flag_success_exploit = "True"
+
+            data_exploit = session_organised_exploit(sessions_created)
+
+            return render(request, 'dashboard/home/exploitcrafter_console.html', {'flag_success_scan': flag_success_scan,
+                                                                              'data_scan': data_scan,
+                                                                              'data_exploit': data_exploit,
+                                                                              'flag_success_exploit': flag_success_exploit})
+        else:
+            flag_error = "True"
+            error = 'Any session was created'
+            return render(request, 'dashboard/home/exploitcrafter_console.html', {flag_error: 'flag_error',
+                                                                                  'data_scan': data_scan,
+                                                                                  error: 'error'})
+
 
     return render(request, 'dashboard/home/exploitcrafter_console.html', {})

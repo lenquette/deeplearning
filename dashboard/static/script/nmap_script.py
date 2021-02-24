@@ -8,13 +8,11 @@ def scan_nmap(type_scan, ip, list_of_args) :
 	result = None
 		
 	if len(list_of_args) != 0 :
-	
 		if 'v4' in list_of_args :
-			
 			if type_scan == 'TCP':
 				
 				result = nmap.nmap_tcp_scan(ip, args="-v4")
-			
+
 			elif type_scan == 'SYN':
 			
 				result = nmap.nmap_syn_scan(ip, args="-v4")
@@ -33,9 +31,7 @@ def scan_nmap(type_scan, ip, list_of_args) :
 		
 		return result
 	
-	else : 
-
-		
+	else :
 		if type_scan == 'TCP':
 			
 			result = nmap.nmap_tcp_scan(ip)

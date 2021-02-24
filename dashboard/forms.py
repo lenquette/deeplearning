@@ -109,3 +109,5 @@ class Checkbox_args_entree(forms.Form):
     arguments_checkbox = forms.MultipleChoiceField(choices=ARGUMENTS, label=False,
                                                    widget=forms.CheckboxSelectMultiple(),
                                                    required=False)
+
+

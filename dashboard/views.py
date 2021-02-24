@@ -667,27 +667,34 @@ def crafter_visu(request):
     global sessions_client
     global data_scan
     global data_exploit
+    global id_session
 
     # global flag
     global flag_error_scan
     global flag_success_scan
     global flag_success_exploit
+    global flag_good_id
+
+    champ_de_l_id = Formulaire_entree(request.POST)
+    champ_du_prompt = Formulaire_entree_prompt_metasploit(request.POST)
 
     if request.method == 'POST' and 'run_script_scan' in request.POST:
         from automate import script_automate_scan
 
-        #pdb.set_trace()
+        # pdb.set_trace()
 
         data_scan, client, console = script_automate_scan()
 
         if data_scan is not None:
             flag_success_scan = "True"
-            return render(request, 'dashboard/home/exploitcrafter_console.html', {'flag_success_scan': flag_success_scan,
-                                                                                 'data_scan': data_scan})
+            return render(request, 'dashboard/home/exploitcrafter_console.html',
+                          {'flag_success_scan': flag_success_scan,
+                           'data_scan': data_scan})
         else:
             flag_error = "True"
             error = 'Error or nothing can be exploited'
-            return render(request, 'dashboard/home/exploitcrafter_console.html', {flag_error: 'flag_error', error: 'error'})
+            return render(request, 'dashboard/home/exploitcrafter_console.html',
+                          {flag_error: 'flag_error', error: 'error'})
 
     if request.method == 'POST' and 'run_script_exploit' in request.POST:
         from automate import script_automate_exploit
@@ -695,18 +702,20 @@ def crafter_visu(request):
 
         client, sessions_created = script_automate_exploit(data_scan, client, console)
 
-        if client.sessions.list is not None:
+        if len(client.sessions.list) != 0 :
 
-            #pdb.set_trace()
+            # pdb.set_trace()
 
             flag_success_exploit = "True"
 
             data_exploit = session_organised_exploit(sessions_created)
 
-            return render(request, 'dashboard/home/exploitcrafter_console.html', {'flag_success_scan': flag_success_scan,
-                                                                              'data_scan': data_scan,
-                                                                              'data_exploit': data_exploit,
-                                                                              'flag_success_exploit': flag_success_exploit})
+            return render(request, 'dashboard/home/exploitcrafter_console.html',
+                          {'flag_success_scan': flag_success_scan,
+                           'data_scan': data_scan,
+                           'data_exploit': data_exploit,
+                           'flag_success_exploit': flag_success_exploit,
+                           'champ_de_l_id': champ_de_l_id})
         else:
             flag_error = "True"
             error = 'Any session was created'
@@ -714,5 +723,34 @@ def crafter_visu(request):
                                                                                   'data_scan': data_scan,
                                                                                   error: 'error'})
 
+    if champ_de_l_id.is_valid() and request.method == 'POST' and 'run_script_session' in request.POST:
+
+        id_session = request.POST.get('entry_str')
+
+        for exploit in data_exploit:
+            if id_session in exploit:
+                flag_good_id = "True"
+
+        if flag_good_id is not None:
+            return render(request, 'dashboard/home/metasploit_console_prompt.html',
+                          {'champ_du_prompt': champ_du_prompt})
+
+        else:
+            flag_error = "True"
+            error = 'Bad Id session'
+            return render(request, 'dashboard/home/exploitcrafter_console.html', {flag_error: 'flag_error',
+                                                                                  'data_scan': data_scan,
+                                                                                  error: 'error'})
+
+        #######################################PROMPT COMMANDE###############################
+    if champ_du_prompt.is_valid() and request.method == 'POST' and 'run_cmd' in request.POST:
+        from metasploit_script import main_run_prompt
+
+        cmd_wanted = request.POST.get('prompt_str')
+
+        output = main_run_prompt(cmd_wanted, client.sessions.session(str(id_session)))
+
+        return render(request, 'dashboard/home/metasploit_console_prompt.html', {'champ_du_prompt': champ_du_prompt,
+                                                                                 'output': output})
 
     return render(request, 'dashboard/home/exploitcrafter_console.html', {})

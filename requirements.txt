@@ -2,7 +2,9 @@ alabaster==0.7.12
 asgiref==3.3.1
 Babel==2.9.0
 certifi==2020.12.5
+cffi==1.14.5
 chardet==4.0.0
+cryptography==3.4.6
 decorator==4.4.2
 Django==3.0.11
 docutils==0.16
@@ -13,6 +15,7 @@ MarkupSafe==1.1.1
 msgpack==1.0.2
 packaging==20.9
 py==1.10.0
+pycparser==2.20
 Pygments==2.7.4
 pymetasploit3==1.0.3
 pyparsing==2.4.7

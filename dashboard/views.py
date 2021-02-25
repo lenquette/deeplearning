@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.views.decorators.cache import cache_control
 from .forms import Input_for_Test, Formulaire_entree, Selection_entree, Checkbox_args_entree, \
     Formulaire_entree_search_metasploit, Formulaire_entree_run_metasploit, Formulaire_entree_options_metasploit, \
     Formulaire_entree_options_arg_metasploit, Formulaire_entree_payload_metasploit, Type_var_metasploit, \
@@ -20,14 +21,29 @@ print(DashboardScriptDir)
 # Create your views here.
 
 def home_page(request):
+    '''
+
+    @param request: request made by the user on the web page
+    @return: the view for the home page
+    '''
     return render(request, 'dashboard/home/home.html', {})
 
 
 def apropos(request):
+    '''
+
+    @param request: request made by the user on the web page
+    @return: the view for the about page
+    '''
     return render(request, 'dashboard/home/apropos.html', {})
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True) #flush the cache page
 def external(request):
+    '''
+
+    @param request: request made by the user on the web page
+    @return: the view for the test's module
+    '''
     form = Input_for_Test(request.POST)
 
     if form.is_valid():
@@ -48,8 +64,13 @@ def external(request):
 
     return render(request, 'dashboard/home/test.html', {'form': form})
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def nmap_visu(request):
+    '''
+
+    @param request: request made by the user on the web page
+    @return: the view for the nmap's module
+    '''
     # save data module
     global data_nmap
     import pickle
@@ -90,8 +111,13 @@ def nmap_visu(request):
     return render(request, 'dashboard/home/nmap_console.html',
                   {'type_scan': type_scan, 'ip_cible': ip_cible, 'arguments': arguments})
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def metasploit_visu(request):
+    '''
+
+    @param request: request made by the user on the web page
+    @return: the metasploit's module
+    '''
     # creation of flag
     global flag_connection
     global flag_search
@@ -660,8 +686,13 @@ def metasploit_visu(request):
 
     return render(request, 'dashboard/home/metasploit_console.html', {})
 
-
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def crafter_visu(request):
+    '''
+
+    @param request: request made by the user on the web page
+    @return: the view for the crafter sessions' module
+    '''
     import pdb
 
     # global var

@@ -4,6 +4,13 @@ nmap = nmap3.NmapScanTechniques()
 nmap_version = nmap3.Nmap()
 
 def scan_nmap(type_scan, ip, list_of_args) :
+	'''
+
+	@param type_scan: type de scan (TCP, UDP, SYN, VERSION)
+	@param ip: ip of the target
+	@param list_of_args: argument you may add to nmap (v4)
+	@return: the result of the scan as a json
+	'''
 
 	result = None
 		
@@ -56,6 +63,13 @@ def scan_nmap(type_scan, ip, list_of_args) :
 		
 
 def main(type_scan, ip, list_of_args) :
+	'''
+
+	@param type_scan: type de scan (TCP, UDP, SYN, VERSION)
+	@param ip: ip of the target
+	@param list_of_args: argument you may add to nmap (v4)
+	@return: the result of the scan as a json
+	'''
 
 	result = scan_nmap(type_scan, ip, list_of_args)
 	

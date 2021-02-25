@@ -6,6 +6,10 @@ import socket
 
 
 def script_automate_scan():
+    '''
+
+    @return: json data from the metasploit console, the rpc client and the console associated to this client
+    '''
     # check opened port
     opened_vuln_port, ip_vuln = look_for_port()
     # print(opened_vuln_port)
@@ -46,6 +50,13 @@ def script_automate_scan():
 
 
 def script_automate_exploit(data_read_out, client, console):
+    '''
+
+    @param data_read_out: json data from the metasploit console
+    @param client: client rpc
+    @param console: console associated to the client rpc
+    @return: rpc client with the created sessions for this client
+    '''
     # check opened port
     opened_vuln_port, ip_vuln = look_for_port()
     ip_vuln_reconf=[]

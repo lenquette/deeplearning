@@ -49,7 +49,13 @@ def script_automate_scan():
                     data_read_out.append('ip : ' + str(ip) + ' ; ' + ' Host is likely VULNERABLE to : ' + exploit_name)
                 elif 'OptionValidateError' in data_console['data']:
                     data_read_out.append('ip : ' + str(ip) + ' ; ' + ' OptionValidateError : Auxiliary failed : ' + exploit_name)
-        return data_read_out, client, console
+
+    # if '8020' in opened_vuln_port:
+
+
+
+
+    return data_read_out, client, console
 
 
 def script_automate_exploit(data_read_out, client, console):
@@ -77,7 +83,7 @@ def script_automate_exploit(data_read_out, client, console):
     hostname = s.getsockname()[0]
     s.close()
 
-    # pdb.set_trace()
+    pdb.set_trace()
     #extract ip from data_read_outh which is a list of string which mentions possible vulnerable ip
     for data in data_read_out:
         for ip in ip_vuln:

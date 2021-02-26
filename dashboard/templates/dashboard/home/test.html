@@ -5,20 +5,20 @@
 
 <form method="post" class="form-group text-left">
 	
-	<div class="mt-5 py-2">
+	<div class="mt-5 py-2 jumbotron">
 	<h1>Input Text</h1>
-	<div class="py-2">
+	<div class="py-2" style="max-width: 30%">
 <! --	<input type=“text“ name=“param“>
 	{{form}}
 	</div>
 	</div>
 	
-	<div class="mt-5 py-2">
+	<div class="mt-5 py-2 jumbotron">
 	{% csrf_token %}
 	<button type="submit" name="run_script" class="btn btn-primary btn-lg">Run script</button>
 	</div>
 	
-	<div class="mt-5 py-2">
+	<div class="mt-5 py-2 jumbotron">
 	<h1>The answer</h1>
 	<div class="py-2">{{data}}</div>
 	</div>

@@ -5,15 +5,15 @@
 
 <form method="post" class="form-group text-left">
 	
-	<div class="mt-5 py-2">
-	<h1>Type de scan</h1>
+	<div class="mt-5 py-2 p-3 bg-primary bg-gradient rounded-3" style="max-width: 30%">
+	<h1 class="display-4 border-bottom">Type de scan</h1>
 <! --	<input type=“text“ name=“param“>
 	{{type_scan}}
 	{{type_scan_val}}
 	</div>
 	
-	<div class="mt-5 py-2">
-	<h1>Arguments supplémentaires</h1>
+	<div class="mt-5 py-2 p-3 bg-primary bg-gradient rounded-3" style="max-width: 30%">
+	<h1 class="display-4 border-bottom">Arguments supplémentaires</h1>
 	{{arguments}}
 	{# display argument choosen after lauching the script #}
 	{% if arguments_val %}
@@ -23,28 +23,29 @@
 	{% endif %}
 	</div>
 	
-	<div class="mt-5 py-2" style="max-width: 30%">
-	<h1>Adresse IP de la cible</h1>
+	<div class="mt-5 py-2 p-3 bg-primary bg-gradient rounded-3" style="max-width: 30%">
+	<h1 class="display-4 border-bottom">Adresse IP de la cible</h1>
 	{{ip_cible}}
 	{{ip_cible_val}}
 	</div>
 	
-	<div class="mt-5 py-2">
+	<div class="mt-5 py-2 p-3">
 	{% csrf_token %}
 	<button type="submit" name="run_script" class="btn btn-primary btn-lg">Run script</button>
 	</div>
-	
-	<div class="mt-5 py-2">
-	<h1>Retour du terminal</h1>
-	<h2 class="mt-5">Résultat scan des ports</h2>
-	<div class="mt-5 py-2">
-	{% if data %}
-	<div><pre>{{data | pprint}}</pre></div>
-	{% endif %}
-	</div>
-	</div>
-
 </form>
+
+<div class="mt-5 py-2 p-3">
+	<h1 class="display-4 border-bottom">Retour du terminal</h1>
+	<h2 class="mt-5 display-5">Résultat scan des ports</h2>
+	<div class="mt-5 py-2 overflow-auto">
+		{% if data %}
+		<div><pre>{{data | pprint}}</pre></div>
+		{% endif %}
+	</div>
+</div>
+
+
 
 
 {% endblock content %}

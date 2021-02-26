@@ -13,29 +13,32 @@ def scan_nmap(type_scan, ip, list_of_args) :
 	'''
 
 	result = None
+	args_str = ""
 		
 	if len(list_of_args) != 0 :
-		if 'v4' in list_of_args :
-			if type_scan == 'TCP':
-				
-				result = nmap.nmap_tcp_scan(ip, args="-v4")
+		for arg in list_of_args :
+			args_str = args_str+"-"+arg+" "
 
-			elif type_scan == 'SYN':
-			
-				result = nmap.nmap_syn_scan(ip, args="-v4")
-							
-			elif type_scan == 'UDP':
-			
-				result = nmap.nmap_udp_scan(ip, args="-v4")
-				
-			elif type_scan == 'VERSION':
-			
-				result =  nmap_version.nmap_version_detection(ip)
-			
-			else :
-			
-				return(-1)
-		
+		if type_scan == 'TCP':
+
+			result = nmap.nmap_tcp_scan(ip, args=args_str)
+
+		elif type_scan == 'SYN':
+
+			result = nmap.nmap_syn_scan(ip, args=args_str)
+
+		elif type_scan == 'UDP':
+
+			result = nmap.nmap_udp_scan(ip, args=args_str)
+
+		elif type_scan == 'VERSION':
+
+			result =  nmap_version.nmap_version_detection(ip)
+
+		else :
+
+			return(-1)
+
 		return result
 	
 	else :

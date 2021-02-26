@@ -63,7 +63,7 @@ class Selection_entree(forms.Form):
     )
 
     scan_wanted = forms.ChoiceField(choices=SCAN_CHOICES, label=False,
-                                    widget=forms.RadioSelect(), required=False)
+                                    widget=forms.RadioSelect(), required=True)
 
 
 class Type_var_metasploit(forms.Form):
@@ -104,6 +104,7 @@ class Choice_module(forms.Form):
 class Checkbox_args_entree(forms.Form):
     ARGUMENTS = (
         ('v4', 'IPv4'),
+        ('p-', 'Scan forced on all ports (1-65535)')
     )
 
     arguments_checkbox = forms.MultipleChoiceField(choices=ARGUMENTS, label=False,

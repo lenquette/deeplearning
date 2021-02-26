@@ -719,7 +719,7 @@ def crafter_visu(request):
 
         data_scan, client, console = script_automate_scan()
 
-        if data_scan is not None:
+        if len(data_scan) != 0:
             flag_success_scan = "True"
             return render(request, 'dashboard/home/exploitcrafter_console.html',
                           {'flag_success_scan': flag_success_scan,
@@ -736,7 +736,7 @@ def crafter_visu(request):
 
         client, sessions_created = script_automate_exploit(data_scan, client, console)
 
-        if len(client.sessions.list) != 0:
+        if sessions_created != -1:
 
             # pdb.set_trace()
 

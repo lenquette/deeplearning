@@ -103,8 +103,8 @@ def main_config_payload(chosen_option, val, type_val, payload):
 def main_exe_exploit(payload, exploit, client):
     #print(payload.runoptions)
     #print(exploit.runoptions)
-    #import pdb
-    #pdb.set_trace()
+    # import pdb
+    # pdb.set_trace()
     print(client)
     json_exploit = exploit.execute(payload=payload)
     time.sleep(15)

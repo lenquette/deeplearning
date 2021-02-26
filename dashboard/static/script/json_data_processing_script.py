@@ -1,6 +1,7 @@
 import json
 import sys
 import os
+import re
 from os.path import dirname, abspath
 from pass_crypt import uncrypt_json
 import pickle
@@ -21,13 +22,13 @@ def look_for_port():
 
     @return:list of vulnerable port AND list of tuple of vulnerable ip associated and related port
     '''
-    port = ['21', '445', '4848']
+    port = ['161', '445', '1617', '8020']
     ip_addr = [*nmap_data][:-2]
     port_vuln = []
     ip_vuln = []
     for port_num in port:
         for ip in ip_addr:
-            if port_num in json.dumps(nmap_data[ip]):
+            if re.search(r'\b{}\b'.format(port_num),json.dumps(nmap_data[ip])):
                 port_vuln.append(port_num)
                 ip_vuln.append((ip, port_num))
     return port_vuln, ip_vuln

@@ -26,30 +26,30 @@
 <body class="h-100">
 
 	<header class="masthead mb-auto">
-	<div class="w-100"> <!-- Else "container-fluid" but doesn't work properly ... -->
-	<nav class="navbar navbar-expand-md navbar-dark bg-secondary bg-gradient "> <!-- style="
-	background-image: url('https://images.unsplash.com/photo-1511447333015-45b65e60f6d5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80');
-	height:" -->
-	<a class="navbar-brand p-3" href="{% url 'dashboard:home_page' %}">Hack Toolbox</a>
-	<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-	<span class="navbar-toggler-icon"></span>
-	</button>
-	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-	<ul class="navbar-nav mr-auto">
-	<li class="nav-item dropdown">
-	<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">Outils</a>
-	<div class="dropdown-menu">
-	<a class="dropdown-item" href="{% url 'dashboard:external' %}">Test</a>
-	<a class="dropdown-item" href="{% url 'dashboard:nmap_visu' %}">Nmap</a>
-	<a class="dropdown-item" href="{% url 'dashboard:metasploit_visu' %}">Metasploit</a>
-	<a class="dropdown-item" href="{% url 'dashboard:crafter_visu' %}">Session crafter</a>
-	</div>
-	</li>
-	<li class="nav-item"><a class="nav-link" href="{% url 'dashboard:apropos' %}">À propos</a></li>
-	</ul>
-	</div>
-	</nav>
-	</div>
+		<div class="w-100"> <!-- Else "container-fluid" but doesn't work properly ... -->
+			<nav class="navbar navbar-expand-md navbar-dark bg-secondary bg-gradient "> <!-- style="
+		background-image: url('https://images.unsplash.com/photo-1511447333015-45b65e60f6d5?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=1000&q=80');
+		height:" -->
+				<a class="navbar-brand p-3" href="{% url 'dashboard:home_page' %}">Hack Toolbox</a>
+				<button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+				<div class="collapse navbar-collapse" id="navbarSupportedContent">
+					<ul class="navbar-nav mr-auto">
+						<li class="nav-item dropdown">
+							<a class="nav-link dropdown-toggle" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" role="button">Outils</a>
+							<div class="dropdown-menu">
+								<a class="dropdown-item" href="{% url 'dashboard:external' %}">Test</a>
+								<a class="dropdown-item" href="{% url 'dashboard:nmap_visu' %}">Nmap</a>
+								<a class="dropdown-item" href="{% url 'dashboard:metasploit_visu' %}">Metasploit</a>
+								<a class="dropdown-item" href="{% url 'dashboard:crafter_visu' %}">Session crafter</a>
+							</div>
+						</li>
+						<li class="nav-item"><a class="nav-link" href="{% url 'dashboard:apropos' %}">À propos</a></li>
+					</ul>
+				</div>
+			</nav>
+		</div>
 	</header>
      	
      	

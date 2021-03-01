@@ -4,7 +4,7 @@
 {% block content %}
 <form method="post" class="form-group text-left">
     <div class="mt-5 py-2 p-3">
-        <h1>Prompt de la console</h1>
+        <h1 class="border-bottom" style="max-width: 40%">Prompt de la console</h1>
     </div>
     <div class="bg-primary bg-gradient rounded-3 p-3" style="max-width: 40%">
         <p class="py-2">Indiquer le commande à rentrer</p>
@@ -20,7 +20,7 @@
 
 <div>
     <div class="mt-5 py-2 p-3">
-        <h1>Output de la console</h1>
+        <h1 class="border-bottom" style="max-width: 40%">Output de la console</h1>
     </div>
     <div class="overflow-auto border border-dark p-3 list-unstyled mt-2" style="max-width: 60%; max-height: 500px;">
         <pre>{{ output }}</pre>

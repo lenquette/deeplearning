@@ -3,57 +3,54 @@
 
 {% block content %}  
 
-<form method="post" class="form-group text-left">
-	
-	<div class="mt-5 py-2 p-3"  style="max-width: 30%">
-		<h1 class=" border-bottom">Type de scan</h1>
-	</div>
-	<div class="mt-2 py-2 p-3 bg-primary bg-gradient rounded-3" style="max-width: 30%">
-<!--	<input type=“text“ name=“param“> -->
-		{{type_scan}}
-		{{type_scan_val}}
-	</div>
-	
-	<div class="mt-5 py-2 p-3"  style="max-width: 30%">
-		<h1 class=" border-bottom">Arguments supplémentaires</h1>
-	</div>
-	<div class="mt-2 py-2 p-3 bg-primary bg-gradient rounded-3" style="max-width: 30%">
-		{{arguments}}
-		{# display argument choosen after lauching the script #}
-		{% if arguments_val %}
-			{% for arguments_val in arguments_val|safeseq %}
-				{{ arguments_val }}
-			{% endfor %}
-		{% endif %}
-	</div>
-	
-	<div class="mt-5 py-2 p-3"  style="max-width: 30%">
-		<h1 class="border-bottom">Adresse IP de la cible</h1>
-	</div>
-	<div class="mt-2 py-2 p-3 bg-primary bg-gradient rounded-3" style="max-width: 30%">
-		<p class="py-2">Entrez l'adresse IP de la cible</p>
-		{{ip_cible}}
-		{{ip_cible_val}}
-	</div>
-	
+	<form method="post" class="form-group text-left">
+
+		<div class="mt-5 py-2 p-3"  style="max-width: 30%">
+			<h1 class=" border-bottom">Type de scan</h1>
+		</div>
+		<div class="mt-2 py-2 p-3 bg-primary bg-gradient rounded-3" style="max-width: 30%">
+	<!--	<input type=“text“ name=“param“> -->
+			{{type_scan}}
+			{{type_scan_val}}
+		</div>
+
+		<div class="mt-5 py-2 p-3"  style="max-width: 30%">
+			<h1 class=" border-bottom">Arguments supplémentaires</h1>
+		</div>
+		<div class="mt-2 py-2 p-3 bg-primary bg-gradient rounded-3" style="max-width: 30%">
+			{{arguments}}
+			{# display argument choosen after lauching the script #}
+			{% if arguments_val %}
+				{% for arguments_val in arguments_val|safeseq %}
+					{{ arguments_val }}
+				{% endfor %}
+			{% endif %}
+		</div>
+
+		<div class="mt-5 py-2 p-3"  style="max-width: 30%">
+			<h1 class="border-bottom">Adresse IP de la cible</h1>
+		</div>
+		<div class="mt-2 py-2 p-3 bg-primary bg-gradient rounded-3" style="max-width: 30%">
+			<p class="py-2">Entrez l'adresse IP de la cible</p>
+			{{ip_cible}}
+			{{ip_cible_val}}
+		</div>
+
+		<div class="mt-5 py-2 p-3">
+		{% csrf_token %}
+		<button type="submit" name="run_script" class="btn btn-primary btn-lg">Run script</button>
+		</div>
+	</form>
+
 	<div class="mt-5 py-2 p-3">
-	{% csrf_token %}
-	<button type="submit" name="run_script" class="btn btn-primary btn-lg">Run script</button>
+		<h1 class="border-bottom" style="max-width: 30%">Retour du terminal</h1>
+		<h2 class="mt-5">Résultat scan des ports</h2>
+		<div class="mt-5 py-2 overflow-auto">
+			{% if data %}
+			<div><pre>{{data | pprint}}</pre></div>
+			{% endif %}
+		</div>
 	</div>
-</form>
-
-<div class="mt-5 py-2 p-3">
-	<h1 class="border-bottom" style="max-width: 30%">Retour du terminal</h1>
-	<h2 class="mt-5">Résultat scan des ports</h2>
-	<div class="mt-5 py-2 overflow-auto">
-		{% if data %}
-		<div><pre>{{data | pprint}}</pre></div>
-		{% endif %}
-	</div>
-</div>
-
-
-
 
 {% endblock content %}
 

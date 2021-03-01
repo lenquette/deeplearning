@@ -15,8 +15,6 @@ ProjectFileDir = os.path.dirname(os.path.abspath(__file__))
 DashboardScriptDir = os.path.join(ProjectFileDir, 'static/script/')
 sys.path.append(DashboardScriptDir)
 
-print(DashboardScriptDir)
-
 
 # Create your views here.
 
@@ -37,7 +35,8 @@ def apropos(request):
     '''
     return render(request, 'dashboard/home/apropos.html', {})
 
-@cache_control(no_cache=True, must_revalidate=True, no_store=True) #flush the cache page
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)  # flush the cache page
 def external(request):
     '''
 
@@ -63,6 +62,7 @@ def external(request):
             return render(request, 'dashboard/home/test.html', {'form': form, 'data': data})
 
     return render(request, 'dashboard/home/test.html', {'form': form})
+
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def nmap_visu(request):
@@ -110,6 +110,7 @@ def nmap_visu(request):
 
     return render(request, 'dashboard/home/nmap_console.html',
                   {'type_scan': type_scan, 'ip_cible': ip_cible, 'arguments': arguments})
+
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def metasploit_visu(request):
@@ -685,6 +686,7 @@ def metasploit_visu(request):
                                                                                  'output': output})
 
     return render(request, 'dashboard/home/metasploit_console.html', {})
+
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def crafter_visu(request):

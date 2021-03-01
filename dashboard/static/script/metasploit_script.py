@@ -1,13 +1,20 @@
 from pymetasploit3.msfrpc import MsfRpcClient, MsfConsole
 import time
+
+
 def main_connection():
     # ip = "127.0.0.1"
     # user = "msf"
     passwd = '1234LOL'
-    client = MsfRpcClient(passwd, port=55552)
-    console = MsfConsole(client)
-    print(client)
+    try:
+        client = MsfRpcClient(passwd, port=55552)
+        console = MsfConsole(client)
+        print(client)
+    except:
+        client = -1
+        console = -1
     return client, console
+
 
 def main_display_exploit(client):
     list_of_exploit = client.modules.exploits
@@ -27,7 +34,7 @@ def main_run_exploit(chosen_exploit, client):
         return -1
 
 
-def main_run_auxiliary(chosen_auxiliary,client):
+def main_run_auxiliary(chosen_auxiliary, client):
     try:
         auxiliary = client.modules.use('auxiliary', chosen_auxiliary)
         return auxiliary
@@ -52,7 +59,6 @@ def main_change_option_exploit(choosen_option, arg, type_val, exploit):
         return -1
 
 
-
 def main_change_option_auxiliary(choosen_option, arg, type_val, auxiliary):
     try:
         if type_val == "INT":
@@ -70,13 +76,11 @@ def main_change_option_auxiliary(choosen_option, arg, type_val, auxiliary):
         return -1
 
 
-
 def main_see_payload(exploit):
     return exploit.targetpayloads()
 
 
 def main_choose_payload(chosen_payload, client):
-
     try:
         payload = client.modules.use('payload', chosen_payload)
         return payload
@@ -101,14 +105,14 @@ def main_config_payload(chosen_option, val, type_val, payload):
 
 
 def main_exe_exploit(payload, exploit, client):
-    #print(payload.runoptions)
-    #print(exploit.runoptions)
+    # print(payload.runoptions)
+    # print(exploit.runoptions)
     # import pdb
     # pdb.set_trace()
     print(client)
     json_exploit = exploit.execute(payload=payload)
     time.sleep(15)
-    #print(client.sessions.list)
+    # print(client.sessions.list)
     try:
 
         session_num_list = [*client.sessions.list]
@@ -119,10 +123,11 @@ def main_exe_exploit(payload, exploit, client):
     except:
         return -1, -1
 
+
 def main_enter_console_for_scan(auxiliary, ip, console):
     # import pdb
     # pdb.set_trace()
-    try :
+    try:
         console.write('use ' + auxiliary)
         console.write('set RHOSTS ' + ip)
         console.write('run')
@@ -130,6 +135,7 @@ def main_enter_console_for_scan(auxiliary, ip, console):
         return console.read()
     except:
         return -1
+
 
 def main_exe_auxiliary(auxiliary, client):
     json_auxiliary = auxiliary.execute()
@@ -145,8 +151,7 @@ def main_exe_auxiliary(auxiliary, client):
 
 
 def main_run_prompt(cmd, session):
-
-    if "Meterpreter" in str(type(session)) :
+    if "Meterpreter" in str(type(session)):
         terminating_strs = ['----END----']
         return session.run_with_output(cmd, terminating_strs, timeout=10, timeout_exception=False)
     # 10 seconds max
@@ -155,12 +160,10 @@ def main_run_prompt(cmd, session):
         session.write(cmd)
         return session.read()
 
+
 def main_enter_console_manual(list_of_string, console):
     for string in list_of_string:
         console.write(string)
         while console.is_busy():
             time.sleep(1)
     return 0
-
-
-

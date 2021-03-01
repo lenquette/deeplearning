@@ -1,4 +1,5 @@
 import nmap3
+import pdb
 
 nmap = nmap3.NmapScanTechniques()
 nmap_version = nmap3.Nmap()
@@ -12,7 +13,6 @@ def scan_nmap(type_scan, ip, list_of_args) :
 	@return: the result of the scan as a json
 	'''
 
-	result = None
 	args_str = ""
 		
 	if len(list_of_args) != 0 :
@@ -33,7 +33,7 @@ def scan_nmap(type_scan, ip, list_of_args) :
 
 		elif type_scan == 'VERSION':
 
-			result =  nmap_version.nmap_version_detection(ip)
+			result = nmap_version.nmap_version_detection(ip, args=args_str)
 
 		else :
 

@@ -14,13 +14,13 @@
 			{% csrf_token %}
 			{{form}}
 		</div>
+
+
+		<div class="mt-5 py-2 p-3">
+			{% csrf_token %}
+			<button type="submit" name="run_script" class="btn btn-primary btn-lg">Run script</button>
+		</div>
 	</form>
-
-	<div class="mt-5 py-2 p-3">
-		{% csrf_token %}
-		<button type="submit" name="run_script" class="btn btn-primary btn-lg">Run script</button>
-	</div>
-
 	<div class="mt-5 py-2 p-3">
 		<h1>The answer</h1>
 	</div>

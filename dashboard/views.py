@@ -128,12 +128,14 @@ def metasploit_visu(request):
     global flag_error
     global flag_auxiliary_ready_to_run
     global flag_choice
+    global flag_payload_value
 
     # global var
     global module_choice
     global session
     global client
     global console
+    global status_connection
 
     # global form
     global list_of_module
@@ -177,13 +179,18 @@ def metasploit_visu(request):
         # call function
         client, console = main_connection()
 
-        if client is not None:
+        if client != -1:
             flag_connection = "connected"
+            status_connection = "connected"
+
+        else:
+            flag_connection = None
+            status_connection = "échec"
 
         # renderer
         return render(request, 'dashboard/home/metasploit_console.html',
                       {'flag_connection': flag_connection, 'champ_de_recherche': champ_de_recherche,
-                       'type_module': type_module})
+                       'type_module': type_module, 'status_connection': status_connection})
 
     ##############################PRE-SELECTION MODULE'S TYPE ###############################
     if request.method == 'POST' and 'run_display_module' in request.POST:
@@ -211,7 +218,7 @@ def metasploit_visu(request):
         return render(request, 'dashboard/home/metasploit_console.html',
                       {'flag_connection': flag_connection, 'list_of_module': list_of_module,
                        'champ_de_recherche': champ_de_recherche, 'type_module': type_module,
-                       'flag_choice': flag_choice})
+                       'flag_choice': flag_choice, 'status_connection': status_connection})
 
     #################################SELECTION OF ATTACK'S MOODULE###################
     if champ_de_recherche.is_valid() and request.method == 'POST' and 'run_search' in request.POST:
@@ -244,7 +251,7 @@ def metasploit_visu(request):
                           {'flag_connection': flag_connection, 'new_list': new_list,
                            'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
                            'champ_du_run': champ_du_run, 'type_module': type_module,
-                           'flag_choice': flag_choice})
+                           'flag_choice': flag_choice, 'status_connection': status_connection})
 
         ######################################AUXILIARY SECTION##################################
         elif module_choice == "AUXILIARY":
@@ -274,7 +281,7 @@ def metasploit_visu(request):
                           {'flag_connection': flag_connection, 'new_list': new_list,
                            'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
                            'champ_du_run': champ_du_run, 'type_module': type_module,
-                           'flag_choice': flag_choice})
+                           'flag_choice': flag_choice, 'status_connection': status_connection})
 
     #######################################CHOICE MODULE IN LIST###############################
     if champ_de_recherche.is_valid() and champ_du_run.is_valid() and type_de_var.is_valid() and request.method == 'POST' and 'run_run' in request.POST:
@@ -299,7 +306,7 @@ def metasploit_visu(request):
                               {'flag_connection': flag_connection, 'new_list': new_list,
                                'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
                                'champ_du_run': champ_du_run, 'type_module': type_module,
-                               'flag_choice': flag_choice})
+                               'flag_choice': flag_choice, 'status_connection': status_connection})
 
             else:
                 # checked pseudo~~~flag
@@ -319,7 +326,7 @@ def metasploit_visu(request):
                                'champ_de_l_option': champ_de_l_option,
                                'champ_de_l_arg_de_option': champ_de_l_arg_de_option, 'type_de_var': type_de_var,
                                'type_module': type_module,
-                               'flag_choice': flag_choice})
+                               'flag_choice': flag_choice, 'status_connection': status_connection})
 
         ######################################AUXILIARY SECTION##################################
         elif module_choice == "AUXILIARY":
@@ -339,7 +346,8 @@ def metasploit_visu(request):
                                'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
                                'champ_du_run': champ_du_run,
                                'type_module': type_module,
-                               'flag_choice': flag_choice})
+                               'flag_choice': flag_choice,
+                               'status_connection': status_connection})
 
             else:
                 # checked pseudo~~~flag
@@ -359,7 +367,8 @@ def metasploit_visu(request):
                                'champ_de_l_option': champ_de_l_option,
                                'champ_de_l_arg_de_option': champ_de_l_arg_de_option, 'type_de_var': type_de_var,
                                'type_module': type_module,
-                               'flag_choice': flag_choice})
+                               'flag_choice': flag_choice,
+                               'status_connection': status_connection})
 
     #######################################CONFIG MODULE###############################
     if champ_de_recherche.is_valid() and champ_du_run.is_valid() and type_de_var.is_valid() and champ_de_l_option.is_valid() and request.method == 'POST' and 'run_option' in request.POST:
@@ -392,7 +401,8 @@ def metasploit_visu(request):
                                'champ_de_l_option': champ_de_l_option,
                                'champ_de_l_arg_de_option': champ_de_l_arg_de_option, 'type_de_var': type_de_var,
                                'type_module': type_module,
-                               'flag_choice': flag_choice})
+                               'flag_choice': flag_choice,
+                               'status_connection': status_connection})
 
             else:
 
@@ -421,7 +431,8 @@ def metasploit_visu(request):
                                'type_de_var': type_de_var, 'module_targetpayload': module_targetpayload,
                                'champ_du_payload': champ_du_payload,
                                'type_module': type_module,
-                               'flag_choice': flag_choice})
+                               'flag_choice': flag_choice,
+                               'status_connection': status_connection})
 
         ######################################AUXILIARY SECTION####################################
         elif module_choice == "AUXILIARY":
@@ -450,7 +461,8 @@ def metasploit_visu(request):
                                'champ_de_l_arg_de_option': champ_de_l_arg_de_option,
                                'type_de_var': type_de_var,
                                'type_module': type_module,
-                               'flag_choice': flag_choice})
+                               'flag_choice': flag_choice,
+                               'status_connection': status_connection})
 
             else:
 
@@ -480,7 +492,8 @@ def metasploit_visu(request):
                                'flag_auxiliary_ready_to_run': flag_auxiliary_ready_to_run,
                                'type_de_var': type_de_var,
                                'type_module': type_module,
-                               'flag_choice': flag_choice})
+                               'flag_choice': flag_choice,
+                               'status_connection': status_connection})
 
     #######################################PAYLOAD CHOICE###############################
     if champ_de_recherche.is_valid() and champ_du_run.is_valid() and type_de_var.is_valid() and champ_de_l_option.is_valid() and type_de_var_payload.is_valid() and champ_de_la_config_payload.is_valid() and champ_de_la_val_de_la_config_payload.is_valid() and request.method == 'POST' and 'run_payload_choice' in request.POST:
@@ -503,7 +516,8 @@ def metasploit_visu(request):
                            'type_de_var': type_de_var, 'module_targetpayload': module_targetpayload,
                            'champ_du_payload': champ_du_payload,
                            'type_module': type_module,
-                           'flag_choice': flag_choice})
+                           'flag_choice': flag_choice,
+                           'status_connection': status_connection})
 
         else:
             # checked pseudo~~~flag
@@ -531,7 +545,8 @@ def metasploit_visu(request):
                            'payload_missing_required': payload_missing_required,
                            'type_de_var_payload': type_de_var_payload, 'flag_payload': flag_payload,
                            'type_module': type_module,
-                           'flag_choice': flag_choice})
+                           'flag_choice': flag_choice,
+                           'status_connection': status_connection})
 
     #######################################CONFIG PAYLOAD###############################
     if champ_de_recherche.is_valid() and champ_du_run.is_valid() and type_de_var.is_valid() and champ_de_l_option.is_valid() and type_de_var_payload.is_valid() and champ_de_la_config_payload.is_valid() and champ_de_la_val_de_la_config_payload.is_valid() and request.method == 'POST' and 'run_payload_option' in request.POST:
@@ -568,7 +583,8 @@ def metasploit_visu(request):
                            'payload_missing_required': payload_missing_required,
                            'type_de_var_payload': type_de_var_payload, 'flag_payload': flag_payload,
                            'type_module': type_module,
-                           'flag_choice': flag_choice})
+                           'flag_choice': flag_choice,
+                           'status_connection': status_connection})
 
         else:
 
@@ -601,7 +617,8 @@ def metasploit_visu(request):
                            'payload_missing_required': payload_missing_required,
                            'flag_payload': flag_payload, 'flag_payload_value': flag_payload_value,
                            'type_module': type_module,
-                           'flag_choice': flag_choice})
+                           'flag_choice': flag_choice,
+                           'status_connection': status_connection})
 
     #######################################RUN EXPLOIT AND HACK###############################
     if champ_de_recherche.is_valid() and champ_du_run.is_valid() and type_de_var.is_valid() and champ_de_l_option.is_valid() and request.method == 'POST' and 'run_exploit' in request.POST:
@@ -634,8 +651,9 @@ def metasploit_visu(request):
                            'champ_de_la_val_de_la_config_payload': champ_de_la_val_de_la_config_payload,
                            'type_de_var_payload': type_de_var_payload, 'payload_runoptions': payload_runoptions,
                            'flag_payload': flag_payload, 'error': error, 'flag_error': flag_error,
-                           'type_module': type_module,
-                           'flag_choice': flag_choice})
+                           'type_module': type_module, 'flag_payload_value': flag_payload_value,
+                           'flag_choice': flag_choice,
+                           'status_connection': status_connection})
         else:
             return render(request, 'dashboard/home/metasploit_console_prompt.html',
                           {'champ_du_prompt': champ_du_prompt})
@@ -665,7 +683,8 @@ def metasploit_visu(request):
                            'flag_auxiliary_ready_to_run': flag_auxiliary_ready_to_run,
                            'error': error, 'flag_error': flag_error,
                            'type_module': type_module,
-                           'flag_choice': flag_choice})
+                           'flag_choice': flag_choice,
+                           'status_connection': status_connection})
 
         else:
             return render(request, 'dashboard/home/metasploit_console_prompt.html',
@@ -757,6 +776,7 @@ def crafter_visu(request):
             error = 'Any session was created'
             return render(request, 'dashboard/home/exploitcrafter_console.html', {flag_error: 'flag_error',
                                                                                   'data_scan': data_scan,
+                                                                                  'flag_success_scan': flag_success_scan,
                                                                                   error: 'error'})
 
     if champ_de_l_id.is_valid() and request.method == 'POST' and 'run_script_session' in request.POST:
@@ -776,6 +796,10 @@ def crafter_visu(request):
             error = 'Bad Id session'
             return render(request, 'dashboard/home/exploitcrafter_console.html', {flag_error: 'flag_error',
                                                                                   'data_scan': data_scan,
+                                                                                  'flag_success_scan': flag_success_scan,
+                                                                                  'data_exploit': data_exploit,
+                                                                                  'flag_success_exploit': flag_success_exploit,
+                                                                                  'champ_de_l_id': champ_de_l_id,
                                                                                   error: 'error'})
 
         #######################################PROMPT COMMANDE###############################

@@ -63,7 +63,7 @@ class Selection_entree(forms.Form):
     )
 
     scan_wanted = forms.ChoiceField(choices=SCAN_CHOICES, label=False,
-                                    widget=forms.RadioSelect(), required=True)
+                                    widget=forms.RadioSelect(attrs={'class': 'list-unstyled'}), required=True)
 
 
 class Type_var_metasploit(forms.Form):
@@ -74,7 +74,7 @@ class Type_var_metasploit(forms.Form):
     )
 
     type_wanted = forms.ChoiceField(choices=SCAN_CHOICES, label=False,
-                                    widget=forms.RadioSelect(),
+                                    widget=forms.RadioSelect(attrs={'class': 'list-unstyled'}),
                                     required=False)
 
 
@@ -86,7 +86,7 @@ class Type_var_payload_metasploit(forms.Form):
     )
 
     type_payload_wanted = forms.ChoiceField(choices=SCAN_CHOICES, label=False,
-                                            widget=forms.RadioSelect(),
+                                            widget=forms.RadioSelect(attrs={'class': 'list-unstyled'}),
                                             required=False)
 
 
@@ -97,7 +97,7 @@ class Choice_module(forms.Form):
     )
 
     module_wanted = forms.ChoiceField(choices=MODULES_CHOICES, label=False,
-                                      widget=forms.RadioSelect(),
+                                      widget=forms.RadioSelect(attrs={'class': 'list-unstyled'}),
                                       required=True)
 
 
@@ -108,7 +108,7 @@ class Checkbox_args_entree(forms.Form):
     )
 
     arguments_checkbox = forms.MultipleChoiceField(choices=ARGUMENTS, label=False,
-                                                   widget=forms.CheckboxSelectMultiple(),
+                                                   widget=forms.CheckboxSelectMultiple(attrs={'class': 'list-unstyled'}),
                                                    required=False)
 
 

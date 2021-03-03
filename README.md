@@ -33,7 +33,7 @@ To use metasploit's module, enter the following commands :
 
 In order to use the "Session Crafter", there are several actions to do.
 
-First write the following commande lines in a python shell :
+First, write the following commande lines in a python shell :
 
 		from selenium import webdriver
 		from webdriver_manager.firefox import GeckoDriverManager

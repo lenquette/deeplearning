@@ -5,6 +5,7 @@ import re
 from os.path import dirname, abspath
 from pass_crypt import uncrypt_json
 import pickle
+import pdb
 
 # add pinckle's location folder
 ProjectFileDirParent = dirname(dirname(abspath(__file__)))
@@ -83,3 +84,34 @@ def session_organised_exploit(json_session):
         organised_liste.append(
             'n° id ' + num + ' ; ' + 'exploit utilisé : ' + exploit + ' ; ' + 'type d\'OS : ' + os + ' ; ' + 'adresse ip : ' + ip)
     return organised_liste
+
+
+def get_port_id_and_name():
+    ip_addr = [*nmap_data][:-2]
+    port_id = ""
+    service_name = ""
+    data = []
+
+    # pdb.set_trace()
+    for ip in ip_addr:
+        for port in nmap_data[ip]['ports']:
+            port_id = port['portid']
+            try:
+                service_name = port['service']['product'] + ' / ' +  port['service']['version'] + ' / ' + port['service']['name']
+            except:
+                try:
+                    service_name = port['service']['product'] + ' / ' + ' / ' + port['service']['name']
+                except:
+                    try:
+                        service_name = port['service']['name'] + ' / ' +  port['service']['version']
+                    except:
+                        try:
+                            service_name = port['service']['name']
+                        except:
+                            service_name = 'no_retrieve'
+            data.append((port_id, service_name))
+
+    return data
+
+
+print(get_port_id_and_name())

@@ -1,5 +1,7 @@
 from pymetasploit3.msfrpc import MsfRpcClient, MsfConsole
 import time
+import jellyfish
+import pdb
 
 
 def main_connection():
@@ -167,3 +169,109 @@ def main_enter_console_manual(list_of_string, console):
         while console.is_busy():
             time.sleep(1)
     return 0
+
+
+def retrieve_exploit_from_db_info(list_of_rows, client):
+    '''
+
+    @param list_of_rows: list of the row extracted from exploitdb after a research
+    @param client: rpc metasploit client
+    @return: possible exploit according to the database of exploitdb
+    '''
+    # define keyword global
+    keyword_global = ['SMB', 'smb', 'Smb']  # 'Windows', 'windows', 'WINDOWS', 'Server', 'SERVER', 'server',
+    keyword_special = ['ms17', 'Ms17', 'MS17', 'JMX', 'jmx', 'Jmx', 'RMI', 'rmi', 'Rmi', "manageengine", "MANAGEENGINE",
+                       "ManageEngine"]
+
+    # pdb.set_trace()
+    # define data row's container
+    ## variables of the row
+    row_data = {}
+    global_keyword_list = []
+    special_keyword_list = []
+
+    ## variables of the rows
+    id_row = 1
+    rows_data = {}
+
+    # create the dictionary of the rows
+    # seek word key global and special in rows' data and store it
+    for row in list_of_rows:
+        for item in row:
+            for keyword in keyword_global:
+                if keyword in item:
+                    global_keyword_list.append(keyword)
+            for keyword in keyword_special:
+                if keyword in item:
+                    special_keyword_list.append(keyword)
+
+            # pdb.set_trace()
+
+            if len(special_keyword_list) != 0:
+                row_data['global'] = global_keyword_list
+                row_data['special'] = special_keyword_list
+                rows_data[str(id_row)] = row_data
+
+                # reset variable of the row
+                row_data = {}
+                global_keyword_list = []
+                special_keyword_list = []
+
+            # increment the id_row
+            id_row = id_row + 1
+
+    # pdb.set_trace()
+    # if nothing is found ...
+    if len(rows_data) == 0:
+        return -1
+
+    # seek the relative exploit for each row (forged on rows_data)
+
+    # create new list
+    new_list = []
+    end_list = []
+    # miles_dist = []
+    exploits_chosen = []
+
+    # generate list_of exploit
+    list_of_exploit = main_display_exploit(client)
+
+
+    for row in rows_data.items():
+        # first search with the global to reduce the loss of time (cause we are going to use damerau levenshtein distance's algorithm after)
+        for keyword in row[1]["global"]:
+            for exploit in list_of_exploit:
+                if keyword.lower() in exploit and exploit not in new_list:
+                    new_list.append(exploit)
+    #pdb.set_trace()
+
+    #if no global was set, new_list is empty !!!!!!
+    if len(new_list) == 0:
+        new_list = list_of_exploit
+
+    # then search special keyword
+    for row in rows_data.items():
+        for keyword in row[1]["special"]:
+            for remaining in new_list:
+                    if keyword.lower() in remaining and remaining not in end_list:
+                        end_list.append(remaining)
+
+    # calculate damerau_levenshtein
+    # new_word = remaining.split('/')[-1]
+    # dist = jellyfish.damerau_levenshtein_distance(keyword.lower(), new_word)
+    # if dist == len(new_word):
+    #     # affect a value so this exploit would never be chosen
+    #     dist = 1000
+    # miles_dist.append(dist)
+    # pdb.set_trace()
+    # index = miles_dist.index(min(miles_dist))
+    # exploits_chosen.append(new_list[index])
+    exploits_chosen = end_list
+
+    return exploits_chosen
+
+
+client, console = main_connection()
+
+print(retrieve_exploit_from_db_info([['2015-02-17', 'Java JMX - Server Insecure Configuration Java Code Execution (Metasploit)', 'remote', 'Java', 'Metasploit']]
+,client))

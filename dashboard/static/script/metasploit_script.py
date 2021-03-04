@@ -204,6 +204,10 @@ def retrieve_exploit_from_db_info(list_of_rows, client):
             for keyword in keyword_special:
                 if keyword in item:
                     special_keyword_list.append(keyword)
+                    ###########################################CORRELATION PART !!!!!!!#################################
+                    ######CORRELATION RMI-JMX##################
+                    if keyword in ['RMI', 'rmi', 'Rmi']:
+                        special_keyword_list.append('JMX')
 
             # pdb.set_trace()
 
@@ -271,7 +275,7 @@ def retrieve_exploit_from_db_info(list_of_rows, client):
     return exploits_chosen
 
 
-client, console = main_connection()
-
-print(retrieve_exploit_from_db_info([['2015-02-17', 'Java JMX - Server Insecure Configuration Java Code Execution (Metasploit)', 'remote', 'Java', 'Metasploit']]
-,client))
+# client, console = main_connection()
+#
+# print(retrieve_exploit_from_db_info([['2015-02-17', 'Java JMX - Server Insecure Configuration Java Code Execution (Metasploit)', 'remote', 'Java', 'Metasploit']]
+# ,client))

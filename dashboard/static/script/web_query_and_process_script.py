@@ -54,6 +54,6 @@ def retrieve_from_html_exploitdb(data):
     return output_rows
 
 
-data = exploitdb_query('Java JMX')
-output = retrieve_from_html_exploitdb(data)
-print(output)
+# data = exploitdb_query('Java JMX')
+# output = retrieve_from_html_exploitdb(data)
+# print(output)

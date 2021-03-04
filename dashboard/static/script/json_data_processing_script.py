@@ -87,6 +87,10 @@ def session_organised_exploit(json_session):
 
 
 def get_port_id_and_name():
+    '''
+
+    @return: list of tuple, according to nmap_data, which is arranged like that : [('port', 'product / version / name '),...]
+    '''
     ip_addr = [*nmap_data][:-2]
     port_id = ""
     service_name = ""
@@ -97,21 +101,110 @@ def get_port_id_and_name():
         for port in nmap_data[ip]['ports']:
             port_id = port['portid']
             try:
-                service_name = port['service']['product'] + ' / ' +  port['service']['version'] + ' / ' + port['service']['name']
+                service_name = port['service']['product'] + ' / ' + port['service']['version'] + ' / ' + \
+                               port['service']['name']
             except:
                 try:
                     service_name = port['service']['product'] + ' / ' + ' / ' + port['service']['name']
                 except:
                     try:
-                        service_name = port['service']['name'] + ' / ' +  port['service']['version']
+                        service_name = port['service']['name'] + ' / ' + port['service']['version']
                     except:
                         try:
                             service_name = port['service']['name']
                         except:
                             service_name = 'no_retrieve'
-            data.append((port_id, service_name))
+            data.append([port_id, service_name])
 
     return data
 
 
-print(get_port_id_and_name())
+def create_requete_for_exploitdb(data):
+    list_of_requete = []
+
+    for liste in data:
+
+        # pdb.set_trace()
+        # create list relative au data for the query
+        list_of_data_list = liste[1].split(' / ')
+
+        # if there is only one data
+        if len(list_of_data_list) == 1:
+            list_of_requete.append(list_of_data_list[0])
+
+        else:
+            # treat product by removing name with only min (better search for exploitdb)
+            list_product = list_of_data_list[0].split(' ')
+            for word in list_product:
+                try:
+                    flag = float(word)
+                except:
+                    flag = None
+
+                if flag is None:
+                    if word == word.lower() and word not in '+-=~#!:/.;?,''({})@^$£µ%§|':
+                        list_product.remove(word)
+
+            string_word = ' '.join(list_product)
+            list_of_data_list[0] = string_word
+
+            # treat '-' and keep the first part after split
+            list_product = list_of_data_list[0].split('-')
+            list_of_data_list[0] = list_product[0]
+
+            # print(list_of_data_list)
+            # get the two fisrt number of version if version only contain number
+            version = list_of_data_list[1]
+            try:
+                num_unit = version.split('.')[0]
+                num_deci = version.split('.')[1]
+                string_num = num_unit + '.' + num_deci
+                flag = float(string_num)
+            except:
+                flag = None
+
+            # store the future request
+            if flag is not None:
+                list_of_requete.append(list_of_data_list[0] + ' ' + string_num)
+
+            else:
+                list_of_requete.append(list_of_data_list[0])
+
+    return (list_of_requete)
+
+
+def improve_research(data):
+    '''
+
+    @param data: list of requests already made
+    @return: deleted salt, noisy data and doubled data
+    '''
+
+    # delete doubled data
+    data = list(set(data))
+
+    for query in data:
+        # pdb.set_trace()
+        # suppress noisy data
+        if query == 'unknown':
+            data.remove(query)
+        if query == 'no_retrieve':
+            data.remove(query)
+        if '/' in query:
+            data[data.index(query)] = query.split('/')[0]
+
+    for query in data:
+        ###exception salt###
+        if 'Jenkins' in query:
+            data[data.index(query)] = 'Jenkins'
+
+        if 'ManageEngine Desktop Central' in query:
+            data[data.index(query)] = 'ManageEngine Desktop Central'
+
+    return data
+
+
+# data = get_port_id_and_name()
+# print(data)
+# print("\n")
+# print(create_requete_for_exploitdb(data))

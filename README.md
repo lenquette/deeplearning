@@ -16,6 +16,10 @@
 
 		python3 -m pip install -r requirements.txt
 
+## Poweroff the virtual environment
+
+		deactivate
+
 # Launch programm
 
 		python3 manage.py runserver
@@ -31,7 +35,7 @@ To use metasploit's module, enter the following commands :
 		
 # Automate/Session Crafter
 
-In order to use the "Session Crafter", there are several actions to do.
+In order to use the future version (not released yet) of "Session Crafter", there are several actions to do.
 
 First, write the following commande lines in a python shell :
 

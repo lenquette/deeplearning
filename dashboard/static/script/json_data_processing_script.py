@@ -17,6 +17,12 @@ FileName = os.path.join(DashboardTransitDir, 'filename.pickle')
 with open(FileName, 'rb') as handle:
     nmap_data = uncrypt_json(pickle.load(handle))
 
+def look_for_ip_of_nmap_scan():
+    '''
+
+    @return: list of ip of nmap scan
+    '''
+    return [*nmap_data][:-2]
 
 def look_for_port():
     '''
@@ -86,51 +92,55 @@ def session_organised_exploit(json_session):
     return organised_liste
 
 
-def get_port_id_and_name():
+def get_port_id_and_name(ip_addr):
     '''
 
     @return: list of tuple, according to nmap_data, which is arranged like that : [('port', 'product / version / name '),...]
     '''
-    ip_addr = [*nmap_data][:-2]
+    ################CHECK IF GIVEN IP IS RIGHT#####################
+    ip_addr_list = [*nmap_data][:-2]
+    if ip_addr not in ip_addr_list :
+        return -1
+
     port_id = ""
     service_name = ""
     data = []
 
     # pdb.set_trace()
-    for ip in ip_addr:
-        for port in nmap_data[ip]['ports']:
-            port_id = port['portid']
+    for port in nmap_data[ip_addr]['ports']:
+        port_id = port['portid']
+        try:
+            service_name = port['service']['product'] + ' / ' + port['service']['version'] + ' / ' + \
+                           port['service']['name']
+        except:
             try:
-                service_name = port['service']['product'] + ' / ' + port['service']['version'] + ' / ' + \
-                               port['service']['name']
+                service_name = port['service']['product'] + ' / ' + ' / ' + port['service']['name']
             except:
                 try:
-                    service_name = port['service']['product'] + ' / ' + ' / ' + port['service']['name']
+                    service_name = port['service']['name'] + ' / ' + port['service']['version']
                 except:
                     try:
-                        service_name = port['service']['name'] + ' / ' + port['service']['version']
+                        service_name = port['service']['name']
                     except:
-                        try:
-                            service_name = port['service']['name']
-                        except:
-                            service_name = 'no_retrieve'
-            data.append([port_id, service_name])
+                        service_name = 'no_retrieve'
+        data.append([port_id, service_name])
 
     return data
 
 
 def create_requete_for_exploitdb(data):
-    list_of_requete = []
+    list_of_requete = {}
 
     for liste in data:
 
         # pdb.set_trace()
         # create list relative au data for the query
         list_of_data_list = liste[1].split(' / ')
+        port = liste[0]
 
         # if there is only one data
         if len(list_of_data_list) == 1:
-            list_of_requete.append(list_of_data_list[0])
+            list_of_requete[port] = list_of_data_list[0]
 
         else:
             # treat product by removing name with only min (better search for exploitdb)
@@ -165,10 +175,10 @@ def create_requete_for_exploitdb(data):
 
             # store the future request
             if flag is not None:
-                list_of_requete.append(list_of_data_list[0] + ' ' + string_num)
+                list_of_requete[port] = list_of_data_list[0] + ' ' + string_num
 
             else:
-                list_of_requete.append(list_of_data_list[0])
+                list_of_requete[port] = list_of_data_list[0]
 
     return (list_of_requete)
 
@@ -181,25 +191,36 @@ def improve_research(data):
     '''
 
     # delete doubled data
-    data = list(set(data))
+    port_list = list(set([*data]))
 
-    for query in data:
+
+    for port in port_list:
         # pdb.set_trace()
         # suppress noisy data
-        if query == 'unknown':
-            data.remove(query)
-        if query == 'no_retrieve':
-            data.remove(query)
-        if '/' in query:
-            data[data.index(query)] = query.split('/')[0]
+        try :
+            if data[port] == 'unknown':
+                del data[port]
+        except :
+            a = None
+        try :
+            if data[port] == 'no_retrieve':
+                del data[port]
+        except :
+            a = None
+        try :
+            if '/' in data[port]:
+                # pdb.set_trace()
+                data[port] = data[port].split('/')[0]
+        except:
+            a = None
 
-    for query in data:
+    for port in data:
         ###exception salt###
-        if 'Jenkins' in query:
-            data[data.index(query)] = 'Jenkins'
+        if 'Jenkins' in data[port]:
+            data[port] = 'Jenkins'
 
-        if 'ManageEngine Desktop Central' in query:
-            data[data.index(query)] = 'ManageEngine Desktop Central'
+        if 'ManageEngine Desktop Central' in data[port]:
+            data[port] = 'ManageEngine Desktop Central'
 
     return data
 

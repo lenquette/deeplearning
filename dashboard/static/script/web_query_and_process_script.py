@@ -53,7 +53,7 @@ def retrieve_from_html_exploitdb(data):
 
     return output_rows
 
-
+#################################################TEST SECTION##########################################################
 # data = exploitdb_query('Java JMX')
 # output = retrieve_from_html_exploitdb(data)
 # print(output)

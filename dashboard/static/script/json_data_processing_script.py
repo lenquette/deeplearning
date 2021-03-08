@@ -94,7 +94,7 @@ def session_organised_exploit(json_session):
 
 def get_port_id_and_name(ip_addr):
     '''
-
+    @param ip_addr: given ip (str format) of the machine
     @return: list of tuple, according to nmap_data, which is arranged like that : [('port', 'product / version / name '),...]
     '''
     ################CHECK IF GIVEN IP IS RIGHT#####################
@@ -129,6 +129,11 @@ def get_port_id_and_name(ip_addr):
 
 
 def create_requete_for_exploitdb(data):
+    '''
+    @param data: list of tuple (port_num, version)
+    @return: dictionnary with => key:port_number ; values:version_name_transformed (by the way,
+    we mean 'version_name'+'x.x' with x.x as the number of the version)
+    '''
     list_of_requete = {}
 
     for liste in data:
@@ -225,7 +230,9 @@ def improve_research(data):
     return data
 
 
-# data = get_port_id_and_name()
-# print(data)
-# print("\n")
-# print(create_requete_for_exploitdb(data))
+###############################################TEST PART################################################################
+
+data = get_port_id_and_name('172.16.1.2')
+print(data)
+print("\n")
+print(create_requete_for_exploitdb(data))

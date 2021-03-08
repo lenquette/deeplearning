@@ -708,7 +708,7 @@ def metasploit_visu(request):
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
-def crafter_visu(request):
+def crafter_port_visu(request):
     '''
 
     @param request: request made by the user on the web page
@@ -742,13 +742,13 @@ def crafter_visu(request):
 
         if len(data_scan) != 0:
             flag_success_scan = "True"
-            return render(request, 'dashboard/home/exploitcrafter_console.html',
+            return render(request, 'dashboard/home/exploitcrafter_port_console.html',
                           {'flag_success_scan': flag_success_scan,
                            'data_scan': data_scan})
         else:
             flag_error = "True"
             error = 'Error or nothing can be exploited'
-            return render(request, 'dashboard/home/exploitcrafter_console.html',
+            return render(request, 'dashboard/home/exploitcrafter_port_console.html',
                           {flag_error: 'flag_error', error: 'error'})
 
     if request.method == 'POST' and 'run_script_exploit' in request.POST:
@@ -765,7 +765,7 @@ def crafter_visu(request):
 
             data_exploit = session_organised_exploit(sessions_created)
 
-            return render(request, 'dashboard/home/exploitcrafter_console.html',
+            return render(request, 'dashboard/home/exploitcrafter_port_console.html',
                           {'flag_success_scan': flag_success_scan,
                            'data_scan': data_scan,
                            'data_exploit': data_exploit,
@@ -774,7 +774,7 @@ def crafter_visu(request):
         else:
             flag_error = "True"
             error = 'Any session was created'
-            return render(request, 'dashboard/home/exploitcrafter_console.html', {flag_error: 'flag_error',
+            return render(request, 'dashboard/home/exploitcrafter_port_console.html', {flag_error: 'flag_error',
                                                                                   'data_scan': data_scan,
                                                                                   'flag_success_scan': flag_success_scan,
                                                                                   error: 'error'})
@@ -794,7 +794,7 @@ def crafter_visu(request):
         else:
             flag_error = "True"
             error = 'Bad Id session'
-            return render(request, 'dashboard/home/exploitcrafter_console.html', {flag_error: 'flag_error',
+            return render(request, 'dashboard/home/exploitcrafter_port_console.html', {flag_error: 'flag_error',
                                                                                   'data_scan': data_scan,
                                                                                   'flag_success_scan': flag_success_scan,
                                                                                   'data_exploit': data_exploit,
@@ -816,4 +816,4 @@ def crafter_visu(request):
         return render(request, 'dashboard/home/metasploit_console_prompt.html', {'champ_du_prompt': champ_du_prompt,
                                                                                  'output': output})
 
-    return render(request, 'dashboard/home/exploitcrafter_console.html', {})
+    return render(request, 'dashboard/home/exploitcrafter_port_console.html', {})

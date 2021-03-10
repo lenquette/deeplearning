@@ -40,6 +40,7 @@ def look_for_port():
                 port_vuln.append(port_num)
         dict_ip[ip] = port_vuln
     # pdb.set_trace()
+    #####DELETE NOISY DATA#######
     for ip, liste in dict_ip.items():
         if len(liste) == 0 :
             del dict_ip[ip]

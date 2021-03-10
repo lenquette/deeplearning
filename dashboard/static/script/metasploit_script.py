@@ -180,8 +180,13 @@ def retrieve_exploit_from_db_info(list_of_rows, client):
     '''
     # define keyword global
     keyword_global = ['SMB', 'smb', 'Smb']  # 'Windows', 'windows', 'WINDOWS', 'Server', 'SERVER', 'server',
-    keyword_special = ['ms17', 'Ms17', 'MS17', 'JMX', 'jmx', 'Jmx', 'RMI', 'rmi', 'Rmi', "manageengine", "MANAGEENGINE",
-                       "ManageEngine"]
+    keyword_special = ['ms20', 'Ms20', 'MS20', 'ms19', 'Ms19', 'MS19', 'ms18', 'Ms18', 'MS18', 'ms17', 'Ms17', 'MS17',
+                       'ms16', 'Ms16', 'MS16', 'ms15', 'Ms15', 'MS15', 'ms14', 'Ms14', 'MS14', 'ms13', 'Ms13', 'MS13',
+                       'ms12', 'Ms12', 'MS12', 'ms11', 'Ms11', 'MS11', 'ms10', 'Ms10', 'MS10', 'ms09', 'Ms09', 'MS09',
+                       'ms08', 'Ms08', 'MS08', 'ms07', 'Ms07', 'MS07', 'ms06', 'Ms06', 'MS06', 'ms05', 'Ms05', 'MS05',
+                       'ms04', 'Ms04', 'MS04', 'ms03', 'Ms03', 'MS03', 'ms02', 'Ms02', 'MS02', 'ms01', 'Ms01', 'MS01',
+                       'JMX',  'jmx',  'Jmx',  'RMI',  'rmi',  'Rmi',  'manageengine', 'MANAGEENGINE', 'ManageEngine',
+                       'tomcat',       'TOMCAT',       'Tomcat']
 
     # pdb.set_trace()
     # define data row's container
@@ -240,16 +245,15 @@ def retrieve_exploit_from_db_info(list_of_rows, client):
     # generate list_of exploit
     list_of_exploit = main_display_exploit(client)
 
-
     for row in rows_data.items():
         # first search with the global to reduce the loss of time (cause we are going to use damerau levenshtein distance's algorithm after)
         for keyword in row[1]["global"]:
             for exploit in list_of_exploit:
                 if keyword.lower() in exploit and exploit not in new_list:
                     new_list.append(exploit)
-    #pdb.set_trace()
+    # pdb.set_trace()
 
-    #if no global was set, new_list is empty !!!!!!
+    # if no global was set, new_list is empty !!!!!!
     if len(new_list) == 0:
         new_list = list_of_exploit
 
@@ -257,8 +261,8 @@ def retrieve_exploit_from_db_info(list_of_rows, client):
     for row in rows_data.items():
         for keyword in row[1]["special"]:
             for remaining in new_list:
-                    if keyword.lower() in remaining and remaining not in end_list:
-                        end_list.append(remaining)
+                if keyword.lower() in remaining and remaining not in end_list:
+                    end_list.append(remaining)
 
     # calculate damerau_levenshtein
     # new_word = remaining.split('/')[-1]
@@ -273,7 +277,6 @@ def retrieve_exploit_from_db_info(list_of_rows, client):
     exploits_chosen = end_list
 
     return exploits_chosen
-
 
 # client, console = main_connection()
 #

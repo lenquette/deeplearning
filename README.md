@@ -48,6 +48,16 @@ Then, write the following commande in a Linux terminal :
 		
 You may use the "Session Crafter" now !!!
 
+# SYN attack module
+
+To use this module, you must change users's rights on python3, thanks to the command 'setcap'.
+
+To do so, write the following command line :
+
+		setcap cap_net_raw=eip /usr/bin/python3.8
+
+You may use the "SYN attack module" now !!!
+
 
 
 		██╗  ██╗ █████╗  ██████╗██╗  ██╗    ████████╗ ██████╗  ██████╗ ██╗     ██████╗  ██████╗ ██╗  ██╗

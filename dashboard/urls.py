@@ -11,5 +11,7 @@ urlpatterns = [
         path('nmap_visu/', views.nmap_visu, name='nmap_visu'),
         path('apropos/', views.apropos, name='apropos'),
         path('metasploit/', views.metasploit_visu, name='metasploit_visu'),
-        path('crafter_exploit_port_based/', views.crafter_port_visu, name='crafter_visu')
+        path('crafter_exploit_port_based/', views.crafter_port_visu, name='crafter_port_visu'),
+        path('crafter_exploit_dbdatabase_based/', views.crafter_version_visu, name='crafter_version_visu'),
+        path('syn_flood_attack/', views.syn_flood_attack_visu, name='syn_flood_attack_visu')
         ]

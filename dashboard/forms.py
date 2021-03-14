@@ -112,3 +112,15 @@ class Checkbox_args_entree(forms.Form):
                                                    required=False)
 
 
+
+class IP_cible_entree(forms.Form):
+    ip_flood_syn_target = forms.CharField(max_length=15, required=False, label=False,
+                                widget=forms.TextInput(attrs={'class': 'form-control'}))  # label='entry_str'
+
+class Port_de_la_cible(forms.Form):
+    port_flood_syn_target = forms.CharField(max_length=15, required=False, label=False,
+                                widget=forms.TextInput(attrs={'class': 'form-control'}))  # label='entry_str'
+
+class Nombre_de_paquet(forms.Form):
+    paquet_flood_syn_target = forms.CharField(max_length=15, required=False, label=False,
+                                widget=forms.TextInput(attrs={'class': 'form-control'}))  # label='entry_str'

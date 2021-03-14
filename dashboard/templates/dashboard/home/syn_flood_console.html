@@ -1,0 +1,44 @@
+{% extends "dashboard/base.html" %}
+{% block title %}SYN flood console{% endblock title %}
+
+{% block content %}
+
+{# À propos section #}
+<div class="py-2 p-3">
+        <form method="post" class="form-group text-left">
+
+            <div class="mt-5 py-2 p-3"  style="max-width: 30%">
+                <h1 class=" border-bottom">Adresse IP de la cible</h1>
+            </div>
+            <div class="mt-2 py-2 p-3 bg-primary bg-gradient rounded-3" style="max-width: 30%">
+                <!--	<input type=“text“ name=“param“> -->
+                <p class="py-2">Entrer l'adresse IP de la cible</p>
+                 {{ip_de_la_cible}}
+            </div>
+
+            <div class="mt-5 py-2 p-3"  style="max-width: 30%">
+                <h1 class=" border-bottom">Numéro de port de la cible</h1>
+            </div>
+            <div class="mt-2 py-2 p-3 bg-primary bg-gradient rounded-3" style="max-width: 30%">
+                <p class="py-2">Entrer le numéro de port de la cible</p>
+                {{port_de_la_cible}}
+            </div>
+
+            <div class="mt-5 py-2 p-3"  style="max-width: 30%">
+                 <h1 class="border-bottom">Nombre de paquets à envoyer à la cible</h1>
+            </div>
+            <div class="mt-2 py-2 p-3 bg-primary bg-gradient rounded-3" style="max-width: 30%">
+                 <p class="py-2">Entrez le nombre de paquets à envoyer à la cible</p>
+                 {{nombre_de_paquet}}
+            </div>
+
+            <div class="mt-5 py-2 p-3">
+		    {% csrf_token %}
+		    <button type="submit" name="run_script" class="btn btn-primary btn-lg">Run script</button>
+		    </div>
+
+        </form>
+</div>
+
+
+{% endblock content %}

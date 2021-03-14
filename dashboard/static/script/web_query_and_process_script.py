@@ -42,14 +42,15 @@ def retrieve_from_html_exploitdb(data):
     '''
     table = data.find('tbody')
     output_rows = []
-    for table_row in table.findAll('tr'):
-        columns = table_row.findAll('td')
-        output_row = []
-        for column in columns:
-            output_row.append(column.text)
-        while '' in output_row:
-            output_row.remove('')
-        output_rows.append(output_row)
+    if table != None:
+        for table_row in table.findAll('tr'):
+            columns = table_row.findAll('td')
+            output_row = []
+            for column in columns:
+                output_row.append(column.text)
+            while '' in output_row:
+                output_row.remove('')
+            output_rows.append(output_row)
 
     return output_rows
 

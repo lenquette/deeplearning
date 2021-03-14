@@ -4,7 +4,7 @@ from .forms import Input_for_Test, Formulaire_entree, Selection_entree, Checkbox
     Formulaire_entree_search_metasploit, Formulaire_entree_run_metasploit, Formulaire_entree_options_metasploit, \
     Formulaire_entree_options_arg_metasploit, Formulaire_entree_payload_metasploit, Type_var_metasploit, \
     Formulaire_entree_prompt_metasploit, Type_var_payload_metasploit, Formulaire_entree_payload_option_metasploit, \
-    Formulaire_entree_payload_option_val_metasploit, Choice_module
+    Formulaire_entree_payload_option_val_metasploit, Choice_module, IP_cible_entree, Port_de_la_cible, Nombre_de_paquet
 
 import sys
 import os
@@ -720,9 +720,8 @@ def crafter_port_visu(request):
     global client
     global console
     global sessions_client
-    global data_scan
-    global data_exploit
-    global id_session
+    global dict_data
+    global data_table
 
     # global flag
     global flag_error_scan
@@ -738,82 +737,188 @@ def crafter_port_visu(request):
 
         # pdb.set_trace()
 
-        data_scan, client, console = script_automate_scan()
+        dict_data = script_automate_scan()
 
-        if len(data_scan) != 0:
+        if len(dict_data) != 0:
             flag_success_scan = "True"
+
             return render(request, 'dashboard/home/exploitcrafter_port_console.html',
                           {'flag_success_scan': flag_success_scan,
-                           'data_scan': data_scan})
+                           'dict_data': dict_data})
         else:
             flag_error = "True"
             error = 'Error or nothing can be exploited'
             return render(request, 'dashboard/home/exploitcrafter_port_console.html',
                           {flag_error: 'flag_error', error: 'error'})
 
-    if request.method == 'POST' and 'run_script_exploit' in request.POST:
-        from automate import script_automate_exploit
-        from json_data_processing_script import session_organised_exploit
-
-        client, sessions_created = script_automate_exploit(data_scan, client, console)
-
-        if sessions_created != -1:
-
-            # pdb.set_trace()
-
-            flag_success_exploit = "True"
-
-            data_exploit = session_organised_exploit(sessions_created)
-
-            return render(request, 'dashboard/home/exploitcrafter_port_console.html',
-                          {'flag_success_scan': flag_success_scan,
-                           'data_scan': data_scan,
-                           'data_exploit': data_exploit,
-                           'flag_success_exploit': flag_success_exploit,
-                           'champ_de_l_id': champ_de_l_id})
-        else:
-            flag_error = "True"
-            error = 'Any session was created'
-            return render(request, 'dashboard/home/exploitcrafter_port_console.html', {flag_error: 'flag_error',
-                                                                                  'data_scan': data_scan,
-                                                                                  'flag_success_scan': flag_success_scan,
-                                                                                  error: 'error'})
-
-    if champ_de_l_id.is_valid() and request.method == 'POST' and 'run_script_session' in request.POST:
-
-        id_session = request.POST.get('entry_str')
-
-        for exploit in data_exploit:
-            if id_session in exploit:
-                flag_good_id = "True"
-
-        if flag_good_id is not None:
-            return render(request, 'dashboard/home/metasploit_console_prompt.html',
-                          {'champ_du_prompt': champ_du_prompt})
-
-        else:
-            flag_error = "True"
-            error = 'Bad Id session'
-            return render(request, 'dashboard/home/exploitcrafter_port_console.html', {flag_error: 'flag_error',
-                                                                                  'data_scan': data_scan,
-                                                                                  'flag_success_scan': flag_success_scan,
-                                                                                  'data_exploit': data_exploit,
-                                                                                  'flag_success_exploit': flag_success_exploit,
-                                                                                  'champ_de_l_id': champ_de_l_id,
-                                                                                  error: 'error'})
-
-        #######################################PROMPT COMMANDE###############################
-    if champ_du_prompt.is_valid() and request.method == 'POST' and 'run_cmd' in request.POST:
-        from metasploit_script import main_run_prompt
-
-        cmd_wanted = request.POST.get('prompt_str')
-
-        output = main_run_prompt(cmd_wanted, client.sessions.session(str(id_session)))
-
-        # if cmd_wanted == 'exit':
-        #     return render(request, 'dashboard/home/exploitcrafter_console.html', {})
-
-        return render(request, 'dashboard/home/metasploit_console_prompt.html', {'champ_du_prompt': champ_du_prompt,
-                                                                                 'output': output})
+    # if request.method == 'POST' and 'run_script_exploit' in request.POST:
+    #
+    #     data_table = request.POST.get('scan-table')
+    #     print(data_table)
+    #     print(type(data_table))
+    #
+    #     return render(request, 'dashboard/home/exploitcrafter_port_console.html',
+    #                   {'flag_success_scan': flag_success_scan,
+    #                    'dict_data': dict_data})
+    #     from automate import script_automate_exploit
+    #     from json_data_processing_script import session_organised_exploit
+    #
+    #     client, sessions_created = script_automate_exploit(data_scan, client, console)
+    #
+    #     if sessions_created != -1:
+    #
+    #         # pdb.set_trace()
+    #
+    #         flag_success_exploit = "True"
+    #
+    #         data_exploit = session_organised_exploit(sessions_created)
+    #
+    #         return render(request, 'dashboard/home/exploitcrafter_port_console.html',
+    #                       {'flag_success_scan': flag_success_scan,
+    #                        'data_scan': data_scan,
+    #                        'data_exploit': data_exploit,
+    #                        'flag_success_exploit': flag_success_exploit,
+    #                        'champ_de_l_id': champ_de_l_id})
+    #     else:
+    #         flag_error = "True"
+    #         error = 'Any session was created'
+    #         return render(request, 'dashboard/home/exploitcrafter_port_console.html', {flag_error: 'flag_error',
+    #                                                                               'data_scan': data_scan,
+    #                                                                               'flag_success_scan': flag_success_scan,
+    #                                                                               error: 'error'})
+    #
+    # if champ_de_l_id.is_valid() and request.method == 'POST' and 'run_script_session' in request.POST:
+    #
+    #     id_session = request.POST.get('entry_str')
+    #
+    #     for exploit in data_exploit:
+    #         if id_session in exploit:
+    #             flag_good_id = "True"
+    #
+    #     if flag_good_id is not None:
+    #         return render(request, 'dashboard/home/metasploit_console_prompt.html',
+    #                       {'champ_du_prompt': champ_du_prompt})
+    #
+    #     else:
+    #         flag_error = "True"
+    #         error = 'Bad Id session'
+    #         return render(request, 'dashboard/home/exploitcrafter_port_console.html', {flag_error: 'flag_error',
+    #                                                                               'data_scan': data_scan,
+    #                                                                               'flag_success_scan': flag_success_scan,
+    #                                                                               'data_exploit': data_exploit,
+    #                                                                               'flag_success_exploit': flag_success_exploit,
+    #                                                                               'champ_de_l_id': champ_de_l_id,
+    #                                                                               error: 'error'})
+    #
+    #     #######################################PROMPT COMMANDE###############################
+    # if champ_du_prompt.is_valid() and request.method == 'POST' and 'run_cmd' in request.POST:
+    #     from metasploit_script import main_run_prompt
+    #
+    #     cmd_wanted = request.POST.get('prompt_str')
+    #
+    #     output = main_run_prompt(cmd_wanted, client.sessions.session(str(id_session)))
+    #
+    #     # if cmd_wanted == 'exit':
+    #     #     return render(request, 'dashboard/home/exploitcrafter_console.html', {})
+    #
+    #     return render(request, 'dashboard/home/metasploit_console_prompt.html', {'champ_du_prompt': champ_du_prompt,
+    #                                                                              'output': output})
 
     return render(request, 'dashboard/home/exploitcrafter_port_console.html', {})
+
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def crafter_version_visu(request):
+    '''
+
+    @param request: request made by the user on the web page
+    @return: the view for the crafter sessions' module
+    '''
+    import pdb
+
+    # global var
+    global client
+    global console
+    global sessions_client
+    global dict_data
+    global data_bruteforce
+
+    # global flag
+    global flag_error_scan
+    global flag_success_scan
+    global flag_bruteforce
+
+    # import function to run
+    from metasploit_script import main_connection
+
+    # call function
+    client, console = main_connection()
+
+    if request.method == 'POST' and 'run_script_scan' in request.POST:
+        from automate import get_board_exploit
+
+        # pdb.set_trace()
+
+        dict_data = get_board_exploit(client)
+
+        if len(dict_data) != 0:
+            flag_success_scan = "True"
+
+            return render(request, 'dashboard/home/exploitcrafter_dbdatabase_console.html',
+                          {'flag_success_scan': flag_success_scan,
+                           'dict_data': dict_data})
+        else:
+            flag_error = "True"
+            error = 'Error or nothing can be exploited'
+            return render(request, 'dashboard/home/exploitcrafter_dbdatabase_console.html',
+                          {flag_error: 'flag_error', error: 'error'})
+
+    if request.method == 'POST' and 'run_script_brute_force' in request.POST:
+        from automate import brute_force_exploit
+
+        # pdb.set_trace()
+
+        dict_session = brute_force_exploit(dict_data, client)
+
+        if len(dict_session) != 0:
+            flag_bruteforce = "True"
+
+            return render(request, 'dashboard/home/exploitcrafter_dbdatabase_console.html',
+              {'flag_success_scan': flag_success_scan, 'flag_bruteforce': flag_bruteforce,
+               'dict_data': dict_data, 'dict_session': dict_session})
+        else:
+            flag_error = "True"
+            error = 'Error in looking for session can be exploited'
+            return render(request, 'dashboard/home/exploitcrafter_dbdatabase_console.html',
+                  {flag_error: 'flag_error', error: 'error', 'flag_success_scan': flag_success_scan,
+                           'dict_data': dict_data})
+
+
+
+
+    return render(request, 'dashboard/home/exploitcrafter_dbdatabase_console.html', {})
+
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def syn_flood_attack_visu(request):
+
+    ip_de_la_cible = IP_cible_entree(request.POST)
+    port_de_la_cible = Port_de_la_cible(request.POST)
+    nombre_de_paquet = Nombre_de_paquet(request.POST)
+
+    if ip_de_la_cible.is_valid() and port_de_la_cible.is_valid() and nombre_de_paquet.is_valid() and request.method == 'POST' and 'run_script' in request.POST:
+        # import function to run
+        from extra_scripts import syn_flood_attack
+
+        ip_target = request.POST.get('ip_flood_syn_target')
+        port_target = request.POST.get('port_flood_syn_target')
+        number_of_paquet = request.POST.get('paquet_flood_syn_target')
+
+
+        syn_flood_attack(ip_target, port_target, number_of_paquet)
+        return render(request, 'dashboard/home/syn_flood_console.html', {'ip_de_la_cible': ip_de_la_cible, 'port_de_la_cible': port_de_la_cible,
+                                                                             'nombre_de_paquet': nombre_de_paquet})
+
+
+    return render(request, 'dashboard/home/syn_flood_console.html', {'ip_de_la_cible': ip_de_la_cible, 'port_de_la_cible': port_de_la_cible,
+                                                                             'nombre_de_paquet': nombre_de_paquet})

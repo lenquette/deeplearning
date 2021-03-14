@@ -186,9 +186,9 @@ def retrieve_exploit_from_db_info(list_of_rows, client):
                        'ms08', 'Ms08', 'MS08', 'ms07', 'Ms07', 'MS07', 'ms06', 'Ms06', 'MS06', 'ms05', 'Ms05', 'MS05',
                        'ms04', 'Ms04', 'MS04', 'ms03', 'Ms03', 'MS03', 'ms02', 'Ms02', 'MS02', 'ms01', 'Ms01', 'MS01',
                        'JMX',  'jmx',  'Jmx',  'RMI',  'rmi',  'Rmi',  'manageengine', 'MANAGEENGINE', 'ManageEngine',
-                       'tomcat',       'TOMCAT',       'Tomcat']
+                       'tomcat',       'TOMCAT',       'Tomcat',       'struts',       'STRUTS',       'Struts']
 
-    # pdb.set_trace()
+
     # define data row's container
     ## variables of the row
     row_data = {}
@@ -213,6 +213,8 @@ def retrieve_exploit_from_db_info(list_of_rows, client):
                     ######CORRELATION RMI-JMX##################
                     if keyword in ['RMI', 'rmi', 'Rmi']:
                         special_keyword_list.append('JMX')
+                    if keyword in [ 'tomcat', 'TOMCAT', 'Tomcat']:
+                        special_keyword_list.append('STRUTS')
 
             # pdb.set_trace()
 
@@ -264,19 +266,20 @@ def retrieve_exploit_from_db_info(list_of_rows, client):
                 if keyword.lower() in remaining and remaining not in end_list:
                     end_list.append(remaining)
 
-    # calculate damerau_levenshtein
-    # new_word = remaining.split('/')[-1]
-    # dist = jellyfish.damerau_levenshtein_distance(keyword.lower(), new_word)
-    # if dist == len(new_word):
-    #     # affect a value so this exploit would never be chosen
-    #     dist = 1000
-    # miles_dist.append(dist)
-    # pdb.set_trace()
-    # index = miles_dist.index(min(miles_dist))
-    # exploits_chosen.append(new_list[index])
     exploits_chosen = end_list
 
     return exploits_chosen
+
+
+# def retrieve_from_port_scan(dict_of_ip_port_num_and_conf):
+#
+#     ######INITIAL VARIABLE######
+
+
+
+
+
+
 
 # client, console = main_connection()
 #

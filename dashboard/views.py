@@ -9,6 +9,7 @@ from .forms import Input_for_Test, Formulaire_entree, Selection_entree, Checkbox
 import sys
 import os
 import time
+import pdb
 
 # add executables' folder path
 ProjectFileDir = os.path.dirname(os.path.abspath(__file__))
@@ -906,7 +907,12 @@ def syn_flood_attack_visu(request):
     port_de_la_cible = Port_de_la_cible(request.POST)
     nombre_de_paquet = Nombre_de_paquet(request.POST)
 
+    message = 'no packet sent'
+
     if ip_de_la_cible.is_valid() and port_de_la_cible.is_valid() and nombre_de_paquet.is_valid() and request.method == 'POST' and 'run_script' in request.POST:
+
+        # pdb.set_trace()
+
         # import function to run
         from extra_scripts import syn_flood_attack
 
@@ -914,11 +920,14 @@ def syn_flood_attack_visu(request):
         port_target = request.POST.get('port_flood_syn_target')
         number_of_paquet = request.POST.get('paquet_flood_syn_target')
 
+        number_of_paquet = int(number_of_paquet)
+
+        message = 'packet are sent'
 
         syn_flood_attack(ip_target, port_target, number_of_paquet)
         return render(request, 'dashboard/home/syn_flood_console.html', {'ip_de_la_cible': ip_de_la_cible, 'port_de_la_cible': port_de_la_cible,
-                                                                             'nombre_de_paquet': nombre_de_paquet})
+                                                                             'nombre_de_paquet': nombre_de_paquet, 'message': message})
 
 
     return render(request, 'dashboard/home/syn_flood_console.html', {'ip_de_la_cible': ip_de_la_cible, 'port_de_la_cible': port_de_la_cible,
-                                                                             'nombre_de_paquet': nombre_de_paquet})
+                                                                             'nombre_de_paquet': nombre_de_paquet, 'message': message})

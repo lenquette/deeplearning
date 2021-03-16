@@ -740,6 +740,13 @@ def crafter_port_visu(request):
 
         dict_data = script_automate_scan()
 
+        if dict_data == -1:
+            flag_error = "True"
+            error = 'Cannot connect to remote metasploit console'
+            return render(request, 'dashboard/home/exploitcrafter_port_console.html',
+                          {flag_error: 'flag_error', error: 'error'})
+
+
         if len(dict_data) != 0:
             flag_success_scan = "True"
 
@@ -855,6 +862,12 @@ def crafter_version_visu(request):
     # call function
     client, console = main_connection()
 
+    if client == -1:
+        flag_error = "True"
+        error = 'Cannot connect to remote metasploit console'
+        return render(request, 'dashboard/home/exploitcrafter_dbdatabase_console.html',
+                      {flag_error: 'flag_error', error: 'error'})
+
     if request.method == 'POST' and 'run_script_scan' in request.POST:
         from automate import get_board_exploit
 
@@ -885,24 +898,20 @@ def crafter_version_visu(request):
             flag_bruteforce = "True"
 
             return render(request, 'dashboard/home/exploitcrafter_dbdatabase_console.html',
-              {'flag_success_scan': flag_success_scan, 'flag_bruteforce': flag_bruteforce,
-               'dict_data': dict_data, 'dict_session': dict_session})
+                          {'flag_success_scan': flag_success_scan, 'flag_bruteforce': flag_bruteforce,
+                           'dict_data': dict_data, 'dict_session': dict_session})
         else:
             flag_error = "True"
             error = 'Error in looking for session can be exploited'
             return render(request, 'dashboard/home/exploitcrafter_dbdatabase_console.html',
-                  {flag_error: 'flag_error', error: 'error', 'flag_success_scan': flag_success_scan,
+                          {flag_error: 'flag_error', error: 'error', 'flag_success_scan': flag_success_scan,
                            'dict_data': dict_data})
-
-
-
 
     return render(request, 'dashboard/home/exploitcrafter_dbdatabase_console.html', {})
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def syn_flood_attack_visu(request):
-
     ip_de_la_cible = IP_cible_entree(request.POST)
     port_de_la_cible = Port_de_la_cible(request.POST)
     nombre_de_paquet = Nombre_de_paquet(request.POST)
@@ -910,7 +919,6 @@ def syn_flood_attack_visu(request):
     message = 'no packet sent'
 
     if ip_de_la_cible.is_valid() and port_de_la_cible.is_valid() and nombre_de_paquet.is_valid() and request.method == 'POST' and 'run_script' in request.POST:
-
         # pdb.set_trace()
 
         # import function to run
@@ -925,9 +933,10 @@ def syn_flood_attack_visu(request):
         message = 'packet are sent'
 
         syn_flood_attack(ip_target, port_target, number_of_paquet)
-        return render(request, 'dashboard/home/syn_flood_console.html', {'ip_de_la_cible': ip_de_la_cible, 'port_de_la_cible': port_de_la_cible,
-                                                                             'nombre_de_paquet': nombre_de_paquet, 'message': message})
+        return render(request, 'dashboard/home/syn_flood_console.html',
+                      {'ip_de_la_cible': ip_de_la_cible, 'port_de_la_cible': port_de_la_cible,
+                       'nombre_de_paquet': nombre_de_paquet, 'message': message})
 
-
-    return render(request, 'dashboard/home/syn_flood_console.html', {'ip_de_la_cible': ip_de_la_cible, 'port_de_la_cible': port_de_la_cible,
-                                                                             'nombre_de_paquet': nombre_de_paquet, 'message': message})
+    return render(request, 'dashboard/home/syn_flood_console.html',
+                  {'ip_de_la_cible': ip_de_la_cible, 'port_de_la_cible': port_de_la_cible,
+                   'nombre_de_paquet': nombre_de_paquet, 'message': message})

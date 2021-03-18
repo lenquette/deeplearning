@@ -7,6 +7,7 @@ from os.path import dirname, abspath
 from cryptography.fernet import Fernet
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
+from cryptography.hazmat.backends import default_backend
 
 # add pinckle's location folder to store the data extract from nmap
 ProjectFileDirParent = dirname(dirname(abspath(__file__)))
@@ -27,6 +28,7 @@ def cryptedkey():
     salt_after = binascii.hexlify(os.urandom(4))
     #generation of the key
     kdf = PBKDF2HMAC(
+        backend=default_backend(), #might work without
         algorithm=hashes.SHA256(),
         length=32,
         salt=salt,
@@ -84,3 +86,7 @@ def uncrypt_json(crypted_data):
     private_key = Fernet(private_key)
     var = private_key.decrypt(crypted_data).decode('utf8')
     return json.loads(var)
+
+
+########################TEST SECTION###################
+# cryptedkey()

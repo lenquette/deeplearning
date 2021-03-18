@@ -58,7 +58,25 @@ To do so, write the following command line :
 
 You may use the "SYN attack module" now !!!
 
+# Embedded shell
 
+To use the embedded shell, do the following command :
+
+Fist, install OpenSSH :
+
+		$ sudo apt install openssh
+		$ sudo service ssh status
+		[!] to check if the server is running
+
+Then :
+
+		$ npm install --save read-config@1
+		$ cd additional_features/webssh2/app
+		$ npm install --production (once)
+		$ npm audit fix (once)
+		$ npm start
+
+		
 
 		██╗  ██╗ █████╗  ██████╗██╗  ██╗    ████████╗ ██████╗  ██████╗ ██╗     ██████╗  ██████╗ ██╗  ██╗
 		██║  ██║██╔══██╗██╔════╝██║ ██╔╝    ╚══██╔══╝██╔═══██╗██╔═══██╗██║     ██╔══██╗██╔═══██╗╚██╗██╔╝

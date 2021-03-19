@@ -77,7 +77,8 @@ Then :
 		$ npm start
 
 
-You may use "Embedded shell" now !!!
+You may use "Embedded shell" now !!! Go on http://localhost.:2222/ssh/host/127.0.0.1
+
 
 
 		██╗  ██╗ █████╗  ██████╗██╗  ██╗    ████████╗ ██████╗  ██████╗ ██╗     ██████╗  ██████╗ ██╗  ██╗

@@ -15,6 +15,10 @@
 ## Dependences installation
 
 		python3 -m pip install -r requirements.txt
+		
+If it fails on a "wheel", before retrying the previous command, do :
+
+		pip3 install wheel
 
 ## Poweroff the virtual environment
 

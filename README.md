@@ -46,6 +46,12 @@ Then, write the following commande in a Linux terminal :
 
 		cp ~/.wdm/drivers/geckodriver/linux64/v0.29.0/geckodriver ~/.local/bin/
 		
+NB : To run a python shell with Django in your virtual environement :
+		
+		python3 manage.py shell
+		...
+		exit
+		
 You may use the "Session Crafter" now !!!
 
 # SYN attack module

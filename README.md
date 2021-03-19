@@ -62,7 +62,7 @@ You may use the "SYN attack module" now !!!
 
 To use the embedded shell, do the following command :
 
-Fist, install OpenSSH :
+First, install OpenSSH :
 
 		$ sudo apt install openssh
 		$ sudo service ssh status
@@ -70,7 +70,7 @@ Fist, install OpenSSH :
 
 Then :
 
-		$ npm install --save read-config@1
+		$ npm install --save read-config@1 (once)
 		$ cd additional_features/webssh2/app
 		$ npm install --production (once)
 		$ npm audit fix (once)

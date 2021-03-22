@@ -25,6 +25,8 @@ def home_page(request):
     @param request: request made by the user on the web page
     @return: the view for the home page
     '''
+    from extra_scripts import setup_shell
+    setup_shell()
     return render(request, 'dashboard/home/home.html', {})
 
 

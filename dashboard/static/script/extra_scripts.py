@@ -1,5 +1,7 @@
 import os
 import sys
+import subprocess
+import pdb
 
 
 ###############################SYN FLOOD ATTACK########################################
@@ -16,3 +18,14 @@ def syn_flood_attack(dstIP, dstPort, counter):
         return 0
     except :
         return -1
+
+
+def setup_shell():
+    try :
+        os.chdir('additional_features/webssh2/app/')
+        cmd = ['npm', 'start'] #begin at ptoject's root location !!!!
+        subprocess.Popen(cmd)
+        return 0
+    except :
+        return -1
+

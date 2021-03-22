@@ -99,7 +99,11 @@ def nmap_visu(request):
             # call function
             data = main(type_scan_val, ip_cible_val, arguments_val)
 
+            # delete useless data
+            del data['stats']
+            del data['runtime']
             data_nmap = data
+
             # Store data (serialize)
             with open('dashboard/static/.transit/filename.pickle', 'wb') as handle:
                 pickle.dump(crypted_json(data_nmap), handle, protocol=pickle.HIGHEST_PROTOCOL)
@@ -173,7 +177,7 @@ def metasploit_visu(request):
     if request.method == 'POST' and 'run_script' in request.POST:
 
         # import function to run
-        from metasploit_script import main_connection
+        from metasploit_script import main_connection, launch_metasploit
 
         # test section
 
@@ -185,6 +189,10 @@ def metasploit_visu(request):
             status_connection = "connected"
 
         else:
+            launch_metasploit()
+            client, console = main_connection()
+
+        if client == -1:
             flag_connection = None
             status_connection = "échec"
 
@@ -745,7 +753,6 @@ def crafter_port_visu(request):
             error = 'Cannot connect to remote metasploit console'
             return render(request, 'dashboard/home/exploitcrafter_port_console.html',
                           {flag_error: 'flag_error', error: 'error'})
-
 
         if len(dict_data) != 0:
             flag_success_scan = "True"

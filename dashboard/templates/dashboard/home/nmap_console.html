@@ -1,4 +1,5 @@
 {% extends "dashboard/base.html" %}
+{% load extras_filter %}
 {% block title %}Nmap script{% endblock title %}
 
 {% block content %}  
@@ -45,9 +46,34 @@
 	<div class="mt-5 py-2 p-3">
 		<h1 class="border-bottom" style="max-width: 30%">Retour du terminal</h1>
 		<h2 class="mt-5">Résultat du scan des ports</h2>
-		<div class="mt-5 py-2 overflow-auto">
+		<div class="mt-5 py-2 overflow-auto" style="max-width: 60%; max-height: 500px;">
 			{% if data %}
-			<div><pre>{{data | pprint}}</pre></div>
+			 <table class="table">
+				{% for ip, dict_of_ip in data.items %}
+					 <thead>
+						<tr>
+							 <th class="h2">{{ip}}</th>
+						</tr>
+					 </thead>
+					 <tbody>
+					 		{% for dict_port in dict_of_ip.ports %}
+							<tr>
+								<td class="h3">PORT : {{dict_port|get_item:'portid'}}</td>
+								<td>protocol : {{dict_port|get_item:'protocol'}}</td>
+								<td>reason : {{dict_port|get_item:'reason'}}</td>
+								<td>reason ttl : {{dict_port|get_item:'reason_ttl'}}</td>
+								<td>
+									service :
+									{% for service_item_noun, service_item_value in dict_port.service.items %}
+										<br>
+										{{service_item_noun}} : {{service_item_value}}
+									{% endfor %}
+								</td>
+							</tr>
+					 		{% endfor %}
+					 </tbody>
+				{% endfor %}
+			 </table>
 			{% endif %}
 		</div>
 	</div>

@@ -1,7 +1,14 @@
 from pymetasploit3.msfrpc import MsfRpcClient, MsfConsole
 import time
+import subprocess
 import jellyfish
 import pdb
+
+
+def launch_metasploit():
+    cmd = ["msfconsole", "-x load msgrpc Pass=1234LOL"]
+    subprocess.Popen(cmd)
+    return 0
 
 
 def main_connection():
@@ -185,9 +192,8 @@ def retrieve_exploit_from_db_info(list_of_rows, client):
                        'ms12', 'Ms12', 'MS12', 'ms11', 'Ms11', 'MS11', 'ms10', 'Ms10', 'MS10', 'ms09', 'Ms09', 'MS09',
                        'ms08', 'Ms08', 'MS08', 'ms07', 'Ms07', 'MS07', 'ms06', 'Ms06', 'MS06', 'ms05', 'Ms05', 'MS05',
                        'ms04', 'Ms04', 'MS04', 'ms03', 'Ms03', 'MS03', 'ms02', 'Ms02', 'MS02', 'ms01', 'Ms01', 'MS01',
-                       'JMX',  'jmx',  'Jmx',  'RMI',  'rmi',  'Rmi',  'manageengine', 'MANAGEENGINE', 'ManageEngine',
-                       'tomcat',       'TOMCAT',       'Tomcat',       'struts',       'STRUTS',       'Struts']
-
+                       'JMX', 'jmx', 'Jmx', 'RMI', 'rmi', 'Rmi', 'manageengine', 'MANAGEENGINE', 'ManageEngine',
+                       'tomcat', 'TOMCAT', 'Tomcat', 'struts', 'STRUTS', 'Struts']
 
     # define data row's container
     ## variables of the row
@@ -213,7 +219,7 @@ def retrieve_exploit_from_db_info(list_of_rows, client):
                     ######CORRELATION RMI-JMX##################
                     if keyword in ['RMI', 'rmi', 'Rmi']:
                         special_keyword_list.append('JMX')
-                    if keyword in [ 'tomcat', 'TOMCAT', 'Tomcat']:
+                    if keyword in ['tomcat', 'TOMCAT', 'Tomcat']:
                         special_keyword_list.append('STRUTS')
 
             # pdb.set_trace()
@@ -270,15 +276,9 @@ def retrieve_exploit_from_db_info(list_of_rows, client):
 
     return exploits_chosen
 
-
 # def retrieve_from_port_scan(dict_of_ip_port_num_and_conf):
 #
 #     ######INITIAL VARIABLE######
-
-
-
-
-
 
 
 # client, console = main_connection()

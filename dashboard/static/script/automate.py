@@ -196,7 +196,7 @@ dictionnary_config_scanner = {
 
 
 #####################################################AUTO SCAN PART#####################################################
-def script_automate_scan():
+def script_automate_scan(client, console):
     '''
 
     @return: list data from the metasploit console, the rpc client and the console associated to this client
@@ -211,16 +211,6 @@ def script_automate_scan():
 
     # check ip_port vulnerability
     dict_port_ip_vuln = look_for_port()
-
-    # launch metasploit
-    client, console = main_connection()
-
-    if client == -1:
-        launch_metasploit()
-        client, console = main_connection()
-
-    if client == -1:
-        return -1
 
     #######################################CHECK OPENED PORT####################################
     for ip, liste_port_vuln in dict_port_ip_vuln.items():

@@ -192,11 +192,16 @@ def metasploit_visu(request):
 
         else:
             launch_metasploit()
+            time.sleep(5)
             client, console = main_connection()
 
         if client == -1:
             flag_connection = None
             status_connection = "échec"
+
+        else:
+            flag_connection = "connected"
+            status_connection = "connected"
 
         # renderer
         return render(request, 'dashboard/home/metasploit_console.html',
@@ -744,17 +749,25 @@ def crafter_port_visu(request):
     champ_du_prompt = Formulaire_entree_prompt_metasploit(request.POST)
 
     if request.method == 'POST' and 'run_script_scan' in request.POST:
+        from metasploit_script import main_connection, launch_metasploit
         from automate import script_automate_scan
 
         # pdb.set_trace()
 
-        dict_data = script_automate_scan()
+        # launch metasploit
+        client, console = main_connection()
 
-        if dict_data == -1:
+        if client == -1:
+            launch_metasploit()
+            client, console = main_connection()
+
+        if client == -1:
             flag_error = "True"
             error = 'Cannot connect to remote metasploit console'
             return render(request, 'dashboard/home/exploitcrafter_port_console.html',
                           {flag_error: 'flag_error', error: 'error'})
+
+        dict_data = script_automate_scan(client, console)
 
         if len(dict_data) != 0:
             flag_success_scan = "True"

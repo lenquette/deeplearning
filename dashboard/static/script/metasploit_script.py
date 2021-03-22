@@ -1,13 +1,14 @@
 from pymetasploit3.msfrpc import MsfRpcClient, MsfConsole
 import time
-import subprocess
+import subprocess, os
 import jellyfish
 import pdb
 
 
 def launch_metasploit():
     cmd = ["msfconsole", "-x load msgrpc Pass=1234LOL"]
-    subprocess.Popen(cmd)
+    FNULL = open(os.devnull, 'w')
+    subprocess.Popen(cmd, stdout=FNULL, stderr=subprocess.STDOUT)
     return 0
 
 

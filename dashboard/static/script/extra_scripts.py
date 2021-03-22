@@ -24,7 +24,9 @@ def setup_shell():
     try :
         os.chdir('additional_features/webssh2/app/')
         cmd = ['npm', 'start'] #begin at ptoject's root location !!!!
-        subprocess.Popen(cmd)
+        FNULL = open(os.devnull, 'w')
+        subprocess.Popen(cmd, stdout=FNULL, stderr=subprocess.STDOUT)
+        os.chdir('../../..') #return to original root directory's projetc => other python depends from this element !!!!!!!
         return 0
     except :
         return -1

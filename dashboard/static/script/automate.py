@@ -216,6 +216,10 @@ def script_automate_scan():
     client, console = main_connection()
 
     if client == -1:
+        launch_metasploit()
+        client, console = main_connection()
+
+    if client == -1:
         return -1
 
     #######################################CHECK OPENED PORT####################################

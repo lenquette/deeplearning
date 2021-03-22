@@ -864,10 +864,14 @@ def crafter_version_visu(request):
     global flag_bruteforce
 
     # import function to run
-    from metasploit_script import main_connection
+    from metasploit_script import main_connection, launch_metasploit
 
     # call function
     client, console = main_connection()
+
+    if client == -1:
+        launch_metasploit()
+        client, console = main_connection()
 
     if client == -1:
         flag_error = "True"

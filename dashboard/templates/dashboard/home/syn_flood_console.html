@@ -44,9 +44,39 @@
 </div>
 
 <div class="mt-5 py-2 p-3">
+    <h1 class="border-bottom" style="max-width: 30%">Options choisies</h1>
+    <table class="table" style="max-width: 30%">
+        <tbody>
+        <tr><td>IP choisie</td><td id = "ip_choosen">None</td></tr>
+        <tr><td>Numéro de port choisi</td><td id = "port_choosen">None</td></tr>
+        <tr><td>Nombre de paquet choisi</td><td id = "number_packet_choosen">None</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="mt-5 py-2 p-3">
     <h1 class=" border-bottom">Message</h1>
     <p class="py-2">{{message}}</p>
 </div>
 
+
+<!--jquery-->
+<script type="text/javascript">
+//when page is loaded
+	$(document).ready(function() {
+		//update function for IP address
+		$("#id_ip_flood_syn_target").on('keyup', function() {
+			$("#ip_choosen").html($(this).val());
+		});
+		//update function for port target
+		$("#id_port_flood_syn_target").on('keyup', function() {
+			$("#port_choosen").html($(this).val());
+		});
+		//update function for number of packets
+		$("#id_paquet_flood_syn_target").on('keyup', function() {
+			$("#number_packet_choosen").html($(this).val());
+		});
+	});
+</script>
 
 {% endblock content %}

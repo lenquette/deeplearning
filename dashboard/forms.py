@@ -8,7 +8,7 @@ class Input_for_Test(forms.Form):
 
 class Formulaire_entree(forms.Form):
     entry_str = forms.CharField(max_length=15, required=False, label=False,
-                                widget=forms.TextInput(attrs={'class': 'form-control'}))  # label='entry_str'
+                                widget=forms.TextInput(attrs={'class': 'form-control', 'id': 'entry_str'}))  # label='entry_str'
 
 
 class Formulaire_entree_search_metasploit(forms.Form):
@@ -63,7 +63,7 @@ class Selection_entree(forms.Form):
     )
 
     scan_wanted = forms.ChoiceField(choices=SCAN_CHOICES, label=False,
-                                    widget=forms.RadioSelect(attrs={'class': 'list-unstyled'}), required=True)
+                                    widget=forms.RadioSelect(attrs={'class': 'list-unstyled', 'id': 'scan_wanted'}), required=True)
 
 
 class Type_var_metasploit(forms.Form):
@@ -108,7 +108,8 @@ class Checkbox_args_entree(forms.Form):
     )
 
     arguments_checkbox = forms.MultipleChoiceField(choices=ARGUMENTS, label=False,
-                                                   widget=forms.CheckboxSelectMultiple(attrs={'class': 'list-unstyled'}),
+                                                   widget=forms.CheckboxSelectMultiple(attrs={'class': 'list-unstyled',
+                                                                                              'id': 'arguments_checkbox'}),
                                                    required=False)
 
 

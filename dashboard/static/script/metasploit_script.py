@@ -6,9 +6,12 @@ import pdb
 
 
 def launch_metasploit():
-    cmd = ["msfconsole", "-x load msgrpc Pass=1234LOL"]
+    cmd = ["msfdb", "init", "--user", "ludovic", "--pass", "' '"]
+    cmd2 = ["msfconsole", "-x load msgrpc Pass=1234LOL"]
     FNULL = open(os.devnull, 'w')
     subprocess.Popen(cmd, stdout=FNULL, stderr=subprocess.STDOUT)
+    time.sleep(5)
+    subprocess.Popen(cmd2, stdout=FNULL, stderr=subprocess.STDOUT)
     return 0
 
 

@@ -27,6 +27,7 @@ def home_page(request):
     '''
     from extra_scripts import setup_shell
     setup_shell()
+    time.sleep(1)
     return render(request, 'dashboard/home/home.html', {})
 
 
@@ -759,6 +760,7 @@ def crafter_port_visu(request):
 
         if client == -1:
             launch_metasploit()
+            time.sleep(5)
             client, console = main_connection()
 
         if client == -1:
@@ -886,6 +888,7 @@ def crafter_version_visu(request):
 
     if client == -1:
         launch_metasploit()
+        time.sleep(5)
         client, console = main_connection()
 
     if client == -1:

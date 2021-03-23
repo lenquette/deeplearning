@@ -2,9 +2,11 @@
 {% load extras_filter %}
 {% block title %}Nmap script{% endblock title %}
 
+
+
 {% block content %}  
 
-	<form method="post" class="form-group text-left">
+	<form onload="retrieve_ip()" method="post" class="form-group text-left">
 
 		<div class="mt-5 py-2 p-3"  style="max-width: 30%">
 			<h1 class=" border-bottom">Type de scan</h1>
@@ -43,6 +45,17 @@
 		</div>
 	</form>
 
+	<div class="mt-5 py-2 p-3" id="view_update_arg">
+		<h1 class="border-bottom" style="max-width: 30%">Options choisies</h1>
+		<table class="table" style="max-width: 30%">
+			<tbody>
+			<tr><td>Type de scan</td><td id = "scan_choosen"></td></tr>
+			<tr><td>Arguments choisis</td><td id = "args_choosen"></td></tr>
+		 	<tr><td>IP choisie</td><td id = "ip_choosen"> IP None </td></tr>
+			</tbody>
+		</table>
+	</div>
+
 	<div class="mt-5 py-2 p-3">
 		<h1 class="border-bottom" style="max-width: 30%">Retour du terminal</h1>
 		<h2 class="mt-5">Résultat du scan des ports</h2>
@@ -77,6 +90,48 @@
 			{% endif %}
 		</div>
 	</div>
+
+<!--jquery-->
+<script type="text/javascript">
+	//related function to checkbox
+	function updateArgumentCheckbox() {
+		var allArgs = [];
+		$("#arguments_checkbox :checked").each(function() {
+		   allArgs.push($(this).val()+' ');
+		   });
+	    $('#args_choosen').html(allArgs);
+	}
+
+	//related function ro radiobutton
+	function updateScanRadiobutton() {
+		var scan = [];
+		$("#scan_wanted :checked").each(function() {
+			scan.push($(this).val()+' ');
+			});
+		$('#scan_choosen').html(scan);
+	}
+
+	//when page is loaded
+	$(document).ready(function() {
+		//update function for IP address
+		$("#entry_str").on('keyup', function() {
+			$("#ip_choosen").html($(this).val());
+		});
+		//function in live which updates a field according to checked arguments for arguments' scan
+		$("#arguments_checkbox input").click(function() {
+			updateArgumentCheckbox();
+		});
+		//function in live which updates a field according to checked arguments for the type of scan
+		$("#scan_wanted input").click(function() {
+		    updateScanRadiobutton();
+		});
+	});
+
+</script>
+<!--end jquery-->
+
+
+
 
 {% endblock content %}
 

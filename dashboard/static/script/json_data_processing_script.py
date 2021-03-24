@@ -22,23 +22,23 @@ def look_for_ip_of_nmap_scan():
 
     @return: list of ip of nmap scan
     '''
-    return [*nmap_data][:-2]
+    return [*nmap_data]
 
 def look_for_port():
     '''
 
     @return:list of vulnerable port AND list of tuple of vulnerable ip associated and related port
     '''
-    port = ['21', '22', '25', '161', '111', '445', '3306', '3389', '6667']
-    ip_addr = [*nmap_data][:-2]
+    # port = ['21', '22', '25', '161', '111', '445', '3306', '3389', '6667']
+    ip_addr = [*nmap_data]
     dict_ip = {}
     # pdb.set_trace()
     for ip in ip_addr:
-        port_vuln=[]
-        for port_num in port:
-            if re.search(r'\b{}\b'.format(port_num), json.dumps(nmap_data[ip])):
-                port_vuln.append(port_num)
-        dict_ip[ip] = port_vuln
+        port=[]
+        for ip, dict_of_ip in nmap_data.items():
+            for dict in dict_of_ip['ports']:
+                port.append(dict['portid'])
+        dict_ip[ip] = port
     # pdb.set_trace()
     #####DELETE NOISY DATA#######
     for ip, liste in dict_ip.items():
@@ -84,7 +84,7 @@ def get_port_id_and_name(ip_addr):
     @return: list of tuple, according to nmap_data, which is arranged like that : [('port', 'product / version / name '),...]
     '''
     ################CHECK IF GIVEN IP IS RIGHT#####################
-    ip_addr_list = [*nmap_data][:-2]
+    ip_addr_list = [*nmap_data]
     if ip_addr not in ip_addr_list :
         return -1
 

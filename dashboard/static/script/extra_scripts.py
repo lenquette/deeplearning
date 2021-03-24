@@ -13,6 +13,13 @@ from py3_synflood_cmd import SYN_Flood
 
 
 def syn_flood_attack(dstIP, dstPort, counter):
+    '''
+
+    @param dstIP: str ip of the target
+    @param dstPort: str of port
+    @param counter: int of counter
+    @return: 0 or -1 according to the fact that it succeeded or not
+    '''
     try :
         SYN_Flood(dstIP, dstPort, counter)
         return 0
@@ -21,6 +28,10 @@ def syn_flood_attack(dstIP, dstPort, counter):
 
 
 def setup_shell():
+    '''
+    fonction to setup webssh2 automatically with system-call
+    @return: 0 or -1 according to the fact that it succeeded or not
+    '''
     try :
         os.chdir('additional_features/webssh2/app/')
         cmd = ['npm', 'start'] #begin at ptoject's root location !!!!

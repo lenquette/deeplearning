@@ -6,6 +6,10 @@ import pdb
 
 
 def launch_metasploit():
+    '''
+
+    @return: 0 (not really usefull)
+    '''
     cmd = ["msfdb", "init", "--user", "ludovic", "--pass", "' '"]
     cmd2 = ["msfconsole", "-x load msgrpc Pass=1234LOL"]
     FNULL = open(os.devnull, 'w')
@@ -16,13 +20,17 @@ def launch_metasploit():
 
 
 def main_connection():
+    '''
+
+    @return: client and console if it succeeded or -1, -1 if it failed
+    '''
     # ip = "127.0.0.1"
     # user = "msf"
     passwd = '1234LOL'
     try:
         client = MsfRpcClient(passwd, port=55552)
         console = MsfConsole(client)
-        print(client)
+        # print(client)
     except:
         client = -1
         console = -1
@@ -30,16 +38,32 @@ def main_connection():
 
 
 def main_display_exploit(client):
+    '''
+
+    @param client: rpc client from metasploit console
+    @return: list of exploit
+    '''
     list_of_exploit = client.modules.exploits
     return list_of_exploit
 
 
 def main_display_auxiliary(client):
+    '''
+
+    @param client: rpc client from metasploit console
+    @return: list of exploit
+    '''
     list_of_auxiliary = client.modules.auxiliary
     return list_of_auxiliary
 
 
 def main_run_exploit(chosen_exploit, client):
+    '''
+
+    @param chosen_exploit: str of the chosen exploit
+    @param client: rpc client from metasploit console
+    @return: exploit or -1 if it failed
+    '''
     try:
         exploit = client.modules.use('exploit', chosen_exploit)
         return exploit
@@ -48,6 +72,12 @@ def main_run_exploit(chosen_exploit, client):
 
 
 def main_run_auxiliary(chosen_auxiliary, client):
+    '''
+
+    @param chosen_auxiliary: str of the chosen auxiliary
+    @param client: rpc client from metasploit console
+    @return: auxiliary or -1 if it failed
+    '''
     try:
         auxiliary = client.modules.use('auxiliary', chosen_auxiliary)
         return auxiliary
@@ -56,6 +86,14 @@ def main_run_auxiliary(chosen_auxiliary, client):
 
 
 def main_change_option_exploit(choosen_option, arg, type_val, exploit):
+    '''
+
+    @param choosen_option: exploit's option that will be change
+    @param arg: if it is STR, INT, or BOOL type
+    @param type_val: the value ralated to the change of the option
+    @param exploit: chosen exploit
+    @return: list of the configured option for the chosen exploit or -1 if it failed
+    '''
     try:
         if type_val == "INT":
             arg = int(arg)
@@ -73,6 +111,14 @@ def main_change_option_exploit(choosen_option, arg, type_val, exploit):
 
 
 def main_change_option_auxiliary(choosen_option, arg, type_val, auxiliary):
+    '''
+
+    @param choosen_option: auxiliary's option that will be change
+    @param arg: if it is STR, INT, or BOOL type
+    @param type_val: the value related to the change of the option
+    @param auxiliary: chosen auxiliary
+    @return: list of the configured option for the chosen auxiliary or -1 if it failed
+    '''
     try:
         if type_val == "INT":
             arg = int(arg)
@@ -90,10 +136,21 @@ def main_change_option_auxiliary(choosen_option, arg, type_val, auxiliary):
 
 
 def main_see_payload(exploit):
+    '''
+
+    @param exploit: chosen exploit
+    @return: list of payloads related to the chosen exploit
+    '''
     return exploit.targetpayloads()
 
 
 def main_choose_payload(chosen_payload, client):
+    '''
+
+    @param chosen_payload: chosen payload
+    @param client: rpc client from metasploit console
+    @return: payload or -1 if it failed
+    '''
     try:
         payload = client.modules.use('payload', chosen_payload)
         return payload
@@ -102,6 +159,14 @@ def main_choose_payload(chosen_payload, client):
 
 
 def main_config_payload(chosen_option, val, type_val, payload):
+    '''
+
+    @param chosen_option: payload's option that will be change
+    @param val: if it is STR, INT, or BOOL type
+    @param type_val: the value related to the change of the option
+    @param payload: chosen payload
+    @return: list of the configured option for the chosen payload or -1 if it failed
+    '''
     try:
         if type_val == "INT":
             val = int(val)
@@ -118,6 +183,13 @@ def main_config_payload(chosen_option, val, type_val, payload):
 
 
 def main_exe_exploit(payload, exploit, client):
+    '''
+
+    @param payload: chosen payload
+    @param exploit: chosen exploit
+    @param client: rpc client from metasploit console
+    @return: json related to the creation of the session and the sessions or -1, -1 if it failed
+    '''
     # print(payload.runoptions)
     # print(exploit.runoptions)
     # import pdb
@@ -138,6 +210,13 @@ def main_exe_exploit(payload, exploit, client):
 
 
 def main_enter_console_for_scan(auxiliary, ip, console):
+    '''
+
+    @param auxiliary: chosen auxiliary
+    @param ip: str of the ip
+    @param console: console of the rpc client
+    @return: json content of the console
+    '''
     # import pdb
     # pdb.set_trace()
     try:
@@ -151,6 +230,12 @@ def main_enter_console_for_scan(auxiliary, ip, console):
 
 
 def main_exe_auxiliary(auxiliary, client):
+    '''
+
+    @param auxiliary:
+    @param client:
+    @return:
+    '''
     json_auxiliary = auxiliary.execute()
     time.sleep(15)
     try:
@@ -164,6 +249,12 @@ def main_exe_auxiliary(auxiliary, client):
 
 
 def main_run_prompt(cmd, session):
+    '''
+
+    @param cmd: str command
+    @param session: session
+    @return: the content dispaly by the shell of the meterpreter
+    '''
     if "Meterpreter" in str(type(session)):
         terminating_strs = ['----END----']
         return session.run_with_output(cmd, terminating_strs, timeout=10, timeout_exception=False)
@@ -175,6 +266,12 @@ def main_run_prompt(cmd, session):
 
 
 def main_enter_console_manual(list_of_string, console):
+    '''
+
+    @param list_of_string: str command
+    @param console: console of the rpc client
+    @return: 0 (not really usefull)
+    '''
     for string in list_of_string:
         console.write(string)
         while console.is_busy():

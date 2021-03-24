@@ -27,7 +27,7 @@ def look_for_ip_of_nmap_scan():
 def look_for_port():
     '''
 
-    @return:list of vulnerable port AND list of tuple of vulnerable ip associated and related port
+    @return:dictionnary of port related to an ip according to nmap data
     '''
     # port = ['21', '22', '25', '161', '111', '445', '3306', '3389', '6667']
     ip_addr = [*nmap_data]
@@ -47,6 +47,7 @@ def look_for_port():
 
     return dict_ip
 
+#######################################DEPRECIATED#################################################
 def look_for_ip_associated_port(list_of_tuple, port):
     '''
 
@@ -59,6 +60,7 @@ def look_for_ip_associated_port(list_of_tuple, port):
         if port in tuple:
             ip_vuln_spe_port.append(tuple[0])
     return ip_vuln_spe_port
+####################################################################################################
 
 
 def session_organised_exploit(json_session):
@@ -228,4 +230,4 @@ def improve_research(data):
 # print(create_requete_for_exploitdb(data))
 
 
-print(look_for_port())
+# print(look_for_port())

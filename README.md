@@ -49,6 +49,7 @@ If it fails on a "wheel", before retrying the previous command, do :
 Then, connect yourself to : [127.0.0.1:8000/dashboard](127.0.0.1:8000/dashboard)
 
 # Metasploit
+## It's automatic now
 
 To use metasploit's module, enter the following commands :
 
@@ -57,7 +58,7 @@ To use metasploit's module, enter the following commands :
 		
 # Automate/Session Crafter
 
-In order to use the future version (not released yet) of "Session Crafter", there are several actions to do.
+In order to use "Session Crafter", there are several actions to do.
 
 First, write the following commande lines in a python shell :
 
@@ -87,6 +88,7 @@ To do so, write the following command line :
 You may use the "SYN attack module" now !!!
 
 # Embedded shell
+## It's automatic now
 
 To use the embedded shell, do the following command :
 

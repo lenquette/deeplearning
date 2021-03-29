@@ -60,10 +60,17 @@ To use metasploit's module, enter the following commands :
 
 In order to use "Session Crafter", there are several actions to do.
 
-First, write the following commande lines in a python shell :
+First of all, install the webdriver-manager in a terminal linux:
+        
+        pip3 webdriver-manager
+
+First, write the following command lines in a python shell :
 
 		from selenium import webdriver
 		from webdriver_manager.firefox import GeckoDriverManager
+
+        driver = webdriver.Firefox(executable_path=GeckoDriverManager().install())
+
 	
 Then, write the following commande in a Linux terminal :
 
@@ -71,7 +78,7 @@ Then, write the following commande in a Linux terminal :
 		
 NB : To run a python shell with Django in your virtual environement :
 		
-		python3 manage.py shell
+		python3 
 		...
 		exit
 		

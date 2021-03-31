@@ -76,7 +76,7 @@ Then, write the following commande in a Linux terminal :
 
 		cp ~/.wdm/drivers/geckodriver/linux64/v0.29.0/geckodriver ~/.local/bin/
 		
-NB : To run a python shell with Django in your virtual environement :
+NB : To run a python shell with Django in your virtual environment :
 		
 		python3 
 		...

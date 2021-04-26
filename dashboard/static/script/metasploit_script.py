@@ -1,9 +1,6 @@
 from pymetasploit3.msfrpc import MsfRpcClient, MsfConsole
 import time
 import subprocess, os
-import jellyfish
-import pdb
-
 
 def launch_metasploit():
     '''
@@ -190,18 +187,12 @@ def main_exe_exploit(payload, exploit, client):
     @param client: rpc client from metasploit console
     @return: json related to the creation of the session and the sessions or -1, -1 if it failed
     '''
-    # print(payload.runoptions)
-    # print(exploit.runoptions)
-    # import pdb
-    # pdb.set_trace()
     print(client)
     json_exploit = exploit.execute(payload=payload)
     time.sleep(15)
-    # print(client.sessions.list)
     try:
 
         session_num_list = [*client.sessions.list]
-        # print(session_num_list)
         session_id = session_num_list[-1]
         session = client.sessions.session(str(session_id))
         return json_exploit, session
@@ -217,8 +208,6 @@ def main_enter_console_for_scan(auxiliary, ip, console):
     @param console: console of the rpc client
     @return: json content of the console
     '''
-    # import pdb
-    # pdb.set_trace()
     try:
         console.write('use ' + auxiliary)
         console.write('set RHOSTS ' + ip)
@@ -360,7 +349,6 @@ def retrieve_exploit_from_db_info(list_of_rows, client):
             for exploit in list_of_exploit:
                 if keyword.lower() in exploit and exploit not in new_list:
                     new_list.append(exploit)
-    # pdb.set_trace()
 
     # if no global was set, new_list is empty !!!!!!
     if len(new_list) == 0:
@@ -377,12 +365,3 @@ def retrieve_exploit_from_db_info(list_of_rows, client):
 
     return exploits_chosen
 
-# def retrieve_from_port_scan(dict_of_ip_port_num_and_conf):
-#
-#     ######INITIAL VARIABLE######
-
-
-# client, console = main_connection()
-#
-# print(retrieve_exploit_from_db_info([['2015-02-17', 'Java JMX - Server Insecure Configuration Java Code Execution (Metasploit)', 'remote', 'Java', 'Metasploit']]
-# ,client))

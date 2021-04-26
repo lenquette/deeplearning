@@ -1,0 +1,29 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Hack tools{% endblock title %}
+
+
+
+{% block content %}  
+
+<h1 class="bg-light border-bottom p-3 bg-white d-inline-flex">Hack toolbox</h1>
+
+{# Présentation section #} 
+
+<div>
+<p class="font-weight-normal p-3">
+Bienvenue sur la page d'acceuil de Hack toolbox, "programme" destiné à virtualiser certains processus de pentest.
+Vous trouverez, ci-dessous, certains outils relatif au hacking.
+</p>
+</div>
+<br>
+<h2 class="bg-light border-bottom p-3 bg-white d-inline-flex"> Test </h2>
+<br>
+<a href="{% url 'dashboard:external' %}" class="p-3"> Test </a>
+<br>
+<br>
+<h2 class="bg-light border-bottom p-3 bg-white d-inline-flex"> Nmap </h2>
+<br>
+<a href="{% url 'dashboard:nmap_visu' %}" class="p-3"> Nmap </a>
+
+
+{% endblock content %}

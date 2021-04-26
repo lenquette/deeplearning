@@ -2,7 +2,6 @@ from metasploit_script import *
 from json_data_processing_script import *
 from web_query_and_process_script import *
 
-import pdb
 import socket
 import time
 

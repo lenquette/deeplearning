@@ -79,6 +79,12 @@ NB : To run a python shell with Django in your virtual environment :
 		
 You may use the "Session Crafter" now !!!
 
+#Pymetasploit3
+
+In pymetasploit3, change the request_post definition to set a timeout of 5.0 seconds
+
+    ... request.post(..., timeout = 5.0) ...
+
 # SYN attack module
 
 To use this module, you must change users's rights on python3, thanks to the command 'setcap'.

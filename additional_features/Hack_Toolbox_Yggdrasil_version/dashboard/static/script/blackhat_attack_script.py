@@ -1,5 +1,6 @@
 from json_data_processing_script import *
 from metasploit_script import *
+import os
 
 
 class Blackhat:
@@ -14,7 +15,33 @@ class Blackhat:
 
         ######################STORE INFORMATIONS###############################################################
         self.tree_targets = None
+        self.default_tree_payload_per_exploit = None
 
+
+
+    ####################SUB FUNCTION TO HANDLE CORRECTION AND OPTIMIZATION####################################
+    #                ________
+    #           _,.-Y  |  |  Y-._
+    #       .-~"   ||  |  |  |   "-.
+    #       I" ""=="|" !""! "|"[]""|     _____
+    #       L__  [] |..------|:   _[----I" .-{"-.
+    #      I___|  ..| l______|l_ [__L]_[I_/r(=}=-P
+    #     [L______L_[________]______j~  '-=c_]/=-^
+    #      \_I_j.--.\==I|I==_/.--L_]
+    #        [_((==)[`-----"](==)j
+    #           I--I"~~"""~~"I--I
+    #           |[]|         |[]|
+    #           l__j         l__j
+    #           |!!|         |!!|
+    #           |..|         |..|
+    #           ([])         ([])
+    #           ]--[         ]--[
+    #           [_L]         [_L]  -Row  (the Ascii-Wizard of Oz)
+    #          /|..|\       /|..|\
+    #         `=}--{='     `=}--{='
+    #        .-^--r-^-.   .-^--r-^-.
+    # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    ####################SUB FUNCTION TO HANDLE CORRECTION AND OPTIMIZATION####################################
     def correction_with_correlation_table(self, service_name):
         '''
         Method used to make correlation between value given in entry of the method and the table defined in config.ini
@@ -54,10 +81,46 @@ class Blackhat:
                 return 1
         return 0
 
-    def get_exploits_tree(self):
+    ####################SCAVENGER PROCESS FOR EXPLOITATION####################################################
+    #  _______             _______
+    # |@|@|@|@|           |@|@|@|@|
+    # |@|@|@|@|   _____   |@|@|@|@|
+    # |@|@|@|@| /\_T_T_/\ |@|@|@|@|
+    # |@|@|@|@||/\ T T /\||@|@|@|@|
+    #  ~/T~~T~||~\/~T~\/~||~T~~T\~
+    #   \|__|_| \(-(O)-)/ |_|__|/
+    #   _| _|    \\8_8//    |_ |_
+    # |(@)]   /~~[_____]~~\   [(@)|
+    #   ~    (  |       |  )    ~
+    #       [~` ]       [ '~]
+    #       |~~|         |~~|
+    #       |  |         |  |
+    #      _<\/>_       _<\/>_
+    #     /_====_\     /_====_\
+    ####################SCAVENGER PROCESS FOR EXPLOITATION####################################################
+
+    def get_default_payload_per_exploit_tree(self):
+        '''
+        Method used to create the tree for payload (per exploit)
+        :return:
+        '''
+        ####GET THE DEFAULT LIST######
+        self.env.get_exploits()
+        self.env.get_default_payload()
+        ####STORE IT##################
+        self.default_tree_payload_per_exploit = self.env.default_list_payload_per_exploit
+
+        print(self.env.color_monitor.background_OKGREEN + "[*] Storing information in {}".format(
+            str(self.json_monitor.datapath) + '/data.json') +
+              self.env.color_monitor.background_ENDC)
+
+        self.json_monitor.write_json_data_in_a_file(self.json_monitor.datapath + '/default_payload_tree.json',
+                                                    self.env.default_list_payload_per_exploit)
+
+    def get_targets_tree(self):
         '''
         Methode used to create the exploit tree
-        :return:
+        :return: nothing (the result is stored in self.tree_targets)
         '''
         ##########################################USE THE MSFCONSOLE TO RETRIEVE THE EXPLOIT###################
         print(
@@ -179,13 +242,39 @@ class Blackhat:
                 self.env.color_monitor.background_OKGREEN + "[*] Success in creating the json of the targets' tree" + self.env.color_monitor.background_ENDC)
         ##########################STORE INFORATIONS IN THE CLASS ITSELF#################################################
         self.tree_targets = dict_of_targets
-        ########################################STORE DATA IN JSON FILE#################################################
+        #                       ug
+        #                      b
+        #                     g           bug
+        #                     u        bug
+        #     bugbug          b       g
+        #           bug      bugbug bu
+        #              bug  bugbugbugbugbugbug
+        # bug   bug   bugbugbugbugbugbugbugbugb
+        #    bug   bug bugbugbugbugbugbugbugbugbu
+        #  bugbugbugbu gbugbugbugbugbugbugbugbugbu
+        # bugbugbugbug
+        #  bugbugbugbu gbugbugbugbugbugbugbugbugbu
+        #    bug   bug bugbugbugbugbugbugbugbugbu
+        # bug   bug  gbugbugbugbugbugbugbugbugb
+        #              bug  bugbugbugbugbugbug
+        #           bug      bugbug  bu
+        #     bugbug          b        g
+        #                     u         bug
+        #                     g            bug
+        #                      b
+        #                       ug
         print(self.env.color_monitor.background_OKGREEN + "[*] Storing information in {}".format(
             str(self.json_monitor.datapath) + '/data.json') +
               self.env.color_monitor.background_ENDC)
         self.json_monitor.write_json_data_in_a_file(self.json_monitor.datapath + '/data.json', self.tree_targets)
 
+    # def launch_exploitation(self, mode):
+    #     if mode == "test":
+    #
+    #     return 0
+
 
 if __name__ == '__main__':
     foo = Blackhat()
-    foo.get_exploits_tree()
+    # foo.get_targets_tree()
+    foo.get_default_payload_per_exploit_tree()

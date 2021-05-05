@@ -34,9 +34,12 @@ class Json_monitor:
         ### Retrieve value
         self.os_list = config['State']['os_type'].split('@')
         self.service_list = config['State']['services'].split('@')
-        self.correlation_table = config['State']['correlations'].split('@')
+        self.correlation_table_services = config['State']['correlations_services'].split('@')
+        self.correlation_table_targets = config['State']['correlations_targets'].split('@')
         self.exploits_directory = config['State']['exploits_directory'].split('@')
         self.datapath = config['Common']['data_path']
+        self.save_path_ia_data = str(config['Common']['save_path'])
+        self.save_ia_data_file = str(config['Common']['save_file'])
         self.targets_tree = None
 
     def look_for_ip_targets(self):
@@ -133,11 +136,22 @@ class Json_monitor:
     def write_json_data_in_a_file(self, name, data):
         '''
         Method used to write in a json file the data
+        :param: name: name of the file (string)
+        :param: data: json data to write
         :return:
         '''
         with open(name, 'w') as outfile:
             json.dump(data, outfile, indent=4)
 
+    def read_json_data_in_a_file(self, name):
+        '''
+        Method used to read data in a json file
+        :param name: name of the json file
+        :return: date : data of the json file
+        '''
+        with open(name) as jsonfile:
+            data = json.load(jsonfile)
+        return data
 
 #######################################DEPRECIATED##################################################
 ####################################################################################################

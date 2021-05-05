@@ -1,0 +1,39 @@
+{
+    "172.16.1.2": {
+        "os": "windows",
+        "ports": {
+            "1617": {
+                "prod_name": "java",
+                "version": "unknown",
+                "protocol": "tcp",
+                "exploit": [
+                    "exploit/multi/browser/java_jre17_exec",
+                    "exploit/multi/browser/java_jre17_glassfish_averagerangestatisticimpl",
+                    "exploit/multi/browser/java_jre17_driver_manager",
+                    "exploit/multi/browser/java_verifier_field_access",
+                    "exploit/multi/browser/java_jre17_jaxws",
+                    "exploit/multi/browser/java_jre17_jmxbean",
+                    "exploit/multi/browser/java_jre17_jmxbean_2",
+                    "exploit/multi/browser/java_jre17_method_handle",
+                    "exploit/multi/browser/java_jre17_provider_skeleton",
+                    "exploit/multi/browser/java_jre17_reflection_types",
+                    "exploit/multi/browser/java_rhino",
+                    "exploit/multi/browser/java_atomicreferencearray",
+                    "exploit/multi/misc/java_jdwp_debugger",
+                    "exploit/multi/misc/java_jmx_server",
+                    "exploit/windows/browser/java_mixer_sequencer",
+                    "exploit/multi/misc/java_rmi_server",
+                    "exploit/multi/browser/java_rmi_connection_impl",
+                    "exploit/multi/browser/java_signed_applet",
+                    "exploit/multi/browser/java_trusted_chain",
+                    "exploit/multi/browser/java_storeimagearray",
+                    "exploit/multi/fileformat/js_unpacker_eval_injection",
+                    "exploit/multi/http/jenkins_metaprogramming",
+                    "exploit/multi/http/jenkins_script_console",
+                    "exploit/multi/http/liferay_java_unmarshalling",
+                    "exploit/windows/browser/msxml_get_definition_code_exec"
+                ]
+            }
+        }
+    }
+}

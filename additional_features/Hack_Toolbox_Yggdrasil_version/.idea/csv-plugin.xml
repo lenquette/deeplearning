@@ -3,6 +3,13 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
+        <entry key="/README.md">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/dashboard/static/script/Python-SYN-Flood-Attack-Tool/py3_synflood_cmd.py">
           <value>
             <Attribute>
@@ -32,6 +39,34 @@
           </value>
         </entry>
         <entry key="/dashboard/static/script/data/data.json">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/dashboard/static/script/data/default_checkmodule_tree.json">
+          <value>
+            <Attribute>
+              <option name="separator" value=":" />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/dashboard/static/script/data/targets_option_tree.json">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/dashboard/static/script/data/targets_option_tree_for_172.16.1.2.json">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/dashboard/static/script/data/targets_tree.json">
           <value>
             <Attribute>
               <option name="separator" value="," />

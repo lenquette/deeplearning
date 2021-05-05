@@ -1,0 +1,12 @@
+{
+   "freebsd/http/citrix_dir_traversal_rce": "auxiliary/scanner/http/citrix_dir_traversal",
+   "linux/http/pulse_secure_cmd_exec": "auxiliary/gather/pulse_secure_file_disclosure ",
+   "linux/misc/saltstack_salt_unauth_rce": "auxiliary/gather/saltstack_salt_root_key",
+   "multi/http/vmware_vcenter_uploadova_rce": "auxiliary/scanner/vmware/esx_fingerprint",
+   "multi/misc/java_rmi_server": "auxiliary/scanner/misc/java_rmi_server",
+   "solaris/ssh/pam_username_bof": "auxiliary/scanner/ssh/ssh_version",
+   "windows/http/exchange_proxylogon_rce": "auxiliary/scanner/http/exchange_proxylogon",
+   "windows/rdp/cve_2019_0708_bluekeep_rce": "auxiliary/scanner/rdp/cve_2019_0708_bluekeep",
+   "windows/smb/ms17_010_eternalblue": "auxiliary/scanner/smb/smb_ms17_010",
+   "windows/smb/ms17_010_psexec": "auxiliary/scanner/smb/smb_ms17_010"
+}

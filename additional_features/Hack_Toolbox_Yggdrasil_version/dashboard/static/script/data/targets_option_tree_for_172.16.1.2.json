@@ -469,13 +469,7 @@
         " LifeSize UVC version <= 1.2.6"
     ],
     "linux/http/linksys_apply_cgi": [
-        " Generic",
-        " Version 1.42.2",
-        " Version 2.02.6beta1",
-        " Version 2.02.7_ETSI",
-        " Version 3.03.6",
-        " Version 4.00.7",
-        " Version 4.20.06"
+        " Generic"
     ],
     "linux/http/linksys_e1500_apply_exec": [
         " CMD",
@@ -785,8 +779,7 @@
         " Automatic"
     ],
     "linux/http/vcms_upload": [
-        " Generic (PHP Payload)",
-        " Linux x86"
+        " Generic (PHP Payload)"
     ],
     "linux/http/vestacp_exec": [
         " Automatic"
@@ -1122,17 +1115,7 @@
     ],
     "linux/misc/sercomm_exec": [
         " Generic Linux MIPS Big Endian",
-        " Generic Linux MIPS Little Endian",
-        " Manual Linux MIPS Big Endian",
-        " Manual Linux MIPS Little Endian",
-        " Cisco WAP4410N",
-        " Honeywell WAP-PL2 IP Camera",
-        " Netgear DG834",
-        " Netgear DG834G",
-        " Netgear DG834PN",
-        " Netgear DGN1000",
-        "Netgear DSG835",
-        "Netgear WPNT834"
+        " Generic Linux MIPS Little Endian"
     ],
     "linux/misc/tplink_archer_a7_c7_lan_rce": [
         " TP-Link Archer A7/C7 (AC1750) v5 (firmware up to 201029/30)"
@@ -1358,43 +1341,43 @@
         " OS X"
     ],
     "multi/browser/java_atomicreferencearray": [
-        " Windows x86 (Native Payload)"
+        " Generic (Java Payload)"
     ],
     "multi/browser/java_calendar_deserialize": [
-        " Windows x86 (Native Payload)"
+        " Generic (Java Payload)"
     ],
     "multi/browser/java_getsoundbank_bof": [
         " J2SE 1.6_16 on Windows x86"
     ],
     "multi/browser/java_jre17_driver_manager": [
-        " Windows x86 (Native Payload)"
+        " Generic (Java Payload)"
     ],
     "multi/browser/java_jre17_exec": [
-        " Windows Universal"
+        " Generic (Java Payload)"
     ],
     "multi/browser/java_jre17_glassfish_averagerangestatisticimpl": [
-        " Windows x86 (Native Payload)"
+        " Generic (Java Payload)"
     ],
     "multi/browser/java_jre17_jaxws": [
-        " Windows Universal"
+        " Generic (Java Payload)"
     ],
     "multi/browser/java_jre17_jmxbean": [
-        " Windows x86 (Native Payload)"
+        " Generic (Java Payload)"
     ],
     "multi/browser/java_jre17_jmxbean_2": [
-        " Windows x86 (Native Payload)"
+        " Generic (Java Payload)"
     ],
     "multi/browser/java_jre17_method_handle": [
-        " Windows x86 (Native Payload)"
+        " Generic (Java Payload)"
     ],
     "multi/browser/java_jre17_provider_skeleton": [
-        " Windows x86 (Native Payload)"
+        " Generic (Java Payload)"
     ],
     "multi/browser/java_jre17_reflection_types": [
-        " Windows x86 (Native Payload)"
+        " Generic (Java Payload)"
     ],
     "multi/browser/java_rhino": [
-        " Windows Universal"
+        " Generic (Java Payload)"
     ],
     "multi/browser/java_rmi_connection_impl": [
         " Generic (Java Payload)"
@@ -1403,16 +1386,16 @@
         " J2SE 1.6_16 on Windows x86"
     ],
     "multi/browser/java_signed_applet": [
-        " Windows x86 (Native Payload)"
+        " Generic (Java Payload)"
     ],
     "multi/browser/java_storeimagearray": [
-        " Windows Universal"
+        " Generic (Java Payload)"
     ],
     "multi/browser/java_trusted_chain": [
-        " Windows Universal"
+        " Generic (Java Payload)"
     ],
     "multi/browser/java_verifier_field_access": [
-        " Windows x86 (Native Payload)"
+        " Generic (Java Payload)"
     ],
     "multi/browser/mozilla_compareto": [
         " Firefox < 1.0.5, Mozilla < 1.7.10, Windows"
@@ -1536,11 +1519,10 @@
         " Automatic"
     ],
     "multi/http/atutor_upload_traversal": [
-        " Windows"
+        " Auto"
     ],
     "multi/http/auxilium_upload_exec": [
-        " Generic (PHP Payload)",
-        " Linux x86"
+        " Generic (PHP Payload)"
     ],
     "multi/http/axis2_deployer": [
         " Windows Universal"
@@ -1604,11 +1586,10 @@
         " Drupal 7.0 - 7.31 (user-post PHP injection method)"
     ],
     "multi/http/eaton_nsm_code_exec": [
-        " Generic (PHP Payload)",
-        " Linux x86"
+        " Generic (PHP Payload)"
     ],
     "multi/http/eventlog_file_upload": [
-        " Eventlog Analyzer v8.1 - v9.9 b9002 / Windows"
+        " Automatic"
     ],
     "multi/http/extplorer_upload_exec": [
         " Automatic Targeting"
@@ -1626,7 +1607,7 @@
         " GetSimpleCMS 3.3.15 and before"
     ],
     "multi/http/git_client_command_exec": [
-        " Windows Powershell"
+        " Automatic"
     ],
     "multi/http/git_submodule_command_exec": [
         " Automatic"
@@ -1654,7 +1635,7 @@
         " Automatic"
     ],
     "multi/http/glassfish_deployer": [
-        " Windows Universal"
+        " Automatic"
     ],
     "multi/http/glossword_upload_exec": [
         " Automatic Targeting"
@@ -1685,11 +1666,10 @@
         " HP SiteScope 11.20 / Windows 2003 SP2"
     ],
     "multi/http/hp_sys_mgmt_exec": [
-        " Windows",
-        " Windows (x64)"
+        " Automatic"
     ],
     "multi/http/hyperic_hq_script_console": [
-        " Windows"
+        " Automatic"
     ],
     "multi/http/ibm_openadmin_tool_soap_welcomeserver_exec": [
         " Generic (PHP Payload)"
@@ -1698,16 +1678,16 @@
         " Automatic"
     ],
     "multi/http/jboss_bshdeployer": [
-        " Windows Universal"
+        " Automatic (Java based)"
     ],
     "multi/http/jboss_deploymentfilerepository": [
-        " Windows Universal"
+        " Automatic (Java based)"
     ],
     "multi/http/jboss_invoke_deploy": [
-        " Windows Universal"
+        " Automatic"
     ],
     "multi/http/jboss_maindeployer": [
-        " Windows Universal"
+        " Automatic (Java based)"
     ],
     "multi/http/jboss_seam_upload_exec": [
         " Java Universal"
@@ -1754,11 +1734,7 @@
         " Mako Server v2.5, 2.6"
     ],
     "multi/http/manage_engine_dc_pmp_sqli": [
-        " Desktop Central v8 >= b80200 / v9 < b90039 (PostgreSQL) on Windows",
-        " Desktop Central MSP v8 >= b80200 / v9 < b90039 (PostgreSQL) on Windows",
-        " Desktop Central [MSP] v7 >= b70200 / v8 / v9 < b90039 (MySQL) on Window",
-        " Password Manager Pro [MSP] v6 >= b6800 / v7 < b7003 (PostgreSQL) on Win",
-        " Password Manager Pro v6 >= b6500 / v7 < b7003 (MySQL) on Windows"
+        " Automatic"
     ],
     "multi/http/manageengine_auth_upload": [
         " Automatic"
@@ -1767,7 +1743,7 @@
         " ServiceDesk Plus v9 b9000 - b9102 / Java Universal"
     ],
     "multi/http/manageengine_search_sqli": [
-        " Windows"
+        " Automatic"
     ],
     "multi/http/mantisbt_manage_proj_page_rce": [
         " Mantis <= 1.1.3"
@@ -1782,7 +1758,7 @@
         " Automatic Targeting"
     ],
     "multi/http/mediawiki_thumb": [
-        " Windows CMD"
+        " Automatic PHP-CLI"
     ],
     "multi/http/metasploit_static_secret_key_base": [
         " Automatic"
@@ -1801,8 +1777,7 @@
         " mma file uploader"
     ],
     "multi/http/mobilecartly_upload_exec": [
-        " Generic (PHP Payload)",
-        " Linux x86"
+        " Generic (PHP Payload)"
     ],
     "multi/http/monstra_fileupload_exec": [
         " Monstra CMS 3.0.4"
@@ -1824,7 +1799,7 @@
         " Automatic"
     ],
     "multi/http/netwin_surgeftp_exec": [
-        " Windows"
+        " Automatic"
     ],
     "multi/http/nibbleblog_file_upload": [
         " Nibbleblog 4.0.3"
@@ -1834,7 +1809,7 @@
         " Automatic (Linux Dropper)"
     ],
     "multi/http/novell_servicedesk_rce": [
-        " Novell ServiceDesk / Windows"
+        " Automatic"
     ],
     "multi/http/nuuo_nvrmini_upgrade_rce": [
         " NUUO NVRmini"
@@ -1914,7 +1889,7 @@
         " Automatic"
     ],
     "multi/http/phpmyadmin_lfi_rce": [
-        " Windows"
+        " Automatic"
     ],
     "multi/http/phpmyadmin_null_termination_exec": [
         " Automatic"
@@ -1932,8 +1907,7 @@
         " PhpTax 0.8"
     ],
     "multi/http/phpwiki_ploticus_exec": [
-        " Generic (PHP Payload)",
-        " Linux x86"
+        " Generic (PHP Payload)"
     ],
     "multi/http/pimcore_unserialize_rce": [
         " Pimcore 5.x (Symfony unserialize payload)",
@@ -1955,8 +1929,7 @@
         " Automatic"
     ],
     "multi/http/polarcms_upload_exec": [
-        " Generic (PHP Payload)",
-        " Linux x86"
+        " Generic (PHP Payload)"
     ],
     "multi/http/processmaker_exec": [
         " ProcessMaker Open Source 2.x (PHP Payload)"
@@ -1965,8 +1938,7 @@
         " Automatic Targeting"
     ],
     "multi/http/qdpm_upload_exec": [
-        " Generic (PHP Payload)",
-        " Linux x86"
+        " Generic (PHP Payload)"
     ],
     "multi/http/rails_actionpack_inline_exec": [
         " Automatic"
@@ -1994,8 +1966,7 @@
         " Windows CMD"
     ],
     "multi/http/sflog_upload_exec": [
-        " Generic (PHP Payload)",
-        " Linux x86"
+        " Generic (PHP Payload)"
     ],
     "multi/http/shiro_rememberme_v124_deserialize": [
         " Windows Command payload"
@@ -2024,14 +1995,13 @@
         " SonicWALL GMS 6.0 Viewpoint / Windows 2003 SP2"
     ],
     "multi/http/sonicwall_scrutinizer_methoddetail_sqli": [
-        " Dell SonicWALL Scrutinizer 11.01 on Windows"
+        " Automatic"
     ],
     "multi/http/splunk_mappy_exec": [
         " Universal CMD"
     ],
     "multi/http/splunk_upload_app_exec": [
-        " Splunk >= 7.2.4 / Windows",
-        " Splunk >= 5.0.1 / Windows"
+        " Automatic"
     ],
     "multi/http/spree_search_exec": [
         " Automatic"
@@ -2050,7 +2020,7 @@
         " Linux Dropper"
     ],
     "multi/http/struts2_namespace_ognl": [
-        " Windows"
+        " Automatic detection"
     ],
     "multi/http/struts2_rest_xstream": [
         " Windows (In-Memory)",
@@ -2070,7 +2040,7 @@
         " Windows Universal"
     ],
     "multi/http/struts_default_action_mapper": [
-        " Windows"
+        " Automatic"
     ],
     "multi/http/struts_dev_mode": [
         " Struts 2"
@@ -2094,7 +2064,7 @@
         " Sun Java System Web Server 7.0 update 7 on Windows x86 (SEH)"
     ],
     "multi/http/sysaid_auth_file_upload": [
-        " SysAid Help Desk v14.4 / Windows"
+        " Automatic"
     ],
     "multi/http/sysaid_rdslogs_file_upload": [
         " SysAid Help Desk v14.3 - 14.4 / Java Universal"
@@ -2103,10 +2073,10 @@
         " Automatic Targeting"
     ],
     "multi/http/tomcat_jsp_upload_bypass": [
-        " Java Windows"
+        " Automatic"
     ],
     "multi/http/tomcat_mgr_deploy": [
-        " Windows Universal"
+        " Automatic"
     ],
     "multi/http/tomcat_mgr_upload": [
         " Windows Universal"
@@ -2168,7 +2138,7 @@
         " Windows Dropper"
     ],
     "multi/http/webnms_file_upload": [
-        " WebNMS Framework Server 5.2 / 5.2 SP1 - Windows"
+        " Automatic"
     ],
     "multi/http/webpagetest_upload_exec": [
         " WebPageTest v2.6 or older"
@@ -2219,8 +2189,7 @@
         " ZENworks Configuration Management 10 SP3 and 11 SP2 / Windows 2003 SP2"
     ],
     "multi/http/zpanel_information_disclosure_rce": [
-        " Generic (PHP Payload)",
-        " Linux x86"
+        " Generic (PHP Payload)"
     ],
     "multi/ids/snort_dce_rpc": [
         " Windows Universal"
@@ -2246,16 +2215,17 @@
         " Windows"
     ],
     "multi/misc/batik_svg_java": [
-        " Windows Universal"
+        " Generic (Java Payload)"
     ],
     "multi/misc/bmc_patrol_cmd_exec": [
-        " Windows Powershell Injected Shellcode"
+        " Generic Command Callback"
     ],
     "multi/misc/bmc_server_automation_rscd_nsh_rce": [
-        " Windows/VBS Stager"
+        " Automatic",
+        " Generic Command"
     ],
     "multi/misc/claymore_dual_miner_remote_manager_rce": [
-        " Windows"
+        " Automatic Target"
     ],
     "multi/misc/consul_rexec_exec": [
         " Linux"
@@ -2291,7 +2261,7 @@
         " Generic (Java Payload)"
     ],
     "multi/misc/java_rmi_server": [
-        " Windows x86 (Native Payload)"
+        " Generic (Java Payload)"
     ],
     "multi/misc/legend_bot_exec": [
         " Legend IRC Bot"
@@ -2318,6 +2288,7 @@
         " pbot"
     ],
     "multi/misc/persistent_hpca_radexec_exec": [
+        " HP Client Automation 9.0.0 / Linux",
         " HP Client Automation 9.0.0 / Windows"
     ],
     "multi/misc/ra1nx_pubcall_exec": [
@@ -2354,7 +2325,7 @@
         " Windows"
     ],
     "multi/misc/wireshark_lwres_getaddrbyname": [
-        " wireshark/tshark 1.2.1 and 1.2.5 on Windows (x86)"
+        " Automatic"
     ],
     "multi/misc/wireshark_lwres_getaddrbyname_loop": [
         " wireshark/tshark 1.2.1 and 1.2.5 on Windows (x86)"
@@ -2375,14 +2346,14 @@
         " Debugging"
     ],
     "multi/php/php_unserialize_zval_cookie": [
-        " Automatic"
+        " Automatic",
+        " Linux x86 Generic"
     ],
     "multi/php/wp_duplicator_code_inject": [
         " WordPress Duplicator <= 1.2.40"
     ],
     "multi/postgres/postgres_copy_from_program_cmd_exec": [
-        " Windows - PowerShell (In-Memory)",
-        " Windows (CMD)"
+        " Automatic"
     ],
     "multi/postgres/postgres_createlang": [
         " Automatic"
@@ -2409,7 +2380,7 @@
         " Windows x64"
     ],
     "multi/scada/inductive_ignition_rce": [
-        " Windows"
+        " Automatic"
     ],
     "multi/script/web_delivery": [
         " Python",
@@ -2927,8 +2898,7 @@
         " Hastymail 2.1.1 RC1"
     ],
     "unix/webapp/havalite_upload_exec": [
-        " Generic (PHP Payload)",
-        " Linux x86"
+        " Generic (PHP Payload)"
     ],
     "unix/webapp/horde_unserialize_exec": [
         " Horde 5"
@@ -2968,8 +2938,7 @@
         " Kimai version 0.9.2.x (PHP Payload)"
     ],
     "unix/webapp/libretto_upload_exec": [
-        " Generic (PHP Payload)",
-        " Linux x86"
+        " Generic (PHP Payload)"
     ],
     "unix/webapp/maarch_letterbox_file_upload": [
         " Maarch LetterBox 2.8"
@@ -3062,8 +3031,7 @@
         " Piwik"
     ],
     "unix/webapp/projectpier_upload_exec": [
-        " Generic (PHP Payload)",
-        " Linux x86"
+        " Generic (PHP Payload)"
     ],
     "unix/webapp/projectsend_upload_exec": [
         " ProjectSend (PHP Payload)"
@@ -3285,8 +3253,7 @@
         " ZPanel 10.0.0.2 on Linux"
     ],
     "unix/x11/x11_keyboard_exec": [
-        " xterm (Generic)",
-        " gnome-terminal (Ubuntu)"
+        " xterm (Generic)"
     ],
     "windows/antivirus/ams_hndlrsvc": [
         " Windows Universal"
@@ -3448,20 +3415,10 @@
         " Automatic"
     ],
     "windows/browser/adobe_flash_mp4_cprt": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3 with msvcrt ROP",
-        " IE 8 on Windows XP SP3 with JRE ROP",
-        " IE 7 on Windows Vista",
-        " IE 8 on Windows 7 SP1"
+        " Automatic"
     ],
     "windows/browser/adobe_flash_otf_font": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3",
-        " IE 7 on Windows Vista SP2",
-        " IE 8 on Windows 7 SP1",
-        " IE 9 on Windows 7 SP1"
+        " Automatic"
     ],
     "windows/browser/adobe_flash_pcre": [
         " Automatic"
@@ -3470,13 +3427,10 @@
         " Automatic"
     ],
     "windows/browser/adobe_flash_rtmp": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3 with msvcrt ROP"
+        " Automatic"
     ],
     "windows/browser/adobe_flash_sps": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3 / Vista"
+        " Automatic"
     ],
     "windows/browser/adobe_flash_uncompress_zlib_uninitialized": [
         " Automatic"
@@ -3491,11 +3445,7 @@
         " Automatic"
     ],
     "windows/browser/adobe_flashplayer_flash10o": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3",
-        " IE 7 on Windows Vista",
-        " IE 8 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/adobe_flashplayer_newfunction": [
         " Automatic"
@@ -3530,10 +3480,7 @@
         " Windows NT/2000/XP/2003 Automatic"
     ],
     "windows/browser/aladdin_choosefilepath_bof": [
-        " Windows XP with IE 6",
-        " Windows XP with IE 7",
-        " Windows XP with IE 8",
-        " Windows Vista with IE 7"
+        " Automatic"
     ],
     "windows/browser/amaya_bdo": [
         " Amaya Browser v11"
@@ -3552,8 +3499,7 @@
         " Apple QuickTime Player 7.6.6 and 7.6.7 on Windows XP SP3"
     ],
     "windows/browser/apple_quicktime_mime_type": [
-        " Windows XP SP3 / Safari 5.1.7 / Apple QuickTime Player 7.7.2",
-        " Windows XP SP3 / Safari 5.0.5 / Apple QuickTime Player 7.7.2"
+        " Automatic"
     ],
     "windows/browser/apple_quicktime_rdrf": [
         " Quicktime 7.7.3 with IE 8 on Windows XP SP3",
@@ -3568,17 +3514,14 @@
         " Apple QuickTime Player 7.6.6"
     ],
     "windows/browser/apple_quicktime_texml_font_table": [
-        " IE 6 on Windows XP SP3",
-        " Firefox 3.5 on Windows XP SP3",
-        " Firefox 3.5.1 on Windows XP SP3"
+        " Automatic"
     ],
     "windows/browser/ask_shortformat": [
         " Windows XP SP0/SP1 Pro English",
         " Windows 2000 Pro English ALL"
     ],
     "windows/browser/asus_net4switch_ipswcom": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3"
+        " Automatic"
     ],
     "windows/browser/athocgov_completeinstallation": [
         " Windows XP SP0-SP3 / Windows Vista / IE 6.0 SP0-SP2 / IE 7"
@@ -3620,25 +3563,16 @@
         " Automatic"
     ],
     "windows/browser/cisco_playerpt_setsource": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3 / Windows Vista SP2",
-        " IE 8 on Windows XP SP3"
+        " Automatic"
     ],
     "windows/browser/cisco_playerpt_setsource_surl": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3 / Windows Vista SP2",
-        " IE 8 on Windows XP SP3",
-        " IE 8 with Java 6 on Windows XP SP3",
-        " IE 8 with Java 6 on Windows 7 SP1/Vista SP2",
-        " IE 9 with Java 6 on Windows 7 SP1"
+        " Automatic"
     ],
     "windows/browser/cisco_webex_ext": [
         " Cisco WebEx Extension 1.0.1"
     ],
     "windows/browser/citrix_gateway_actx": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 7 on Windows Vista"
+        " Automatic"
     ],
     "windows/browser/clear_quest_cqole": [
         " Automatic"
@@ -3650,15 +3584,10 @@
         " Windows XP SP0-SP3 / Windows Vista / IE 6.0 SP0-SP2 / IE 7"
     ],
     "windows/browser/crystal_reports_printcontrol": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3",
-        " IE 8 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/dell_webcam_crazytalk": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 7 on Windows Vista"
+        " Automatic"
     ],
     "windows/browser/dxstudio_player_exec": [
         " Automatic"
@@ -3686,11 +3615,10 @@
         " Mozilla Firefox 38 to 41"
     ],
     "windows/browser/foxit_reader_plugin_url_bof": [
-        " Windows 7 SP1 / Firefox 18 / Foxit Reader 5.4.4.11281"
+        " Automatic"
     ],
     "windows/browser/getgodm_http_response_bof": [
-        " 4.9.0.1982 on Windows XP SP3",
-        " 5.3.0.2712 on Windows XP SP3"
+        " Automatic"
     ],
     "windows/browser/gom_openurl": [
         " Windows XP SP2 Pro English"
@@ -3705,12 +3633,7 @@
         " Automatic"
     ],
     "windows/browser/hp_alm_xgo_setshapenodetype_exec": [
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3",
-        " IE 7 on Windows Vista",
-        " IE 8 on Windows Vista",
-        " IE 8 on Windows 7",
-        " IE 9 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/hp_easy_printer_care_xmlcachemgr": [
         " Automatic"
@@ -3725,12 +3648,7 @@
         " Windows XP SP2 Pro English / IE6SP0-SP2"
     ],
     "windows/browser/hp_loadrunner_writefilebinary": [
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3",
-        " IE 7 on Windows Vista",
-        " IE 8 on Windows Vista",
-        " IE 8 on Windows 7",
-        " IE 9 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/hp_loadrunner_writefilestring": [
         " Automatic IE on Windows XP"
@@ -3742,15 +3660,10 @@
         " Windows XP SP0-SP3 / IE 6.0 SP0-2 & IE 7.0"
     ],
     "windows/browser/ibm_spss_c1sizer": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3",
-        " IE 8 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/ibm_tivoli_pme_activex_bof": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3"
+        " Automatic"
     ],
     "windows/browser/ibmegath_getxmlvalue": [
         " Windows XP SP0-SP3 / Windows Vista / IE 6.0 SP0-SP2 / IE 7"
@@ -3759,34 +3672,22 @@
         " Windows XP SP0-SP2 / IE 6.0 SP0-2 & IE 7.0 English"
     ],
     "windows/browser/ie_cbutton_uaf": [
-        " IE 8 on Windows XP SP3",
-        " IE 8 on Windows Vista",
-        " IE 8 on Windows Server 2003",
-        " IE 8 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/ie_cgenericelement_uaf": [
-        " IE 8 on Windows XP SP3",
-        " IE 8 on Windows Vista",
-        " IE 8 on Windows Server 2003",
-        " IE 8 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/ie_createobject": [
         " Automatic"
     ],
     "windows/browser/ie_execcommand_uaf": [
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3",
-        " IE 7 on Windows Vista",
-        " IE 8 on Windows Vista",
-        " IE 8 on Windows 7",
-        " IE 9 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/ie_iscomponentinstalled": [
         " Windows XP SP0 with Internet Explorer 6.0"
     ],
     "windows/browser/ie_setmousecapture_uaf": [
-        " Windows 7 with Office 2007|2010",
-        " Windows XP with IE 8"
+        " Automatic"
     ],
     "windows/browser/ie_unsafe_scripting": [
         " Windows x86/x64"
@@ -3795,33 +3696,19 @@
         " Automatic"
     ],
     "windows/browser/indusoft_issymbol_internationalseparator": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3",
-        " IE 7 on Windows Vista",
-        " IE 8 on Windows Vista",
-        " IE 8 on Windows 7",
-        " IE 9 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/inotes_dwa85w_bof": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3",
-        " IE 7 on Windows Vista",
-        " IE 8 on Windows Vista",
-        " IE 8 on Windows 7",
-        " IE 9 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/intrust_annotatex_add": [
-        " Windows XP/Vista SP0-SP3 (IE6/IE7)",
-        " Windows XP SP0-SP3 DEP bypass (IE8)",
-        " Windows 7/Vista ALSR/DEP bypass (IE8)"
+        " Automatic"
     ],
     "windows/browser/java_basicservice_impl": [
-        " Windows x86"
+        " Generic (Java Payload)"
     ],
     "windows/browser/java_cmm": [
-        " Windows x86 (Native Payload)"
+        " Generic (Java Payload)"
     ],
     "windows/browser/java_codebase_trust": [
         " Generic (Java Payload)"
@@ -3833,13 +3720,13 @@
         " Windows / Java 6 <=u18"
     ],
     "windows/browser/java_ws_arginject_altjvm": [
-        " Java Runtime on Windows x86"
+        " Automatic"
     ],
     "windows/browser/java_ws_double_quote": [
-        " Java Runtime 1.6.31 to 1.6.35 and 1.7.03 to 1.7.07 on Windows x86"
+        " Automatic"
     ],
     "windows/browser/java_ws_vmargs": [
-        " Java Runtime on Windows x86"
+        " Automatic"
     ],
     "windows/browser/juniper_sslvpn_ive_setupdll": [
         " Windows XP Pro SP3 English"
@@ -3883,9 +3770,7 @@
         " Windows XP Pro SP0/SP1 English"
     ],
     "windows/browser/mozilla_attribchildremoved": [
-        " Windows XP - Firefox 8 / 8.0.1",
-        " Windows XP - Firefox 9",
-        " Windows XP - Firefox 9.0.1"
+        " Automatic"
     ],
     "windows/browser/mozilla_firefox_onreadystatechange": [
         " Firefox 17 & Firefox 21 / Windows XP SP3"
@@ -3897,12 +3782,10 @@
         " Firefox 3.6.8 - 3.6.11, Windows XP/Windows Server 2003"
     ],
     "windows/browser/mozilla_mchannel": [
-        " Firefox 3.6.16 on Windows XP SP3",
-        " Firefox 3.6.16 on Windows 7 + Java"
+        " Automatic"
     ],
     "windows/browser/mozilla_nssvgvalue": [
-        " Windows XP - Firefox 7",
-        " Windows XP - Firefox 8 (<= 8.0.1)"
+        " Automatic"
     ],
     "windows/browser/mozilla_nstreerange": [
         " Auto (Direct attack against Windows XP, otherwise through Java, if enab"
@@ -3937,12 +3820,7 @@
         " Windows 2000 SP4 -> Windows 2003 SP0"
     ],
     "windows/browser/ms07_017_ani_loadimage_chunksize": [
-        " (Automatic) IE6, IE7 and Firefox on Windows NT, 2000, XP, 2003 and Vist",
-        " IE6 on Windows NT, 2000, XP, 2003 (all languages)",
-        " IE7 on Windows XP SP2, 2003 SP1, SP2 (all languages)",
-        " IE7 and Firefox on Windows Vista (all languages)",
-        " Firefox on Windows XP (English)",
-        " Firefox on Windows 2003 (English)"
+        " (Automatic) IE6, IE7 and Firefox on Windows NT, 2000, XP, 2003 and Vist"
     ],
     "windows/browser/ms08_041_snapshotviewer": [
         " Automatic"
@@ -3973,8 +3851,7 @@
         " Automatic"
     ],
     "windows/browser/ms10_002_ie_object": [
-        " IE 8 on Windows XP SP3",
-        " IE 8 on Windows 7 SP0"
+        " Automatic"
     ],
     "windows/browser/ms10_018_ie_behaviors": [
         " (Automatic) IE6, IE7 on Windows NT, 2000, XP, 2003 and Vista"
@@ -3983,7 +3860,7 @@
         " Automatic (Heap Spray)"
     ],
     "windows/browser/ms10_022_ie_vbscript_winhlp32": [
-        " Internet Explorer on Windows"
+        " Automatic"
     ],
     "windows/browser/ms10_026_avi_nsamplespersec": [
         " Windows XP SP3 Automatic"
@@ -4001,34 +3878,25 @@
         " Automatic"
     ],
     "windows/browser/ms11_050_mshtml_cobjectelement": [
-        " Internet Explorer 7 on Windows Vista",
-        " Internet Explorer 8 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/ms11_081_option": [
-        " IE 8 on Windows XP SP3",
-        " IE 8 on Windows Vista",
-        " IE 8 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/ms11_093_ole32": [
-        " IE 6 on Windows XP SP3 / Visio Viewer 2010",
-        " IE 7 on Windows XP SP3 / Visio Viewer 2010"
+        " Automatic"
     ],
     "windows/browser/ms12_004_midi": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3"
+        " Automatic"
     ],
     "windows/browser/ms12_037_ie_colspan": [
-        " IE 8 on Windows XP SP3 with msvcrt ROP",
-        " IE 8 on Windows 7 SP1"
+        " Automatic"
     ],
     "windows/browser/ms12_037_same_id": [
-        " IE 8 on Windows XP SP3 with msvcrt ROP",
-        " IE 8 on Windows XP SP3 with JRE ROP",
-        " IE 8 on Windows 7 SP1/Vista SP2 with JRE ROP"
+        " Automatic"
     ],
     "windows/browser/ms13_009_ie_slayoutrun_uaf": [
-        " IE 8 on Windows XP SP3"
+        " Automatic"
     ],
     "windows/browser/ms13_022_silverlight_script_object": [
         " Windows x86/x64"
@@ -4037,8 +3905,7 @@
         " IE 8 on Windows 7 SP1"
     ],
     "windows/browser/ms13_055_canchor": [
-        " IE 8 on Windows XP SP3",
-        " IE 8 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/ms13_059_cflatmarkuppointer": [
         " Automatic"
@@ -4047,9 +3914,7 @@
         " IE 8 on Windows XP SP3"
     ],
     "windows/browser/ms13_080_cdisplaypointer": [
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3",
-        " IE 8 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/ms13_090_cardspacesigninhelper": [
         " Windows XP with IE 8"
@@ -4065,7 +3930,7 @@
         " Windows 7"
     ],
     "windows/browser/ms16_051_vbscript": [
-        " Windows 10 with IE 11"
+        " Automatic"
     ],
     "windows/browser/msvidctl_mpeg2": [
         " Windows XP SP0-SP3 / IE 6.0 SP0-2 & IE 7.0"
@@ -4074,12 +3939,7 @@
         " Windows XP SP0-SP3 / Windows Vista / IE 6.0 SP0-SP2 / IE 7"
     ],
     "windows/browser/msxml_get_definition_code_exec": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3 / Vista SP2",
-        " IE 8 on Windows XP SP3",
-        " IE 8 with Java 6 on Windows XP SP3",
-        " IE 8 with Java 6 on Windows 7 SP1/Vista SP2",
-        " IE 9 with Java 6 on Windows 7 SP1"
+        " Automatic"
     ],
     "windows/browser/nctaudiofile2_setformatlikesample": [
         " Windows XP SP2/SP3 Pro English (IE6)"
@@ -4095,13 +3955,7 @@
         " Automatic"
     ],
     "windows/browser/novell_groupwise_gwcls1_actvx": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3",
-        " IE 7 on Windows Vista",
-        " IE 8 on Windows Vista",
-        " IE 8 on Windows 7",
-        " IE 9 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/novelliprint_callbackurl": [
         " Windows XP SP0-SP2 / Windows Vista / IE 6.0 SP0-SP2 / IE 7"
@@ -4125,24 +3979,13 @@
         " iPrint 5.30 Windows Client"
     ],
     "windows/browser/ntr_activex_check_bof": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3",
-        " IE 7 on Windows Vista",
-        " IE 8 on Windows Vista",
-        " IE 8 on Windows 7",
-        " IE 9 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/ntr_activex_stopmodule": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 7 on Windows Vista"
+        " Automatic"
     ],
     "windows/browser/oracle_autovue_setmarkupmode": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3 / Windows Vista SP2",
-        " IE 8 with Java 6 on Windows XP SP3/7 SP1/Vista SP2",
-        " IE 9 with Java 6 on Windows 7 SP1"
+        " Automatic"
     ],
     "windows/browser/oracle_dc_submittoexpress": [
         " Windows XP SP0-SP3 / Windows Vista / IE 6.0 SP0-SP2 / IE 7"
@@ -4163,13 +4006,7 @@
         " Automatic"
     ],
     "windows/browser/quickr_qp2_bof": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3",
-        " IE 7 on Windows Vista",
-        " IE 8 on Windows Vista",
-        " IE 8 on Windows 7",
-        " IE 9 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/real_arcade_installerdlg": [
         " Windows Universal"
@@ -4199,8 +4036,7 @@
         " Automatic"
     ],
     "windows/browser/samsung_neti_wiewer_backuptoavi_bof": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3"
+        " Automatic"
     ],
     "windows/browser/samsung_security_manager_put": [
         " Samsung Security Manager 1.32 & 1.4 Universal"
@@ -4209,13 +4045,7 @@
         " Windows XP SP0-SP3 / Windows Vista / IE 6.0 SP0-SP2 / IE 7"
     ],
     "windows/browser/siemens_solid_edge_selistctrlx": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3",
-        " IE 7 on Windows Vista",
-        " IE 8 on Windows Vista",
-        " IE 8 on Windows 7",
-        " IE 9 on Windows 7"
+        " Automatic"
     ],
     "windows/browser/softartisans_getdrivename": [
         " Windows XP SP0-SP3 / Windows Vista / IE 6.0 SP0-SP2 / IE 7"
@@ -4242,22 +4072,16 @@
         " Windows XP SP3 Pro German"
     ],
     "windows/browser/synactis_connecttosynactis_bof": [
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3"
+        " Automatic"
     ],
     "windows/browser/systemrequirementslab_unsafe": [
         " Automatic"
     ],
     "windows/browser/teechart_pro": [
-        " Windows XP SP0-SP3 (IE6/IE7)",
-        " Windows XP SP0-SP3 + JAVA + DEP bypass (IE8)",
-        " Windows 7 + JAVA + DEP bypass (IE8)"
+        " Automatic"
     ],
     "windows/browser/tom_sawyer_tsgetx71ex552": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 8 on Windows XP SP3",
-        " IE 8 on Windows 7 SP1"
+        " Automatic"
     ],
     "windows/browser/trendmicro_extsetowner": [
         " Windows XP SP0-SP2 / Windows Vista / IE 6.0 SP0-SP2 / IE 7"
@@ -4273,9 +4097,7 @@
         " Automatic"
     ],
     "windows/browser/ultramjcam_openfiledig_bof": [
-        " IE 6 on Windows XP SP3",
-        " IE 7 on Windows XP SP3",
-        " IE 7 on Windows Vista"
+        " Automatic"
     ],
     "windows/browser/ultraoffice_httpupload": [
         " Windows Universal"
@@ -4284,8 +4106,7 @@
         " Windows XP SP0-SP3 / Windows Vista / IE 6.0 SP0-SP2 / IE 7"
     ],
     "windows/browser/viscom_movieplayer_drawtext": [
-        " Windows IE6-7",
-        " Windows IE8 + JAVA 6 (DEP & ASLR BYPASS)"
+        " Automatic"
     ],
     "windows/browser/vlc_amv": [
         " Automatic"
@@ -4316,7 +4137,7 @@
         " Windows XP SP0-SP2/ IE 6.0 SP0-SP2 / IE 7"
     ],
     "windows/browser/wmi_admintools": [
-        " Windows Universal"
+        " Automatic"
     ],
     "windows/browser/x360_video_player_set_text_bof": [
         " Automatic"
@@ -4345,32 +4166,13 @@
         " Windows 2000 ALL / Windows XP SP0-SP1 (English)"
     ],
     "windows/dcerpc/ms07_029_msdns_zonename": [
-        " Windows 2000 Server SP0-SP4+ English",
-        " Windows 2000 Server SP0-SP4+ Italian",
-        " Windows 2000 Server SP0-SP4+ French",
-        " Windows 2003 Server SP0 English",
-        " Windows 2003 Server SP0 French",
-        " Windows 2003 Server SP1-SP2 English",
-        " Windows 2003 Server SP1-SP2 French",
-        " Windows 2003 Server SP1-SP2 Spanish",
-        " Windows 2003 Server SP1-SP2 Italian",
-        "Windows 2003 Server SP1-SP2 German"
+        " Automatic (2000 SP0-SP4, 2003 SP0, 2003 SP1-SP2)"
     ],
     "windows/dcerpc/ms07_065_msmq": [
         " Windows 2000 Server English"
     ],
     "windows/email/ms07_017_ani_loadimage_chunksize": [
-        " Windows XP SP2 user32.dll 5.1.2600.2622",
-        " Windows XP SP2 userenv.dll English",
-        " Windows XP SP2 userenv.dll French",
-        " Windows XP SP0/SP1 netui2.dll English",
-        " Windows 2000 SP0-SP4 netui2.dll English",
-        " Windows Vista user32.dll 6.0.6000.16386",
-        " Windows XP SP2 user32.dll (5.1.2600.2180) Multi Language",
-        " Windows XP SP2 user32.dll (5.1.2600.2180) English",
-        " Windows XP SP2 userenv.dll Portuguese (Brazil)",
-        "Windows XP SP1a userenv.dll English",
-        "Windows XP SP1a shell32.dll English"
+        " Automatic"
     ],
     "windows/email/ms10_045_outlook_ref_only": [
         " Automatic"
@@ -4551,8 +4353,7 @@
         " CuteZIP 2.1 / Windows Universal"
     ],
     "windows/fileformat/cve_2017_8464_lnk_rce": [
-        " Windows x64",
-        " Windows x86"
+        " Automatic"
     ],
     "windows/fileformat/cyberlink_lpp_bof": [
         " CyberLink LabelPrint <= 2.5 on Windows 7 (64 bit)",
@@ -4622,8 +4423,7 @@
         " Windows Universal"
     ],
     "windows/fileformat/foxit_reader_filewrite": [
-        " Foxit PDF Reader v4.2 (Windows XP SP0-SP3)",
-        " Foxit PDF Reader v4.2 (Windows Vista/7/8/2008)"
+        " Automatic"
     ],
     "windows/fileformat/foxit_reader_launch": [
         " Foxit Reader 3.0 Windows XP SP2"
@@ -4756,15 +4556,10 @@
         "on Windows XP SP3"
     ],
     "windows/fileformat/ms10_087_rtf_pfragments_bof": [
-        " Microsoft Office 2002 SP3 English on Windows XP SP3 English",
-        " Microsoft Office 2003 SP3 English on Windows XP SP3 English",
-        " Microsoft Office 2007 SP0 English on Windows XP SP3 English",
-        " Microsoft Office 2007 SP0 English on Windows Vista SP0 English",
-        " Microsoft Office 2007 SP0 English on Windows 7 SP0 English"
+        " Automatic"
     ],
     "windows/fileformat/ms11_006_createsizeddibsection": [
-        " Windows 2000 SP0/SP4 English",
-        " Windows XP SP3 English"
+        " Automatic"
     ],
     "windows/fileformat/ms11_021_xlb_bof": [
         " Microsoft Office Excel 2007 on Windows XP",
@@ -5032,18 +4827,13 @@
         " XP Universal"
     ],
     "windows/ftp/3cdaemon_ftp_user": [
-        " Windows 2000 English",
-        " Windows XP English SP0/SP1",
-        " Windows NT 4.0 SP4/SP5/SP6",
-        " Windows 2000 Pro SP4 French",
-        " Windows XP English SP3"
+        " Automatic"
     ],
     "windows/ftp/aasync_list_reply": [
         " XP SP3 Universal"
     ],
     "windows/ftp/ability_server_stor": [
-        " Windows XP SP2 ENG",
-        " Windows XP SP3 ENG"
+        " Automatic"
     ],
     "windows/ftp/absolute_ftp_list_bof": [
         " WinXP SP2 - Windows 7 SP1 / AbsoluteFTP 1.9.6 - 2.2.10.252"
@@ -5061,8 +4851,7 @@
         " Windows 2003 SP1 English"
     ],
     "windows/ftp/comsnd_ftpd_fmtstr": [
-        " Windows XP SP3 - English",
-        " Windows Server 2003 - English"
+        " Automatic"
     ],
     "windows/ftp/dreamftp_format": [
         " Dream FTP Server v1.02 Universal"
@@ -5115,10 +4904,7 @@
         " freeFTPd 1.0.10 and below on Windows Desktop Version"
     ],
     "windows/ftp/freeftpd_user": [
-        " Windows 2000 English ALL",
-        " Windows XP Pro SP0/SP1 English",
-        " Windows NT SP5/SP6a English",
-        " Windows 2003 Server English"
+        " Automatic"
     ],
     "windows/ftp/ftpgetter_pwd_reply": [
         " XP SP3 Universal"
@@ -5144,16 +4930,10 @@
         " GlobalSCAPE Secure FTP Server <= 3.0.2 Universal"
     ],
     "windows/ftp/goldenftp_pass_bof": [
-        " Windows XP Pro SP3",
-        " Windows XP Pro SP2",
-        " Windows XP Pro SP0/SP1"
+        " Automatic"
     ],
     "windows/ftp/httpdx_tolog_format": [
-        " httpdx 1.4 - Windows XP SP3 English",
-        " httpdx 1.4.5 - Windows XP SP3 English",
-        " httpdx 1.4.6 - Windows XP SP3 English",
-        " httpdx 1.4.6b - Windows XP SP3 English",
-        " httpdx 1.5 - Windows XP SP3 English"
+        " Automatic Targeting"
     ],
     "windows/ftp/kmftp_utility_cwd": [
         " Windows 7 SP1 x86"
@@ -5238,20 +5018,16 @@
         " Windows XP Universal"
     ],
     "windows/ftp/turboftp_port": [
-        " Windows Universal TurboFtp 1.30.823",
-        " Windows Universal TurboFtp 1.30.826"
+        " Automatic"
     ],
     "windows/ftp/vermillion_ftpd_port": [
-        " vftpd 1.31 - Windows XP SP3 English"
+        " Automatic Targeting"
     ],
     "windows/ftp/warftpd_165_pass": [
         " Windows 2000"
     ],
     "windows/ftp/warftpd_165_user": [
-        " Windows 2000 SP0-SP4 English",
-        " Windows XP SP0-SP1 English",
-        " Windows XP SP2 English",
-        " Windows XP SP3 English"
+        " Automatic"
     ],
     "windows/ftp/wftpd_size": [
         " Windows 2000 Pro SP4 English",
@@ -5312,11 +5088,7 @@
         " Windows Java"
     ],
     "windows/http/apache_chunked": [
-        " Windows Generic Bruteforce",
-        " Apache.org Build 1.3.17->1.3.24 (Windows 2000)",
-        " Apache.org Build 1.3.17->1.3.24 (Windows NT)",
-        " Windows 2003 English SP0",
-        " Windows 2000 English"
+        " Windows Generic Bruteforce"
     ],
     "windows/http/apache_mod_rewrite_ldap": [
         " Automatic"
@@ -5342,9 +5114,7 @@
         " Windows Apache 2.2 - WebLogic module version 1.0.1150354"
     ],
     "windows/http/bea_weblogic_post_bof": [
-        " BEA WebLogic 8.1 SP6 - mod_wl_20.so / Apache 2.0 / Windows [XP/2000]",
-        " BEA WebLogic 8.1 SP5 - mod_wl_20.so / Apache 2.0 / Windows [XP/2000]",
-        " BEA WebLogic 8.1 SP4 - mod_wl_20.so / Apache 2.0 / Windows [XP/2000]"
+        " Automatic"
     ],
     "windows/http/bea_weblogic_transfer_encoding": [
         " Windows Apache 2.2 version Universal"
@@ -5480,8 +5250,7 @@
         " Windows x64"
     ],
     "windows/http/geutebrueck_gcore_x64_rce_bo": [
-        " GCore 1.3.8.42, Windows x64 (Win7+)",
-        " GCore 1.4.2.37, Windows x64 (Win7+)"
+        " Automatic Targeting"
     ],
     "windows/http/gitstack_rce": [
         " Automatic"
@@ -5520,7 +5289,7 @@
         " HP OpenView Network Node Manager 7.53"
     ],
     "windows/http/hp_nnm_nnmrptconfig_nameparams": [
-        " HP NNM 7.53 Windows Server 2003 Enterprise"
+        " Automatic"
     ],
     "windows/http/hp_nnm_nnmrptconfig_schdparams": [
         " NNM 7.53 - Windows Server 2003 Ent"
@@ -5532,8 +5301,7 @@
         " HP OpenView Network Node Manager 7.53 (Windows 2003)"
     ],
     "windows/http/hp_nnm_ovas": [
-        " Windows 2003/zip.dll OpenView 7.53",
-        " Windows 2000/jvm.dll OpenView NNM 7.51"
+        " Automatic Targeting"
     ],
     "windows/http/hp_nnm_ovbuildpath_textfile": [
         " HP OpenView Network Node Manager 7.53 / Windows 2000 SP4 & Windows XP S"
@@ -5564,10 +5332,10 @@
         " Automatic"
     ],
     "windows/http/hp_nnm_webappmon_execvp": [
-        " HP OpenView Network Node Manager 7.53 (Windows 2003)"
+        " Automatic"
     ],
     "windows/http/hp_nnm_webappmon_ovjavalocale": [
-        " HP OpenView Network Node Manager 7.53 (Windows 2003)"
+        " Automatic"
     ],
     "windows/http/hp_openview_insight_backdoor": [
         " Universal Windows Target"
@@ -5599,19 +5367,13 @@
         " httpdx 1.4 - Windows 2003 SP2 English"
     ],
     "windows/http/httpdx_tolog_format": [
-        " httpdx 1.4 - Windows XP SP3 English",
-        " httpdx 1.4.5 - Windows XP SP3 English",
-        " httpdx 1.4.6 - Windows XP SP3 English",
-        " httpdx 1.4.6b - Windows XP SP3 English",
-        " httpdx 1.5 - Windows XP SP3 English"
+        " Automatic Targeting"
     ],
     "windows/http/ia_webmail": [
         " IA WebMail 3.x"
     ],
     "windows/http/ibm_tivoli_endpoint_bof": [
-        " Windows Server 2003 SP0",
-        " Windows Server 2003 SP1",
-        " Windows Server 2003 SP2"
+        " Automatic"
     ],
     "windows/http/ibm_tpmfosd_overflow": [
         " TPMfOSD 5.1 (Windows 2000 SP4 - English)",
@@ -5645,9 +5407,7 @@
         " Kaseya KServer / Windows"
     ],
     "windows/http/kentico_staging_syncserver": [
-        " Windows EXE Dropper",
-        " Windows Command",
-        " Windows Powershell"
+        " Automatic"
     ],
     "windows/http/kolibri_http": [
         " Windows XP sp3",
@@ -5695,18 +5455,7 @@
         " Debugging test"
     ],
     "windows/http/minishare_get_overflow": [
-        " Windows 2000 SP0-SP3 English",
-        " Windows 2000 SP4 English",
-        " Windows XP SP0-SP1 English",
-        " Windows XP SP2 English",
-        " Windows 2003 SP0 English",
-        " Windows 2003 SP1 English",
-        " Windows 2003 SP2 English",
-        " Windows NT 4.0 SP6",
-        " Windows XP SP2 German",
-        "Windows XP SP2 Polish",
-        "Windows XP SP2 French",
-        "Windows XP SP3 French"
+        " Automatic"
     ],
     "windows/http/miniweb_upload_wbem": [
         " MiniWeb build 300 on Windows (Before Vista)"
@@ -5760,10 +5509,7 @@
         " Windows Universal"
     ],
     "windows/http/peercast_url": [
-        " Windows 2000 English SP0-SP4",
-        " Windows 2003 English SP0-SP1",
-        " Windows XP English SP0/SP1",
-        " Windows XP English SP0/SP2"
+        " Automatic"
     ],
     "windows/http/php_apache_request_headers_bof": [
         " Windows XP SP3 / Windows 2003 Server SP2 (No DEP) / PHP 5.4.2 Thread sa"
@@ -5787,11 +5533,7 @@
         " Automatic Targeting"
     ],
     "windows/http/psoproxy91_overflow": [
-        " Windows 2000 Pro SP0-4 English",
-        " Windows 2000 Pro SP0-4 French",
-        " Windows 2000 Pro SP0-4 Italian",
-        " Windows XP Pro SP0/1 English",
-        " Windows XP Pro SP2 English"
+        " Automatic"
     ],
     "windows/http/rabidhamster_r4_log": [
         " R4 v1.25"
@@ -5800,8 +5542,7 @@
         " Automatic"
     ],
     "windows/http/sambar6_search_results": [
-        " Windows 2000",
-        " Windows XP"
+        " Automatic"
     ],
     "windows/http/sap_configservlet_exec_noauth": [
         " Windows generic"
@@ -5843,22 +5584,10 @@
         " Windows Powershell"
     ],
     "windows/http/shoutcast_format": [
-        " Windows NT SP5/SP6a English",
-        " Windows 2000 English ALL",
-        " Windows XP Pro SP0/SP1 English",
-        " Windows 2003 Server English"
+        " Automatic"
     ],
     "windows/http/shttpd_post": [
-        " Windows NT English SP5-SP6",
-        " Windows 2000 Spanish SP4",
-        " Windows 2000 French SP4",
-        " Windows 2000 English SP0-SP4",
-        " Windows 2000 French SP0-SP4",
-        " Windows 2003 Server English SP0-SP1",
-        " Windows XP German SP2",
-        " Windows XP German SP1",
-        " Windows XP English SP2",
-        "Windows XP English SP0-SP1"
+        " Automatic"
     ],
     "windows/http/solarwinds_fsm_userlogin": [
         " Solarwinds Firewall Security Manager 6.6.5"
@@ -5882,10 +5611,7 @@
         " SimpleWebServer 2.2-rc2 / Windows XP SP3 / Windows 7 SP1"
     ],
     "windows/http/sybase_easerver": [
-        " Windows All - Sybase EAServer 5.2 - jdk 1.3.1_11",
-        " Windows All - Sybase EAServer 5.2 - jdk 1.3.?.?",
-        " Windows All - Sybase EAServer 5.2 - jdk 1.4.2_06",
-        " Windows All - Sybase EAServer 5.2 - jdk 1.4.1_02"
+        " Automatic"
     ],
     "windows/http/syncbreeze_bof": [
         " Automatic"
@@ -6022,9 +5748,7 @@
         " Windows Universal"
     ],
     "windows/imap/mercury_rename": [
-        " Windows 2000 SP4 English",
-        " Windows XP Pro SP0 English",
-        " Windows XP Pro SP1 English"
+        " Automatic"
     ],
     "windows/imap/novell_netmail_append": [
         " Windows 2000 SP0-SP4 English"
@@ -6063,8 +5787,7 @@
         " RSA WebAgent 5.3 on Windows 2003 English SP0"
     ],
     "windows/isapi/w3who_query": [
-        " Windows 2000 RESKIT DLL [Windows 2000]",
-        " Windows 2000 RESKIT DLL [Windows XP]"
+        " Automatic Detection"
     ],
     "windows/ldap/imail_thc": [
         " Windows 2000 English",
@@ -6074,28 +5797,16 @@
         " Universal PGPcertd.exe"
     ],
     "windows/license/calicclnt_getconfig": [
-        " Windows 2000 English",
-        " Windows XP English SP0-1",
-        " Windows XP English SP2",
-        " Windows 2003 English SP0"
+        " Automatic"
     ],
     "windows/license/calicserv_getconfig": [
-        " Windows 2000 English",
-        " Windows XP English SP0-1",
-        " Windows XP English SP2",
-        " Windows 2003 English SP0"
+        " Automatic"
     ],
     "windows/license/flexnet_lmgrd_bof": [
-        " Autodesk Licensing Server Tools 11.5 / lmgrd 11.5.0.0 / Windows XP SP3",
-        " Alias License Tools 10.8.0.7 / lmgrd 10.8.0.7 / Windows XP SP3",
-        " Alias License Tools 10.8 / lmgrd 10.8.0.2 / Windows XP SP3"
+        " Autodesk Licensing Server Tools 11.5 / lmgrd 11.5.0.0 / Windows XP SP3"
     ],
     "windows/license/sentinel_lm7_udp": [
-        " SentinelLM 7.2.0.0 Windows NT 4.0 SP4/SP5/SP6",
-        " SentinelLM 7.2.0.0 Windows 2000 English",
-        " SentinelLM 7.2.0.0 Windows 2000 German",
-        " SentinelLM 7.2.0.0 Windows XP English SP0/SP1",
-        " SentinelLM 7.2.0.0 Windows 2003 English SP0"
+        " Automatic"
     ],
     "windows/local/adobe_sandbox_adobecollabsync": [
         " Adobe Reader X 10.1.4 / Windows 7 SP1"
@@ -6256,8 +5967,7 @@
         " Windows Vista, 7, and 2008"
     ],
     "windows/local/ms11_080_afdjoinleaf": [
-        " Windows XP SP2 / SP3",
-        " Windows Server 2003 SP2"
+        " Automatic"
     ],
     "windows/local/ms13_005_hwnd_broadcast": [
         " Windows x86",
@@ -6303,25 +6013,22 @@
         " Windows x64"
     ],
     "windows/local/ms16_075_reflection": [
-        " Windows x86",
-        " Windows x64"
+        " Automatic"
     ],
     "windows/local/ms16_075_reflection_juicy": [
         " Automatic"
     ],
     "windows/local/ms18_8120_win32k_privesc": [
-        " Windows 7 x64",
-        " Windows 7 x86"
+        " Automatic"
     ],
     "windows/local/ms_ndproxy": [
-        " Windows XP SP3",
-        " Windows Server 2003 SP2"
+        " Automatic"
     ],
     "windows/local/novell_client_nicm": [
-        " Windows 7 SP1"
+        " Automatic"
     ],
     "windows/local/novell_client_nwfs": [
-        " Windows XP SP3"
+        " Automatic"
     ],
     "windows/local/ntapphelpcachecontrol": [
         " Windows 8 / Windows 8.1 (x86 and x64)"
@@ -6403,8 +6110,7 @@
         " Windows 7"
     ],
     "windows/local/webexec": [
-        " Windows x86",
-        " Windows x64"
+        " Automatic"
     ],
     "windows/local/windscribe_windscribeservice_priv_esc": [
         " Automatic"
@@ -6416,12 +6122,7 @@
         " Windows"
     ],
     "windows/lotus/domino_http_accept_language": [
-        " Lotus Domino 7.0 on Windows 2003 SP1 English(NX)",
-        " Lotus Domino 7.0 on Windows 2003 SP2 English(NX)",
-        " Lotus Domino 7.0 on Windows 2003/2000/XP English(NO NX)",
-        " Lotus Domino 8.0 on Windows 2003 SP1 English(NX)",
-        " Lotus Domino 8.0 on Windows 2003 SP2 English(NX)",
-        " Lotus Domino 8.0 on Windows 2003/2000/XP English(NO NX)"
+        " Automatic"
     ],
     "windows/lotus/domino_icalendar_organizer": [
         " Lotus Domino 8.5 on Windows 2000 SP4",
@@ -6439,8 +6140,7 @@
         " Lotus Notes 8.5.2 FP2 / Windows Universal / DEP"
     ],
     "windows/lpd/hummingbird_exceed": [
-        " Windows 2000 English SP0-SP4",
-        " Windows XP English SP0/SP1"
+        " Automatic"
     ],
     "windows/lpd/niprint": [
         " Windows XP SP3",
@@ -6488,8 +6188,7 @@
         " Windows XP Professional SP3"
     ],
     "windows/misc/bakbone_netvault_heap": [
-        " Windows 2000 SP4 English",
-        " Windows XP SP0/SP1 English"
+        " Automatic"
     ],
     "windows/misc/bcaaa_bof": [
         " BCAAA Version 5.4.6.1.54128"
@@ -6513,8 +6212,7 @@
         " BigAnt 2.52 Universal"
     ],
     "windows/misc/bomberclone_overflow": [
-        " Windows XP SP2 Italian",
-        " Windows 2000 SP1 English"
+        " Automatic"
     ],
     "windows/misc/bopup_comm": [
         " Bopup Communications Server 3.2.26.5460"
@@ -6559,32 +6257,10 @@
         " doubletake 4.5.0.1819"
     ],
     "windows/misc/eiqnetworks_esa": [
-        " EiQ Enterprise Security Analyzer Offset 494 Windows 2000 SP0-SP4 Englis",
-        " EiQ Enterprise Security Analyzer Offset 494 Windows XP English SP1/SP2",
-        " EiQ Enterprise Security Analyzer Offset 494 Windows Server 2003 SP0/SP1",
-        " Astaro Report Manager (OEM) Offset 1262 Windows 2000 SP0-SP4 English",
-        " Astaro Report Manager (OEM) Offset 1262 Windows XP English SP1/SP2",
-        " Astaro Report Manager (OEM) Offset 1262 Windows Server 2003 English SP0",
-        " Fortinet FortiReporter (OEM) Offset 1262 Windows 2000 SP0-SP4 English",
-        " Fortinet FortiReporter (OEM) Offset 1262 Windows XP English SP1/SP2",
-        "Fortinet FortiReporter (OEM) Offset 1262 Windows Server 2003 English SP",
-        "iPolicy Security Reporter (OEM) Offset 1262 Windows 2000 SP0-SP4 Englis",
-        "iPolicy Security Reporter (OEM) Offset 1262 Windows XP English SP1/SP2",
-        "iPolicy Security Reporter (OEM) Offset 1262 Windows Server 2003 English",
-        "SanMina Viking Multi-Log Manager (OEM) Offset 1262 Windows 2000 SP0-SP4",
-        "SanMina Viking Multi-Log Manager (OEM) Offset 1262 Windows XP English S",
-        "SanMina Viking Multi-Log Manager (OEM) Offset 1262 Windows Server 2003",
-        "Secure Computing G2 Security Reporter (OEM) Offset 1262 Windows 2000 SP",
-        "Secure Computing G2 Security Reporter (OEM) Offset 1262 Windows XP Engl",
-        "Secure Computing G2 Security Reporter (OEM) Offset 1262 Windows Server",
-        "Top Layer Network Security Analyzer (OEM) Offset 1262 Windows 2000 SP0-",
-        "Top Layer Network Security Analyzer (OEM) Offset 1262 Windows XP Englis",
-        "Top Layer Network Security Analyzer (OEM) Offset 1262 Windows Server 20"
+        " Automatic"
     ],
     "windows/misc/eiqnetworks_esa_topology": [
-        " Windows 2000 SP4 English",
-        " Windows XP SP2 English",
-        " Windows 2003 SP1 English"
+        " Automatic"
     ],
     "windows/misc/enterasys_netsight_syslog_bof": [
         " Enterasys NetSight 4.0.1.34 / Windows XP SP3",
@@ -6626,8 +6302,7 @@
         " HP Data Protector 8.10 / Windows"
     ],
     "windows/misc/hp_dataprotector_crs": [
-        " HP Data Protector 6.20 build 370 / Windows XP SP3",
-        " HP Data Protector 7.00 build 72 / Windows XP SP3"
+        " Automatic"
     ],
     "windows/misc/hp_dataprotector_dtbclslogin": [
         " HP Data Protector Express 4.0 SP1 (build 43064) / Windows XP SP3"
@@ -6825,8 +6500,7 @@
         " ShixxNOTE 6.net Universal"
     ],
     "windows/misc/solidworks_workgroup_pdmwservice_file_write": [
-        " SolidWorks Workgroup PDM <= 2014 SP2 (Windows XP SP0-SP3)",
-        " SolidWorks Workgroup PDM <= 2014 SP2 (Windows Vista onwards)"
+        " Automatic"
     ],
     "windows/misc/splayer_content_type": [
         " Windows XP SP2/XP3"
@@ -6838,13 +6512,7 @@
         " Windows XP SP3 English"
     ],
     "windows/misc/tiny_identd_overflow": [
-        " Windows 2000 Server SP4 - English",
-        " Windows 2000 Pro All - English",
-        " Windows 2000 Pro All - Italian",
-        " Windows 2000 Pro All - French",
-        " Windows XP SP0/1 - English",
-        " Windows XP SP2 - English",
-        " Windows XP SP2 - Italian"
+        " Automatic"
     ],
     "windows/misc/trendmicro_cmdprocessor_addtask": [
         " Windows 2003 Server SP2 (DEP Bypass)"
@@ -6997,11 +6665,7 @@
         " WinProxy <= 6.1 R1a Universal"
     ],
     "windows/proxy/ccproxy_telnet_ping": [
-        " Windows 2000 Pro All - English",
-        " Windows 2000 Pro All - Italian",
-        " Windows 2000 Pro All - French",
-        " Windows XP SP0/1 - English",
-        " Windows XP SP2 - English"
+        " Automatic"
     ],
     "windows/proxy/proxypro_http_get": [
         " Proxy-Pro GateKeeper 4.7"
@@ -7010,14 +6674,7 @@
         " WinGate 6.1.1.1077"
     ],
     "windows/rdp/cve_2019_0708_bluekeep_rce": [
-        " Windows 7 SP1 / 2008 R2 (6.1.7601 x64)",
-        " Windows 7 SP1 / 2008 R2 (6.1.7601 x64 - Virtualbox 6)",
-        " Windows 7 SP1 / 2008 R2 (6.1.7601 x64 - VMWare 14)",
-        " Windows 7 SP1 / 2008 R2 (6.1.7601 x64 - VMWare 15)",
-        " Windows 7 SP1 / 2008 R2 (6.1.7601 x64 - VMWare 15.1)",
-        " Windows 7 SP1 / 2008 R2 (6.1.7601 x64 - Hyper-V)",
-        " Windows 7 SP1 / 2008 R2 (6.1.7601 x64 - AWS)",
-        " Windows 7 SP1 / 2008 R2 (6.1.7601 x64 - QEMU/KVM)"
+        " Automatic targeting via fingerprinting"
     ],
     "windows/rdp/rdp_doublepulsar_rce": [
         " Execute payload (x64)",
@@ -7039,8 +6696,7 @@
         " Windows Universal S3 CoDeSyS < 2.3.9.27"
     ],
     "windows/scada/codesys_web_server": [
-        " CoDeSys v2.3 on Windows XP SP3",
-        " CoDeSys v3.4 SP4 Patch 2 on Windows XP SP3"
+        " Automatic"
     ],
     "windows/scada/daq_factory_bof": [
         " DAQFactory Pro 5.85 Build 1853 on Windows XP SP3"
@@ -7049,8 +6705,7 @@
         " COMMGR 1.08 / Windows Universal"
     ],
     "windows/scada/factorylink_csservice": [
-        " Windows XP SP3",
-        " Windows Server 2003 SP0"
+        " Automatic"
     ],
     "windows/scada/factorylink_vrn_09": [
         " Automatic"
@@ -7062,20 +6717,16 @@
         " Windows XP"
     ],
     "windows/scada/iconics_webhmi_setactivexguid": [
-        " IE 6/7/8 on Windows XP SP3",
-        " IE 7 on Windows Vista"
+        " Automatic"
     ],
     "windows/scada/igss9_igssdataserver_listall": [
         " Windows XP SP3/2003 Server R2 SP2 (DEP Bypass)"
     ],
     "windows/scada/igss9_igssdataserver_rename": [
-        " Windows XP SP3",
-        " Windows Server 2003 SP2/R2 SP2"
+        " Automatic"
     ],
     "windows/scada/igss9_misc": [
-        " Windows XP",
-        " Windows 7",
-        " Windows Server 2003 / R2"
+        " Automatic"
     ],
     "windows/scada/igss_exec_17": [
         " Windows"
@@ -7120,7 +6771,6 @@
         " Winlog Lite 2.07.00"
     ],
     "windows/scada/winlog_runtime_2": [
-        " Sielco Sistemi Winlog 2.07.14/2.07.16 - Ceramics Kiln Project",
         " Sielco Sistemi Winlog 2.07.14 - Automatic Washing System Project"
     ],
     "windows/scada/yokogawa_bkbcopyd_bof": [
@@ -7163,8 +6813,7 @@
         " Windows 2000 SP2-SP4 + Windows XP SP0-SP1"
     ],
     "windows/smb/ms04_011_lsass": [
-        " Windows 2000 English",
-        " Windows XP English"
+        " Automatic Targetting"
     ],
     "windows/smb/ms04_031_netdde": [
         " Windows 2000 SP4"
@@ -7185,15 +6834,10 @@
         " Windows 2000 SP4"
     ],
     "windows/smb/ms06_025_rras": [
-        " Windows 2000 SP4",
-        " Windows XP SP1"
+        " Automatic"
     ],
     "windows/smb/ms06_040_netapi": [
-        " (wcscpy) Windows NT 4.0 / Windows 2000 SP0-SP4",
-        " (wcscpy) Windows XP SP0/SP1",
-        "Windows XP SP1 English",
-        "Windows XP SP1 Italian",
-        " (wcscpy) Windows 2003 SP0"
+        " (wcscpy) Automatic (NT 4.0, 2000 SP0-SP4, XP SP0-SP1)"
     ],
     "windows/smb/ms06_066_nwapi": [
         " Windows XP SP2"
@@ -7202,94 +6846,13 @@
         " Windows XP SP2"
     ],
     "windows/smb/ms06_070_wkssvc": [
-        " Windows 2000 SP4",
-        " Windows XP SP0/SP1"
+        " Automatic Targetting"
     ],
     "windows/smb/ms07_029_msdns_zonename": [
-        " Windows 2000 Server SP0-SP4+ English",
-        " Windows 2000 Server SP0-SP4+ Italian",
-        " Windows 2000 Server SP0-SP4+ French",
-        " Windows 2003 Server SP0 English",
-        " Windows 2003 Server SP0 French",
-        " Windows 2003 Server SP1-SP2 English",
-        " Windows 2003 Server SP1-SP2 French",
-        " Windows 2003 Server SP1-SP2 Spanish",
-        " Windows 2003 Server SP1-SP2 Italian",
-        "Windows 2003 Server SP1-SP2 German"
+        " Automatic (2000 SP0-SP4, 2003 SP0, 2003 SP1-SP2)"
     ],
     "windows/smb/ms08_067_netapi": [
-        " Windows 2000 Universal",
-        " Windows XP SP0/SP1 Universal",
-        " Windows 2003 SP0 Universal",
-        " Windows XP SP2 English (AlwaysOn NX)",
-        " Windows XP SP2 English (NX)",
-        " Windows XP SP3 English (AlwaysOn NX)",
-        " Windows XP SP3 English (NX)",
-        " Windows XP SP2 Arabic (NX)",
-        " Windows XP SP2 Chinese - Traditional / Taiwan (NX)",
-        "Windows XP SP2 Chinese - Simplified (NX)",
-        "Windows XP SP2 Chinese - Traditional (NX)",
-        "Windows XP SP2 Czech (NX)",
-        "Windows XP SP2 Danish (NX)",
-        "Windows XP SP2 German (NX)",
-        "Windows XP SP2 Greek (NX)",
-        "Windows XP SP2 Spanish (NX)",
-        "Windows XP SP2 Finnish (NX)",
-        "Windows XP SP2 French (NX)",
-        "Windows XP SP2 Hebrew (NX)",
-        "Windows XP SP2 Hungarian (NX)",
-        "Windows XP SP2 Italian (NX)",
-        "Windows XP SP2 Japanese (NX)",
-        "Windows XP SP2 Korean (NX)",
-        "Windows XP SP2 Dutch (NX)",
-        "Windows XP SP2 Norwegian (NX)",
-        "Windows XP SP2 Polish (NX)",
-        "Windows XP SP2 Portuguese - Brazilian (NX)",
-        "Windows XP SP2 Portuguese (NX)",
-        "Windows XP SP2 Russian (NX)",
-        "Windows XP SP2 Swedish (NX)",
-        "Windows XP SP2 Turkish (NX)",
-        "Windows XP SP3 Arabic (NX)",
-        "Windows XP SP3 Chinese - Traditional / Taiwan (NX)",
-        "Windows XP SP3 Chinese - Simplified (NX)",
-        "Windows XP SP3 Chinese - Traditional (NX)",
-        "Windows XP SP3 Czech (NX)",
-        "Windows XP SP3 Danish (NX)",
-        "Windows XP SP3 German (NX)",
-        "Windows XP SP3 Greek (NX)",
-        "Windows XP SP3 Spanish (NX)",
-        "Windows XP SP3 Finnish (NX)",
-        "Windows XP SP3 French (NX)",
-        "Windows XP SP3 Hebrew (NX)",
-        "Windows XP SP3 Hungarian (NX)",
-        "Windows XP SP3 Italian (NX)",
-        "Windows XP SP3 Japanese (NX)",
-        "Windows XP SP3 Korean (NX)",
-        "Windows XP SP3 Dutch (NX)",
-        "Windows XP SP3 Norwegian (NX)",
-        "Windows XP SP3 Polish (NX)",
-        "Windows XP SP3 Portuguese - Brazilian (NX)",
-        "Windows XP SP3 Portuguese (NX)",
-        "Windows XP SP3 Russian (NX)",
-        "Windows XP SP3 Swedish (NX)",
-        "Windows XP SP3 Turkish (NX)",
-        "Windows 2003 SP1 English (NO NX)",
-        "Windows 2003 SP1 English (NX)",
-        "Windows 2003 SP1 Japanese (NO NX)",
-        "Windows 2003 SP1 Spanish (NO NX)",
-        "Windows 2003 SP1 Spanish (NX)",
-        "Windows 2003 SP1 French (NO NX)",
-        "Windows 2003 SP1 French (NX)",
-        "Windows 2003 SP2 English (NO NX)",
-        "Windows 2003 SP2 English (NX)",
-        "Windows 2003 SP2 German (NO NX)",
-        "Windows 2003 SP2 German (NX)",
-        "Windows 2003 SP2 Portuguese - Brazilian (NX)",
-        "Windows 2003 SP2 Spanish (NO NX)",
-        "Windows 2003 SP2 Spanish (NX)",
-        "Windows 2003 SP2 Japanese (NO NX)",
-        "Windows 2003 SP2 French (NO NX)",
-        "Windows 2003 SP2 French (NX)"
+        " Automatic Targeting"
     ],
     "windows/smb/ms09_050_smb2_negotiate_func_index": [
         " Windows Vista SP1/SP2 and Server 2008 (x86)"
@@ -7330,10 +6893,7 @@
         " Automatic"
     ],
     "windows/smb/smb_rras_erraticgopher": [
-        " Windows Server 2003 SP0 (English)",
-        " Windows Server 2003 SP1 (English) (NX)",
-        " Windows Server 2003 SP2 (English) (NX)",
-        " Windows Server 2003 R2 SP2 (English) (NX)"
+        " Automatic"
     ],
     "windows/smb/timbuktu_plughntcommand_bof": [
         " Automatic Targeting"
@@ -7364,18 +6924,7 @@
         " Windows XP Pro SP0/SP1 English"
     ],
     "windows/smtp/ypops_overflow1": [
-        " Windows 2000 SP0 Italian",
-        " Windows 2000 Advanced Server Italian SP4",
-        " Windows 2000 Advanced Server SP3 English",
-        " Windows 2000 SP0 English",
-        " Windows 2000 SP1 English",
-        " Windows 2000 SP2 English",
-        " Windows 2000 SP3 English",
-        " Windows 2000 SP4 English",
-        " Windows XP SP0-SP1 English",
-        "Windows XP SP2 English",
-        "Windows 2003 SP0 English",
-        "Windows 2003 SP1 English"
+        " Automatic"
     ],
     "windows/ssh/freeftpd_key_exchange": [
         " Windows 2000 SP0-SP4 English",
@@ -7423,17 +6972,7 @@
         " Windows XP Pro SP0/SP1 English"
     ],
     "windows/tftp/attftp_long_filename": [
-        " Windows NT SP4 English",
-        " Windows 2000 SP0 English",
-        " Windows 2000 SP1 English",
-        " Windows 2000 SP2 English",
-        " Windows 2000 SP3 English",
-        " Windows 2000 SP4 English",
-        " Windows XP SP0/1 English",
-        " Windows XP SP2 English",
-        " Windows XP SP3 English",
-        "Windows Server 2003",
-        "Windows Server 2003 SP2"
+        " Automatic"
     ],
     "windows/tftp/distinct_tftp_traversal": [
         " Automatic"
@@ -7443,10 +6982,7 @@
         " Windows 2000 SP3 English"
     ],
     "windows/tftp/futuresoft_transfermode": [
-        " Windows 2000 Pro English ALL",
-        " Windows XP Pro SP0/SP1 English",
-        " Windows NT SP5/SP6a English",
-        " Windows 2003 Server English"
+        " Automatic"
     ],
     "windows/tftp/netdecision_tftp_traversal": [
         " NetDecision 4.2 TFTP on Windows XP SP3 / Windows 2003 SP2"
@@ -7460,10 +6996,7 @@
         " Windows XP SP2"
     ],
     "windows/tftp/tftpd32_long_filename": [
-        " Windows NT 4.0 SP6a English",
-        " Windows 2000 Pro SP4 English",
-        " Windows XP Pro SP0 English",
-        " Windows XP Pro SP1 English"
+        " Automatic"
     ],
     "windows/tftp/tftpdwin_long_filename": [
         " Universal - tftpd.exe"

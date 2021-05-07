@@ -41,7 +41,7 @@ def setup_shell():
         FNULL = open(os.devnull, 'w')
         subprocess.Popen(cmd, stdout=FNULL, stderr=subprocess.STDOUT)
         os.chdir(
-            '../../..')  # return to original root directory's projetc => other python depends from this element !!!!!!!
+            '../../..')  # return to original root directory's projetc => other python depends from this element : code pointerz" !!!!!!!
         print(color_monitor.background_OKGREEN + "[*] Success in launching webssh2" +
               color_monitor.background_ENDC)
         return 0

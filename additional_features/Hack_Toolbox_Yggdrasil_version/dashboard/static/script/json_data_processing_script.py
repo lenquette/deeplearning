@@ -2,6 +2,8 @@ import json
 import sys
 import os
 import re
+import time
+import codecs
 import configparser
 from os.path import dirname, abspath
 from extra_scripts import *
@@ -140,8 +142,11 @@ class Json_monitor:
         :param: data: json data to write
         :return:
         '''
-        with open(name, 'w') as outfile:
-            json.dump(data, outfile, indent=4)
+        outfile = codecs.open(name, 'w', 'utf-8')
+        json.dump(data, outfile, indent=4)
+        time.sleep(1.5)
+        outfile.close()
+
 
     def read_json_data_in_a_file(self, name):
         '''
@@ -149,8 +154,9 @@ class Json_monitor:
         :param name: name of the json file
         :return: date : data of the json file
         '''
-        with open(name) as jsonfile:
-            data = json.load(jsonfile)
+        jsonfile = codecs.open(name, 'r', 'utf-8')
+        data = json.load(jsonfile)
+        jsonfile.close()
         return data
 
 #######################################DEPRECIATED##################################################

@@ -5,6 +5,7 @@ import socket
 import multiprocessing
 import random
 
+
 class Blackhat:
     def __init__(self):
         self.json_monitor = Json_monitor()
@@ -27,9 +28,17 @@ class Blackhat:
         self.host_ip = None
         self.lport_for_exploit_execution = 50000
         self.id_storage_for_exploit_execution = []
+        self.flag_relocate = None
 
         ######################MULTIPROCESS INITIALIZER########################################################
         # self.lock = multiprocessing.Lock()
+
+        ######################IF LAUNCH THROUGH GRAPHIC INTERFACE, THEN RELOCATE OS POINTER###################
+        try:
+            os.chdir('dashboard/static/script/')
+            self.flag_relocate = True
+        except Exception:
+            pass
 
     ####################SUB FUNCTION TO HANDLE CORRECTION AND OPTIMIZATION####################################
     #                ________
@@ -427,9 +436,10 @@ class Blackhat:
         ###GENERAL VARIABLE###
         flag_rport_default_value_changed = None
         ###FOR LPORT, CHOOSE A NUMBER BETWEEN 1-10000, STORE IT, AND IF IT IS ALREADY STORED CHOOSE AN OTHER ONE###
-        id = random.randint(1, 10000) #choose an id
-        tmp_time_wait = random.randint(0, 3) #create different time wait (not too long in oder to not impact benchmark) whose goal is to reduce collision probability
-        while id in self.id_storage_for_exploit_execution :
+        id = random.randint(1, 10000)  # choose an id
+        tmp_time_wait = random.randint(0,
+                                       3)  # create different time wait (not too long in oder to not impact benchmark) whose goal is to reduce collision probability
+        while id in self.id_storage_for_exploit_execution:
             id = random.randint(1, 10000)
             time.sleep(tmp_time_wait)
         self.id_storage_for_exploit_execution.append(id)
@@ -466,6 +476,11 @@ class Blackhat:
 
                 elif flag_check is None:
                     raise Exception("Can't configure correctly the exploit : unknown required option")
+
+            if "SRVPORT" in self.env.current_exploit.options:
+                server_port_tmp = (self.lport_for_exploit_execution - 10000) + int(id)
+                flag_check = self.env.change_option_exploit('SRVPORT', str(server_port_tmp), 'INT')
+
         except Exception as e:
             print(self.env.color_monitor.background_FAIL +
                   '[x] Failed to configure exploit {} : {}'.format(str(exploit),
@@ -598,9 +613,16 @@ class Blackhat:
         # self.lock.release()
 
     def launch_exploitation(self, mode):
+        '''
+        Method use to launch a massive exploitation of target, according to the data implemented in the target tree
+        :param mode: 'test' : mode used to use IA data and to exploit victim's machine failures
+                     'train' : mode used to train IA and to improve IA data
+        :return: the sessions created or None if there isn't one
+        '''
         ###GENERAL VARIABLE###
+        tic = time.time()
         flag_ia_data_load = None
-        pool = multiprocessing.Pool(processes=10)  # 20 simultaneous process
+        pool = multiprocessing.Pool(processes=20)  # 20 simultaneous process
         ######################
         if mode == "train":
             # TODO
@@ -633,6 +655,11 @@ class Blackhat:
             if os.path.exists(os.path.join(self.json_monitor.datapath, 'targets_tree.json')) is True:
                 self.targets_tree = self.json_monitor.read_json_data_in_a_file(
                     self.json_monitor.datapath + '/targets_tree.json')
+                print(
+                    self.env.color_monitor.background_OKCYAN + "[*] Retrieve the targets tree : {}".format(
+                        self.json_monitor.datapath + '/targets_tree.json') +
+                    self.env.color_monitor.background_ENDC
+                )
             else:
                 print(
                     self.env.color_monitor.background_WARNING + "[!!!] No target tree were found, creating it based on"
@@ -645,6 +672,11 @@ class Blackhat:
                     self.default_tree_payload_per_exploit = self.json_monitor.read_json_data_in_a_file(
                         self.json_monitor.datapath +
                         '/default_payload_tree.json')
+                    print(
+                        self.env.color_monitor.background_OKCYAN + "[*] Retrieve the default payload tree : {}".format(
+                            self.json_monitor.datapath + '/default_payload_tree.json') +
+                        self.env.color_monitor.background_ENDC
+                    )
                 else:
                     print(self.env.color_monitor.background_WARNING +
                           '[!!!] No default payload tree was found, creation of this feature is launched' +
@@ -656,6 +688,11 @@ class Blackhat:
                     self.checkmodule_option_tree_per_exploit = self.json_monitor.read_json_data_in_a_file(
                         self.json_monitor.datapath +
                         '/default_checkmodule_tree.json')
+                    print(
+                        self.env.color_monitor.background_OKCYAN + "[*] Retrieve the default checkmodule tree : {}".format(
+                            self.json_monitor.datapath + '/default_checkmodule_tree.json') +
+                        self.env.color_monitor.background_ENDC
+                    )
                 else:
                     print(self.env.color_monitor.background_WARNING +
                           '[!!!] No default checkmodule tree was found, creation of this feature is launched' +
@@ -667,6 +704,11 @@ class Blackhat:
                     self.targets_option_tree_per_exploit = self.json_monitor.read_json_data_in_a_file(
                         self.json_monitor.datapath +
                         '/targets_option_tree.json')
+                    print(
+                        self.env.color_monitor.background_OKCYAN + "[*] Retrieve the general targets option tree : {}".format(
+                            self.json_monitor.datapath + '/targets_option_tree.json') +
+                        self.env.color_monitor.background_ENDC
+                    )
                 else:
                     print(self.env.color_monitor.background_WARNING +
                           '[!!!] No targets option tree found, creation of this feature is launched' +
@@ -702,6 +744,13 @@ class Blackhat:
                                          args=(str(ip), str(port_number), exploit, flag_ia_data_load))
                 pool.close()
                 pool.join()
+
+
+                ######################IF LAUNCH THROUGH GRAPHIC INTERFACE, THEN RELOCATE OS POINTER###################
+                if self.flag_relocate:
+                    os.chdir('../../../')
+
+                #########################################SYNCHRONE PART BELOW###########################################
                 #         self.executor_agent_configuration_and_launch_exploit(str(ip), str(port_number), str(exploit),
                 #                                                      flag_ia_data_load)
                 # multiprocessing.Process(target=self.executor_agent_configuration_and_launch_exploit, args=(locker, str(ip), str(port_number), exploit, flag_ia_data_load)).start()
@@ -848,6 +897,8 @@ class Blackhat:
                 #               '[x] Failed to launch the exploitation : {}'.format(str(e)),
                 #               self.env.color_monitor.background_ENDC)
 
+        toc = time.time()
+        print("\n\ntime : ", toc-tic)
         return self.env.client.sessions.list
 
 
@@ -859,9 +910,8 @@ if __name__ == '__main__':
     # foo.get_targets_option_for_target_per_exploit('172.16.1.2')
     # foo.get_default_checkmodule_per_exploit_tree()
     sessions_list = foo.launch_exploitation(mode='test')
-    print(foo.env.color_monitor.background_OKGREEN+"-------------------------------------"+foo.env.color_monitor.background_ENDC)
+    print(
+        foo.env.color_monitor.background_OKGREEN + "-------------------------------------" + foo.env.color_monitor.background_ENDC)
     print(foo.env.color_monitor.background_HEADER, sessions_list, foo.env.color_monitor.background_ENDC)
-    print(foo.env.color_monitor.background_OKGREEN+"-------------------------------------"+foo.env.color_monitor.background_ENDC)
-
-
-
+    print(
+        foo.env.color_monitor.background_OKGREEN + "-------------------------------------" + foo.env.color_monitor.background_ENDC)

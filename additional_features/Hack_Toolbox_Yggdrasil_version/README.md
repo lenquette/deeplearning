@@ -79,6 +79,10 @@ NB : To run a python shell with Django in your virtual environment :
 		
 You may use the "Session Crafter" now !!!
 
+# Black Hat Attack (might be changed to Hellhound)
+
+To use this module, you must first launch an nmap through the graphical interface. Then go to "Black Hat Attack" and launch the module.
+
 # Pymetasploit3
 
 In pymetasploit3, change the request_post definition to set a timeout of 5.0 seconds

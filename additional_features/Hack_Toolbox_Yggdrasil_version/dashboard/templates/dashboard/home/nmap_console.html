@@ -41,7 +41,7 @@
 
 		<div class="mt-5 py-2 p-3">
 		{% csrf_token %}
-		<button type="submit" name="run_script" class="btn btn-primary btn-lg">Run script</button>
+		<button type="submit" name="run_script" class="btn btn-primary btn-lg" id="runbutton">Run script</button>
 		</div>
 	</form>
 
@@ -87,6 +87,12 @@
 					 </tbody>
 				{% endfor %}
 			 </table>
+			{% else %}
+			<div class="d-flex justify-content-center m-5">
+                  <div class="spinner-grow text-primary" style="width: 5rem; height: 5rem;" role="status" id="spinner" hidden>
+                    <span class="sr-only p-5 m-5">Loading...</span>
+                  </div>
+                </div>
 			{% endif %}
 		</div>
 	</div>
@@ -126,6 +132,10 @@
 		    updateScanRadiobutton();
 		});
 	});
+
+	$("#runbutton").on('click', function() {
+            $("#spinner").removeAttr('hidden')
+        });
 
 </script>
 <!--end jquery-->

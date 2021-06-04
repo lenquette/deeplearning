@@ -18,6 +18,8 @@ DashboardScriptDir = os.path.join(ProjectFileDir, 'static/script/')
 sys.path.append(DashboardScriptDir)
 
 from metasploit_script import Msfrpc
+
+
 # Create your views here.
 
 def home_page(request):
@@ -190,7 +192,7 @@ def metasploit_visu(request):
             flag_connection = "connected"
             status_connection = "connected"
 
-        #retry
+        # retry
         else:
             env.launch_metasploit()
             time.sleep(5)
@@ -513,7 +515,6 @@ def metasploit_visu(request):
             payload_runoptions = env.current_payload.runoptions
             payload_missing_required = env.current_payload.missing_required
 
-
             return render(request, 'dashboard/home/metasploit_console.html',
                           {'flag_connection': flag_connection, 'new_list': new_list,
                            'champ_de_recherche': champ_de_recherche, 'flag_search': flag_search,
@@ -543,7 +544,7 @@ def metasploit_visu(request):
 
         flag_payload_value = None
 
-        flag_check = env.change_option_payload(payload_option_arg, payload_option_val, payload_option_type,)
+        flag_check = env.change_option_payload(payload_option_arg, payload_option_val, payload_option_type, )
 
         if flag_check is None:
 
@@ -670,7 +671,6 @@ def metasploit_visu(request):
 
     #######################################PROMPT COMMANDE###############################
     if champ_du_prompt.is_valid() and request.method == 'POST' and 'run_cmd' in request.POST:
-
         cmd_wanted = request.POST.get('prompt_str')
 
         output = env.execute_command(cmd_wanted, session)
@@ -684,6 +684,7 @@ def metasploit_visu(request):
     return render(request, 'dashboard/home/metasploit_console.html', {})
 
 
+#####################DEPRECIATED##################################
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)
 def crafter_port_visu(request):
     '''
@@ -742,7 +743,6 @@ def crafter_port_visu(request):
             error = 'Error or nothing can be exploited'
             return render(request, 'dashboard/home/exploitcrafter_port_console.html',
                           {flag_error: 'flag_error', error: 'error'})
-
 
     return render(request, 'dashboard/home/exploitcrafter_port_console.html', {})
 
@@ -825,6 +825,34 @@ def crafter_version_visu(request):
                            'dict_data': dict_data})
 
     return render(request, 'dashboard/home/exploitcrafter_dbdatabase_console.html', {})
+
+
+##################################################################
+
+@cache_control(no_cache=True, must_revalidate=True, no_store=True)
+def blackhat_attack_visu(request):
+    # define global variable
+    global flag_launch_blackhat_attack_script
+    global THEblackhat
+
+    flag_launch_blackhat_attack_script = None
+    # pdb.set_trace()
+
+    if request.method == 'POST' and 'run_blackhat_script' in request.POST:
+        from blackhat_attack_script import Blackhat
+        THEblackhat = Blackhat()
+        sessions_list = THEblackhat.launch_exploitation(mode='test')
+        if sessions_list == None :
+            flag_launch_blackhat_attack_script = None
+        else :
+            flag_launch_blackhat_attack_script = "True"
+
+        return render(request, 'dashboard/home/blackhat_attack_console.html',
+                      {'flag_launch_blackhat_attack_script': flag_launch_blackhat_attack_script,
+                       'sessions_list': sessions_list})
+
+    return render(request, 'dashboard/home/blackhat_attack_console.html',
+                  {'flag_launch_blackhat_attack_script': flag_launch_blackhat_attack_script})
 
 
 @cache_control(no_cache=True, must_revalidate=True, no_store=True)

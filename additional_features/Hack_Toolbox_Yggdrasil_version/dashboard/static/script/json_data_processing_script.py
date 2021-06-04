@@ -131,7 +131,7 @@ class Json_monitor:
 
                     port[str(dict['portid'])] = tmp
 
-            self.targets_tree[ip] = {'ports': port, 'os': str(max(os_iter))}
+            self.targets_tree[ip] = {'ports': port, 'os': str(max(os_iter, key=os_iter.get))}
 
         return self.targets_tree
 
@@ -158,6 +158,18 @@ class Json_monitor:
         data = json.load(jsonfile)
         jsonfile.close()
         return data
+
+    def write_log(self, name, data):
+        '''
+        Method used to write a log
+        :param name: name of the log file
+        :param data: data to write in the log file
+        :return:
+        '''
+        logfile = codecs.open(name, 'a', 'utf-8')
+        logfile.write(data+'\n')
+        time.sleep(1.5)
+        logfile.close()
 
 #######################################DEPRECIATED##################################################
 ####################################################################################################

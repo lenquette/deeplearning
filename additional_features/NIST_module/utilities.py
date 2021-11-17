@@ -12,6 +12,10 @@ class Background_printer:
         self.background_UNDERLINE = '\033[4m'
 
     def print_intro_banner(self):
+        '''
+        Function used to print begin process banner
+        :return: None
+        '''
         print(self.background_OKGREEN + u"""
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
    _______       __                    

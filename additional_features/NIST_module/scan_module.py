@@ -25,7 +25,6 @@ Color_Monitor = Background_printer()
 Json_Monitor = Json_monitor()
 Msfrpc_Monitor = Msfrpc()
 
-
 ####################################
 ### End Tools generation section ###
 
@@ -57,6 +56,11 @@ class Scanner:
         self.path_data_metasploit_save_tree = config['Data_path']['path_save metasploit_trees']
 
     def IP_range_enumeration(self, IP_network_mask):
+        '''
+        Function used to enumerate the IP of a network thanks to the IP address of the network and the mask
+        :param IP_network_mask: string of the Ip network and the mask as follow '<IP>/<MASK>'
+        :return: list of strings which are the IP address of the network
+        '''
         list_available_IP = []
         IP_network = IP_network_mask.split('/')[0]
         mask = int(IP_network_mask.split('/')[-1])
@@ -77,6 +81,13 @@ class Scanner:
         return list_available_IP
 
     def save_data(self, IP, nmap_scan, subfolder=None):
+        '''
+        Function used to save data of an nmap scan in a json file
+        :param IP: string of the IP address of the machine
+        :param nmap_scan: json data to save (nmap scan)
+        :param subfolder: string of the subfolder for a given scan of a network
+        :return: None
+        '''
         try:
             filename = self.path_data_nmap_save_scan + subfolder + self.default_name + '_' + IP + '_' + datetime.datetime.today().strftime(
                 "%d_%m_%Y__%H_%M_%S") + '.json'
@@ -87,6 +98,16 @@ class Scanner:
                   Color_Monitor.background_ENDC)
 
     def action_asynchrone_nmap_scan(self, type_scan, OS, IP, name_sub_folder):
+        '''
+        Action made to perform an nmap scan. This goal of this function is to make the nmap scan asynchronous.
+        By doing this function related to nmap scan, we will be able (by calling it through multiprocessing and pools)
+        to perform asynchronous scan.
+        :param type_scan: string of the type of scan performed by nmap
+        :param OS: string of the OS dectection options
+        :param IP: string of the IP of a machine or a network
+        :param name_sub_folder: string of the subfolder for a given scan of a network
+        :return: None
+        '''
         if OS is None:
             if type_scan == "-SYN":
                 nmap_result = self.nmap.nmap_syn_scan(IP, args="--privileged")
@@ -152,6 +173,16 @@ class Scanner:
                 ###################################################
 
     def action_asynchrone_nmap_trees(self, dir, path, name_sub_folder):
+        '''
+        Action made to perform an nmap tree.An nmap tree is a summary of an nmap scan.
+        The goal of this function is to make the nmap tree asynchronous.
+        By doing this function related to nmap scan, we will be able (by calling it through multiprocessing and pools)
+        to perform asynchronous tree.
+        :param dir: string of the directory folder of the nmap scans
+        :param path: string of the subfolder of the nmap scan
+        :param name_sub_folder: string of the name of the subfolder of the futur directory of nmap trees
+        :return:
+        '''
         if os.path.isfile(os.path.join(dir, path)):
             try:
                 scan = Json_Monitor.read_json_data_in_a_file(dir + '/' + path)
@@ -167,6 +198,16 @@ class Scanner:
                       Color_Monitor.background_ENDC)
 
     def action_asynchrone_auxiliaries(self, auxiliary, IP, name_sub_folder):
+        '''
+        Action made to perform a metasploit scan through auxiliaries. Auxiliaries might detect unseen issue from nmap
+        standard scan. The goal of this function is to make such scans asynchronous.
+        By doing this function related to metasploit auxiliaries, we will be able (by calling it through multiprocessing and pools)
+        to perform asynchronous metasploit scan.
+        :param auxiliary:
+        :param IP:
+        :param name_sub_folder:
+        :return:
+        '''
         # get auxiliary
         Msfrpc_Monitor.execute_console_command("use " + auxiliary + "\n")
         dict_tmp = {}
@@ -196,8 +237,13 @@ class Scanner:
                   Color_Monitor.background_ENDC)
 
     def scanner_method(self, args=None):
+        '''
+        Function used to scan a network asynchronously, through nmap tool
+        :param args: list of strings : 1: type of scan ; 2: os detection option ; 3: <IP>/<MASK>
+        :return: None
+        '''
         # create pool
-        pool = multiprocessing.Pool(processes=10)
+        pool = multiprocessing.Pool(processes=20)
         nmap_result = None
         nmap_scans = None
         try:
@@ -261,8 +307,10 @@ class Scanner:
                         # if range IP is needed
                         else:
                             for IP in self.IP_range_enumeration(args[3].split("-")[-1]):
-                                pool.apply(self.action_asynchrone_nmap_scan,
+                                pool.apply_async(self.action_asynchrone_nmap_scan,
                                            args=(args[1], True, IP, name_sub_folder))
+                            pool.close()
+                            pool.join()
                             return 0
 
         except Exception as err:
@@ -270,8 +318,13 @@ class Scanner:
                   Color_Monitor.background_ENDC)
 
     def defined_nmap_tree_summary(self, args=None):
+        '''
+        Function used to define nmap tree asynchronously
+        :param args: list of strings : 1: type of scan ; 2: os detection option ; 3: <IP>/<MASK>
+        :return:
+        '''
         # create pool###
-        pool = multiprocessing.Pool(processes=10)
+        pool = multiprocessing.Pool(processes=20)
         # create folder for save###
         if len(args[3].split("-")[-1].split("/")) == 1:
             name_sub_folder = "trees_for_{}".format(args[3].split("-")[-1]).split("/")[
@@ -285,24 +338,31 @@ class Scanner:
         # retrieve data
         dir = self.directoryname_nmap_scan_tmp
         for path in os.listdir(dir):
-            pool.apply(self.action_asynchrone_nmap_trees, args=(dir, path, name_sub_folder))
-            # if os.path.isfile(os.path.join(dir, path)):
-            #     try:
-            #         scan = Json_Monitor.read_json_data_in_a_file(dir + '/' + path)
-            #         target_tree = Json_Monitor.get_targets_tree(scan)
-            #         filename = "nmap_tree_" + path.split("_")[2] + datetime.datetime.today().strftime(
-            #             "__%d_%m_%Y__%H_%M_%S") + '.json'
-            #         Json_Monitor.write_json_data_in_a_file(self.path_data_save_tree + name_sub_folder + '/' + filename,
-            #                                                target_tree)
-            #         print(Color_Monitor.background_OKGREEN + "[*] Tree of {} done".format(
-            #             path.split("_")[2]) + Color_Monitor.background_ENDC)
-            #     except Exception as err:
-            #         print(Color_Monitor.background_FAIL + '[x] An error occurs : {}'.format(err),
-            #               Color_Monitor.background_ENDC)
+            pool.apply_async(self.action_asynchrone_nmap_trees, args=(dir, path, name_sub_folder))
+        pool.close()
+        pool.join()
+        # if os.path.isfile(os.path.join(dir, path)):
+        #     try:
+        #         scan = Json_Monitor.read_json_data_in_a_file(dir + '/' + path)
+        #         target_tree = Json_Monitor.get_targets_tree(scan)
+        #         filename = "nmap_tree_" + path.split("_")[2] + datetime.datetime.today().strftime(
+        #             "__%d_%m_%Y__%H_%M_%S") + '.json'
+        #         Json_Monitor.write_json_data_in_a_file(self.path_data_save_tree + name_sub_folder + '/' + filename,
+        #                                                target_tree)
+        #         print(Color_Monitor.background_OKGREEN + "[*] Tree of {} done".format(
+        #             path.split("_")[2]) + Color_Monitor.background_ENDC)
+        #     except Exception as err:
+        #         print(Color_Monitor.background_FAIL + '[x] An error occurs : {}'.format(err),
+        #               Color_Monitor.background_ENDC)
 
     def scanner_auxiliaries_metasploit(self, args=None):
-        # create pool
-        pool = multiprocessing.Pool(processes=10)
+        '''
+        Function used to perform metasploit scan synchronously
+        :param args: list of strings : 1: type of scan ; 2: os detection option ; 3: <IP>/<MASK>
+        :return:
+        '''
+        #TODO make it asynchrone when pymetasploit3 will allow output through applicative layer and not only through console
+
         # create folder for save###
         if len(args[3].split("-")[-1].split("/")) == 1:
             name_sub_folder = "metasploit_scan_for_".format(args[3].split("-")[-1]).split("/")[
@@ -322,6 +382,8 @@ class Scanner:
         # loop IP
         for path in os.listdir(dir):
             if os.path.isfile(os.path.join(dir, path)):
+                # create pool
+                # pool = multiprocessing.Pool(processes=20)
                 # retrieve list of auxiliaries
                 Msfrpc_Monitor.get_auxiliaries()
                 # retrieve services
@@ -355,7 +417,9 @@ class Scanner:
                 # use the auxiliaries
                 for auxiliary_bis in metasploit_auxiliaries_usefull:
                     self.action_asynchrone_auxiliaries(auxiliary_bis, IP, name_sub_folder)
-                    # pool.apply(self.action_asynchrone_auxiliaries, args=(auxiliary_bis, args[3].split("-")[-1].split("/"), name_sub_folder))
+                    # pool.apply_async(self.action_asynchrone_auxiliaries, args=(auxiliary_bis, IP, name_sub_folder))
+                # pool.close()
+                # pool.join()
         return 0
 
 
@@ -363,13 +427,15 @@ if __name__ == '__main__':
 
     # os.chdir("/home/ludovic/Test_Lab/NIST_module")
     # Scanner_definition = Scanner()
+    # Scanner_definition.directoryname_nmap_tree_tmp = 'trees_for_subnet_10.10.13.0__15_11_2021__11_25_41'
+    # Scanner_definition.scanner_auxiliaries_metasploit(args=["toto", "-SYN", "-O", "10.10.13.0/28"])
     # Scanner_definition.scanner_method(args=["toto", "-SYN", "-O", "10.10.13.1/30"])
     # Scanner_definition.defined_nmap_tree_summary(args=["toto", "-SYN", "-O", "10.10.13.1/30"])
     # ##
-    # # # launch metasploit
-    # # Msfrpc_Monitor.launch_metasploit()
-    # # # connection to metasploit
-    # # Msfrpc_Monitor.connection_rpc()
+    # launch metasploit
+    # Msfrpc_Monitor.launch_metasploit()
+    # connection to metasploit
+    # Msfrpc_Monitor.connection_rpc()
     # ##
     # # Scanner_definition.action_asynchrone_auxiliaries("auxiliary/scanner/smb/smb_ms17_010", "10.10.13.2", "metasploit_scan_for_subnet_10.10.13.1__28_10_2021__10_17_56")
     # Scanner_definition.scanner_auxiliaries_metasploit(args=["toto", "-SYN", "-O", "10.10.13.1/30"])

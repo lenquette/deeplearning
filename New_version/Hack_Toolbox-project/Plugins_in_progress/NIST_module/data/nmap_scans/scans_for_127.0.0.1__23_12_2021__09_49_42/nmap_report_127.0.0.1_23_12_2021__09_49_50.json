@@ -1,0 +1,164 @@
+{
+    "127.0.0.1": {
+        "osmatch": [
+            {
+                "name": "Linux 2.6.32",
+                "accuracy": "100",
+                "line": "55543",
+                "osclass": {
+                    "type": "general purpose",
+                    "vendor": "Linux",
+                    "osfamily": "Linux",
+                    "osgen": "2.6.X",
+                    "accuracy": "100"
+                },
+                "cpe": "cpe:/o:linux:linux_kernel:2.6.32"
+            }
+        ],
+        "ports": [
+            {
+                "protocol": "tcp",
+                "portid": "22",
+                "state": "open",
+                "reason": "syn-ack",
+                "reason_ttl": "64",
+                "service": {
+                    "name": "ssh",
+                    "product": "OpenSSH",
+                    "version": "8.2p1 Ubuntu 4ubuntu0.3",
+                    "extrainfo": "Ubuntu Linux; protocol 2.0",
+                    "ostype": "Linux",
+                    "method": "probed",
+                    "conf": "10"
+                },
+                "cpe": [
+                    {
+                        "cpe": "cpe:/o:linux:linux_kernel"
+                    }
+                ],
+                "scripts": []
+            },
+            {
+                "protocol": "tcp",
+                "portid": "111",
+                "state": "open",
+                "reason": "syn-ack",
+                "reason_ttl": "64",
+                "service": {
+                    "name": "rpcbind",
+                    "version": "2-4",
+                    "extrainfo": "RPC #100000",
+                    "method": "probed",
+                    "conf": "10"
+                },
+                "scripts": []
+            },
+            {
+                "protocol": "tcp",
+                "portid": "445",
+                "state": "open",
+                "reason": "syn-ack",
+                "reason_ttl": "64",
+                "service": {
+                    "name": "netbios-ssn",
+                    "product": "Samba smbd",
+                    "version": "4.6.2",
+                    "method": "probed",
+                    "conf": "10"
+                },
+                "cpe": [
+                    {
+                        "cpe": "cpe:/a:samba:samba:4.6.2"
+                    }
+                ],
+                "scripts": []
+            },
+            {
+                "protocol": "tcp",
+                "portid": "631",
+                "state": "open",
+                "reason": "syn-ack",
+                "reason_ttl": "64",
+                "service": {
+                    "name": "ipp",
+                    "product": "CUPS",
+                    "version": "2.3",
+                    "method": "probed",
+                    "conf": "10"
+                },
+                "cpe": [
+                    {
+                        "cpe": "cpe:/a:apple:cups:2.3"
+                    }
+                ],
+                "scripts": []
+            },
+            {
+                "protocol": "tcp",
+                "portid": "3306",
+                "state": "open",
+                "reason": "syn-ack",
+                "reason_ttl": "64",
+                "service": {
+                    "name": "mysql",
+                    "product": "MySQL",
+                    "version": "5.5.5-10.3.32-MariaDB-0ubuntu0.20.04.1",
+                    "method": "probed",
+                    "conf": "10"
+                },
+                "cpe": [
+                    {
+                        "cpe": "cpe:/a:mysql:mysql:5.5.5-10.3.32-mariadb-0ubuntu0.20.04.1"
+                    }
+                ],
+                "scripts": []
+            },
+            {
+                "protocol": "tcp",
+                "portid": "9050",
+                "state": "open",
+                "reason": "syn-ack",
+                "reason_ttl": "64",
+                "service": {
+                    "name": "tor-socks",
+                    "product": "Tor SOCKS proxy",
+                    "method": "probed",
+                    "conf": "10"
+                },
+                "cpe": [
+                    {
+                        "cpe": "cpe:/a:torproject:tor"
+                    }
+                ],
+                "scripts": []
+            }
+        ],
+        "hostname": [
+            {
+                "name": "localhost",
+                "type": "PTR"
+            }
+        ],
+        "macaddress": null,
+        "state": {
+            "state": "up",
+            "reason": "localhost-response",
+            "reason_ttl": "0"
+        }
+    },
+    "stats": {
+        "scanner": "nmap",
+        "args": "/usr/bin/nmap -oX - -sV --privileged -O 127.0.0.1",
+        "start": "1640249382",
+        "startstr": "Thu Dec 23 09:49:42 2021",
+        "version": "7.80",
+        "xmloutputversion": "1.04"
+    },
+    "runtime": {
+        "time": "1640249390",
+        "timestr": "Thu Dec 23 09:49:50 2021",
+        "elapsed": "7.94",
+        "summary": "Nmap done at Thu Dec 23 09:49:50 2021; 1 IP address (1 host up) scanned in 7.94 seconds",
+        "exit": "success"
+    }
+}

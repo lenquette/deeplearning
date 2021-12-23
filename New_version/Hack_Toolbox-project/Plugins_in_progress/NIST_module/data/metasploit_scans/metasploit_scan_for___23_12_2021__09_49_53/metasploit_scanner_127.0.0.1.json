@@ -1,0 +1,97 @@
+{
+    "scanner/mysql/mysql_authbypass_hashdump": {
+        "data": "[-] 127.0.0.1:3306        - 127.0.0.1:3306 Error: Client does not support authentication protocol requested by server; consider upgrading MariaDB client\n[*] 127.0.0.1:3306        - Scanned 1 of 1 hosts (100% complete)\n[*] Auxiliary module execution completed\n",
+        "prompt": "msf6 auxiliary(scanner/mysql/mysql_authbypass_hashdump) > ",
+        "busy": false
+    },
+    "scanner/mysql/mysql_file_enum": {
+        "data": "[-] 127.0.0.1:3306        - Msf::OptionValidateError The following options failed to validate: FILE_LIST\n",
+        "prompt": "msf6 auxiliary(scanner/mysql/mysql_file_enum) > ",
+        "busy": false
+    },
+    "scanner/mysql/mysql_hashdump": {
+        "data": "[*] 127.0.0.1:3306        - Error: 127.0.0.1: RbMysql::ServerError::NotSupportedAuthMode Client does not support authentication protocol requested by server; consider upgrading MariaDB client\n[*] 127.0.0.1:3306        - Scanned 1 of 1 hosts (100% complete)\n[*] Auxiliary module execution completed\n",
+        "prompt": "msf6 auxiliary(scanner/mysql/mysql_hashdump) > ",
+        "busy": false
+    },
+    "scanner/mysql/mysql_login": {
+        "data": "[+] 127.0.0.1:3306        - 127.0.0.1:3306 - Found remote MySQL version 5.5.5\n[*] 127.0.0.1:3306        - Error: 127.0.0.1: RbMysql::ServerError::NotSupportedAuthMode Client does not support authentication protocol requested by server; consider upgrading MariaDB client\n[*] 127.0.0.1:3306        - Scanned 1 of 1 hosts (100% complete)\n[*] Auxiliary module execution completed\n",
+        "prompt": "msf6 auxiliary(scanner/mysql/mysql_login) > ",
+        "busy": false
+    },
+    "scanner/mysql/mysql_schemadump": {
+        "data": "[*] 127.0.0.1:3306        - Error: 127.0.0.1: RbMysql::ServerError::NotSupportedAuthMode Client does not support authentication protocol requested by server; consider upgrading MariaDB client\n[*] 127.0.0.1:3306        - Scanned 1 of 1 hosts (100% complete)\n[*] Auxiliary module execution completed\n",
+        "prompt": "msf6 auxiliary(scanner/mysql/mysql_schemadump) > ",
+        "busy": false
+    },
+    "scanner/mysql/mysql_version": {
+        "data": "[+] 127.0.0.1:3306        - 127.0.0.1:3306 is running MySQL 5.5.5-10.3.32-MariaDB-0ubuntu0.20.04.1 (protocol 10)\n[*] 127.0.0.1:3306        - Scanned 1 of 1 hosts (100% complete)\n[*] Auxiliary module execution completed\n",
+        "prompt": "msf6 auxiliary(scanner/mysql/mysql_version) > ",
+        "busy": false
+    },
+    "scanner/mysql/mysql_writable_dirs": {
+        "data": "[-] 127.0.0.1:3306        - Msf::OptionValidateError The following options failed to validate: DIR_LIST\n",
+        "prompt": "msf6 auxiliary(scanner/mysql/mysql_writable_dirs) > ",
+        "busy": false
+    },
+    "scanner/ssh/apache_karaf_command_execution": {
+        "data": "[*] 127.0.0.1:8101 - Attempt to login...\n[*] Scanned 1 of 1 hosts (100% complete)\n[*] Auxiliary module execution completed\n",
+        "prompt": "msf6 auxiliary(scanner/ssh/apache_karaf_command_execution) > ",
+        "busy": false
+    },
+    "scanner/ssh/detect_kippo": {
+        "data": "[*] 127.0.0.1:22          - Scanned 1 of 1 hosts (100% complete)\n[*] Auxiliary module execution completed\n",
+        "prompt": "msf6 auxiliary(scanner/ssh/detect_kippo) > ",
+        "busy": false
+    },
+    "scanner/ssh/eaton_xpert_backdoor": {
+        "data": "[*] Scanned 1 of 1 hosts (100% complete)\n[*] Auxiliary module execution completed\n",
+        "prompt": "msf6 auxiliary(scanner/ssh/eaton_xpert_backdoor) > ",
+        "busy": false
+    },
+    "scanner/ssh/fortinet_backdoor": {
+        "data": "[*] Scanned 1 of 1 hosts (100% complete)\n[*] Auxiliary module execution completed\n",
+        "prompt": "msf6 auxiliary(scanner/ssh/fortinet_backdoor) > ",
+        "busy": false
+    },
+    "scanner/ssh/juniper_backdoor": {
+        "data": "[*] Scanned 1 of 1 hosts (100% complete)\n[*] Auxiliary module execution completed\n",
+        "prompt": "msf6 auxiliary(scanner/ssh/juniper_backdoor) > ",
+        "busy": false
+    },
+    "scanner/ssh/karaf_login": {
+        "data": "[*] Attempting login to 127.0.0.1:8101...\n[-] Could not connect to Apache Karaf: The connection was refused by the remote host (127.0.0.1:8101).\n[!] No active DB -- Credential data will not be saved!\n[*] Scanned 1 of 1 hosts (100% complete)\n[*] Auxiliary module execution completed\n",
+        "prompt": "msf6 auxiliary(scanner/ssh/karaf_login) > ",
+        "busy": false
+    },
+    "scanner/ssh/libssh_auth_bypass": {
+        "data": "[*] 127.0.0.1:22 - Attempting authentication bypass\n[*] Scanned 1 of 1 hosts (100% complete)\n[*] Auxiliary module execution completed\n",
+        "prompt": "msf6 auxiliary(scanner/ssh/libssh_auth_bypass) > ",
+        "busy": false
+    },
+    "scanner/ssh/ssh_enum_git_keys": {
+        "data": "[-] Auxiliary aborted due to failure: bad-config: Please specify a KEY_FILE or KEY_DIR\n[*] Auxiliary module execution completed\n",
+        "prompt": "msf6 auxiliary(scanner/ssh/ssh_enum_git_keys) > ",
+        "busy": false
+    },
+    "scanner/ssh/ssh_enumusers": {
+        "data": "[*] 127.0.0.1:22 - SSH - Using malformed packet technique\n[-] Please populate USERNAME or USER_FILE\n[*] Scanned 1 of 1 hosts (100% complete)\n[*] Auxiliary module execution completed\n",
+        "prompt": "msf6 auxiliary(scanner/ssh/ssh_enumusers) > ",
+        "busy": false
+    },
+    "scanner/ssh/ssh_login": {
+        "data": "[*] 127.0.0.1:22 - Starting bruteforce\n[*] Error: 127.0.0.1: Metasploit::Framework::LoginScanner::Invalid Cred details can't be blank, Cred details can't be blank (Metasploit::Framework::LoginScanner::SSH)\n[*] Scanned 1 of 1 hosts (100% complete)\n[*] Auxiliary module execution completed\n",
+        "prompt": "msf6 auxiliary(scanner/ssh/ssh_login) > ",
+        "busy": false
+    },
+    "scanner/ssh/ssh_login_pubkey": {
+        "data": "[*] 127.0.0.1:22 SSH - Testing Cleartext Keys\n[-] Msf::OptionValidateError The following options failed to validate:\n[-] Invalid option USERNAME: At least one of USER_FILE or USERNAME must be given\n[-] Invalid option USER_FILE: At least one of USER_FILE or USERNAME must be given\n[*] Auxiliary module execution completed\n",
+        "prompt": "msf6 auxiliary(scanner/ssh/ssh_login_pubkey) > ",
+        "busy": false
+    },
+    "scanner/ssh/ssh_version": {
+        "data": "[+] 127.0.0.1:22          - SSH server version: SSH-2.0-OpenSSH_8.2p1 Ubuntu-4ubuntu0.3 ( service.version=8.2p1 openssh.comment=Ubuntu-4ubuntu0.3 service.vendor=OpenBSD service.family=OpenSSH service.product=OpenSSH service.cpe23=cpe:/a:openbsd:openssh:8.2p1 os.vendor=Ubuntu os.family=Linux os.product=Linux os.version=20.04 os.cpe23=cpe:/o:canonical:ubuntu_linux:20.04 service.protocol=ssh fingerprint_db=ssh.banner )\n[*] 127.0.0.1:22          - Scanned 1 of 1 hosts (100% complete)\n[*] Auxiliary module execution completed\n",
+        "prompt": "msf6 auxiliary(scanner/ssh/ssh_version) > ",
+        "busy": false
+    }
+}

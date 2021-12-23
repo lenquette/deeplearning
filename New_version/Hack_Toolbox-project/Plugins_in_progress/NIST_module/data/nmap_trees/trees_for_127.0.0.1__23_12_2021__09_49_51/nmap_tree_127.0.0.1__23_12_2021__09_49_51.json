@@ -1,0 +1,43 @@
+{
+    "127.0.0.1": {
+        "ports": {
+            "22": {
+                "prod_name": "ssh",
+                "protocol": "tcp",
+                "version": "8.2p1 Ubuntu 4ubuntu0.3",
+                "name_extended": "OpenSSH"
+            },
+            "111": {
+                "prod_name": "rpcbind",
+                "protocol": "tcp",
+                "version": "2-4",
+                "name_extended": "unknown"
+            },
+            "445": {
+                "prod_name": "samba",
+                "protocol": "tcp",
+                "version": "4.6.2",
+                "name_extended": "Samba smbd"
+            },
+            "631": {
+                "prod_name": "ipp",
+                "protocol": "tcp",
+                "version": "2.3",
+                "name_extended": "CUPS"
+            },
+            "3306": {
+                "prod_name": "mysql",
+                "protocol": "tcp",
+                "version": "5.5.5-10.3.32-MariaDB-0ubuntu0.20.04.1",
+                "name_extended": "MySQL"
+            },
+            "9050": {
+                "prod_name": "tor-socks",
+                "protocol": "tcp",
+                "version": "unknown",
+                "name_extended": "Tor SOCKS proxy"
+            }
+        },
+        "os": "linux"
+    }
+}

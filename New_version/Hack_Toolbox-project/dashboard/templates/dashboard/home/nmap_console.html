@@ -1,0 +1,146 @@
+{% extends "dashboard/base.html" %}
+{% load extras_filter %}
+{% block title %}Nmap script{% endblock title %}
+
+
+
+{% block content %}  
+
+	<form onload="retrieve_ip()" method="post" class="form-group text-left">
+
+		<div class="mt-5 py-2 p-3"  style="max-width: 30%">
+			<h1 class=" border-bottom">Type de scan</h1>
+		</div>
+		<div class="mt-2 py-2 p-3 bg-primary bg-gradient rounded-3" style="max-width: 30%">
+			{{type_scan}}
+			{{type_scan_val}}
+		</div>
+
+		<div class="mt-5 py-2 p-3"  style="max-width: 30%">
+			<h1 class=" border-bottom">Arguments supplémentaires</h1>
+		</div>
+		<div class="mt-2 py-2 p-3 bg-primary bg-gradient rounded-3" style="max-width: 30%">
+			{{arguments}}
+			{# display argument choosen after lauching the script #}
+			{% if arguments_val %}
+				{% for arguments_val in arguments_val|safeseq %}
+					{{ arguments_val }}
+				{% endfor %}
+			{% endif %}
+		</div>
+
+		<div class="mt-5 py-2 p-3"  style="max-width: 30%">
+			<h1 class="border-bottom">Adresse IP de la cible</h1>
+		</div>
+		<div class="mt-2 py-2 p-3 bg-primary bg-gradient rounded-3" style="max-width: 30%">
+			<p class="py-2">Entrez l'adresse IP de la cible</p>
+			{{ip_cible}}
+			{{ip_cible_val}}
+		</div>
+
+		<div class="mt-5 py-2 p-3">
+		{% csrf_token %}
+		<button type="submit" name="run_script" class="btn btn-primary btn-lg" id="runbutton">Run script</button>
+		</div>
+	</form>
+
+	<div class="mt-5 py-2 p-3">
+		<h1 class="border-bottom" style="max-width: 30%">Options choisies</h1>
+		<table class="table" style="max-width: 30%">
+			<tbody>
+			<tr><td>Type de scan</td><td id = "scan_choosen">None</td></tr>
+			<tr><td>Arguments choisis</td><td id = "args_choosen">None</td></tr>
+		 	<tr><td>IP choisie</td><td id = "ip_choosen">None</td></tr>
+			</tbody>
+		</table>
+	</div>
+
+	<div class="mt-5 py-2 p-3">
+		<h1 class="border-bottom" style="max-width: 30%">Retour du terminal</h1>
+		<h2 class="mt-5">Résultat du scan des ports</h2>
+		<div class="mt-5 py-2 overflow-auto" style="max-width: 60%; max-height: 500px;">
+			{% if data %}
+			 <table class="table">
+				{% for ip, dict_of_ip in data.items %}
+					 <thead>
+						<tr>
+							 <th class="h2">{{ip}}</th>
+						</tr>
+					 </thead>
+					 <tbody>
+					 		{% for dict_port in dict_of_ip.ports %}
+							<tr>
+								<td class="h3">PORT : {{dict_port|get_item:'portid'}}</td>
+								<td>protocol : {{dict_port|get_item:'protocol'}}</td>
+								<td>reason : {{dict_port|get_item:'reason'}}</td>
+								<td>reason ttl : {{dict_port|get_item:'reason_ttl'}}</td>
+								<td>
+									service :
+									{% for service_item_noun, service_item_value in dict_port.service.items %}
+										<br>
+										{{service_item_noun}} : {{service_item_value}}
+									{% endfor %}
+								</td>
+							</tr>
+					 		{% endfor %}
+					 </tbody>
+				{% endfor %}
+			 </table>
+			{% else %}
+			<div class="d-flex justify-content-center m-5">
+                  <div class="spinner-grow text-primary" style="width: 5rem; height: 5rem;" role="status" id="spinner" hidden>
+                    <span class="sr-only p-5 m-5">Loading...</span>
+                  </div>
+                </div>
+			{% endif %}
+		</div>
+	</div>
+
+<!--jquery-->
+<script type="text/javascript">
+	//related function to checkbox
+	function updateArgumentCheckbox() {
+		var allArgs = [];
+		$("#arguments_checkbox :checked").each(function() {
+		   allArgs.push($(this).val()+' ');
+		   });
+	    $('#args_choosen').html(allArgs);
+	}
+
+	//related function ro radiobutton
+	function updateScanRadiobutton() {
+		var scan = [];
+		$("#scan_wanted :checked").each(function() {
+			scan.push($(this).val()+' ');
+			});
+		$('#scan_choosen').html(scan);
+	}
+
+	//when page is loaded
+	$(document).ready(function() {
+		//update function for IP address
+		$("#entry_str").on('keyup', function() {
+			$("#ip_choosen").html($(this).val());
+		});
+		//function in live which updates a field according to checked arguments for arguments' scan
+		$("#arguments_checkbox input").click(function() {
+			updateArgumentCheckbox();
+		});
+		//function in live which updates a field according to checked arguments for the type of scan
+		$("#scan_wanted input").click(function() {
+		    updateScanRadiobutton();
+		});
+	});
+
+	$("#runbutton").on('click', function() {
+            $("#spinner").removeAttr('hidden')
+        });
+
+</script>
+<!--end jquery-->
+
+
+
+
+{% endblock content %}
+

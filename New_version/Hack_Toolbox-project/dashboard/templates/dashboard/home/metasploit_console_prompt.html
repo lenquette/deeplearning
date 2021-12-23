@@ -1,0 +1,31 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Metasploit prompt{% endblock title %}
+
+
+{% block content %}
+<form method="post" class="form-group text-left">
+    <div class="mt-5 py-2 p-3">
+        <h1 class="border-bottom" style="max-width: 40%">Prompt de la console</h1>
+    </div>
+    <div class="bg-primary bg-gradient rounded-3 p-3" style="max-width: 40%">
+        <p class="py-2">Indiquer le commande à rentrer</p>
+        <div class="mt-2 py-2">
+            {% csrf_token %}
+            {{champ_du_prompt}}
+        </div>
+    </div>
+    <div class="mt-5 py-2 p-3">
+        <button type="submit" name="run_cmd" class="btn btn-primary btn-lg mt-2">Run Command</button>
+    </div>
+</form>
+
+<div>
+    <div class="mt-5 py-2 p-3">
+        <h1 class="border-bottom" style="max-width: 40%">Output de la console</h1>
+    </div>
+    <div class="overflow-auto border border-dark p-3 list-unstyled mt-2" style="max-width: 60%; max-height: 500px;">
+        <pre>{{ output }}</pre>
+    </div>
+</div>
+
+{% endblock content %}

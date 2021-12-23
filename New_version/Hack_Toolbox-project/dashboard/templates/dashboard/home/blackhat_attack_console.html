@@ -1,0 +1,80 @@
+{% extends "dashboard/base.html" %}
+{% load extras_filter %}
+{% block title %}Black Hat Attack (Nmap + Msf){% endblock title %}
+
+
+{% block content %}
+
+    <div class="row">
+
+        <div class="col">
+            <div class="mt-5 py-2 p-3">
+                <h1 class="border-bottom" style="max-width: 40%">Présentation</h1>
+                <p class="py-2">Ce module couple Nmap à Metasploit et ceux, dans le but de générer automatique des sessions (shell ou meterpreter)</p>
+                <p class="py-2">En ce sens, lancez au préalable Nmap avant de lancer ce module si ce n'est pas déjà fait : <a href="{% url 'dashboard:nmap_visu' %}">Nmap</a></p>
+                <p class="py-2">Pour lancer le scan du dit module, veuillez cliquer sur le bouton ci-dessous : </p>
+                <form method="post" class="form-group text-left">
+                    {% csrf_token %}
+                    <button type="submit" name="run_blackhat_script" class="btn btn-primary btn-lg" id="runbutton">Run Black Hat Script</button>
+                </form>
+                <p class="py-2">Attention, ce module peut-être particulièrement chronophage.</p>
+            </div>
+        </div>
+
+        <div class="col">
+<!--            <div class="d-flex justify-content-center m-5">-->
+<!--              <div class="spinner-grow text-primary" style="width: 5rem; height: 5rem;" role="status">-->
+<!--                <span class="sr-only p-5 m-5">Loading...</span>-->
+<!--              </div>-->
+<!--            </div>-->
+            {% if flag_launch_blackhat_attack_script %}
+                <div class="mt-5 py-2 p-3">
+                    <h1 class="border-bottom" style="max-width:50%">Résultat du scan</h1>
+                    <div class="overflow-auto" style="max-width: 80%; max-height: 500px;">
+                        <table class="table">
+                            {% for id, dict_of_session in sessions_list.items %}
+                                <thead>
+                                        <tr>
+                                                <th class="h2">Target : {{dict_of_session|get_item:"target_host"}}</th>
+                                        </tr>
+                                </thead>
+                                <tbody>
+                                        <tr>
+                                            <td class="h3">Remote port : {{dict_of_session|get_item:"session_port"}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="h3">Exploit : {{dict_of_session|get_item:"via_exploit"}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="h3">Payload : {{dict_of_session|get_item:"via_payload"}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="h3">Type de console : {{dict_of_session|get_item:"type"}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td class="h3">Architecture : {{dict_of_session|get_item:"arch"}}</td>
+                                        </tr>
+                                </tbody>
+                            {% endfor %}
+                        </table>
+                    </div>
+                </div>
+            {% else %}
+                <div class="d-flex justify-content-center m-5">
+                  <div class="spinner-grow text-primary" style="width: 5rem; height: 5rem;" role="status" id="spinner" hidden>
+                    <span class="sr-only p-5 m-5">Loading...</span>
+                  </div>
+                </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <script type="text/javascript">
+        $("#runbutton").on('click', function() {
+            $("#spinner").removeAttr('hidden')
+        });
+
+	</script>
+
+{% endblock content %}

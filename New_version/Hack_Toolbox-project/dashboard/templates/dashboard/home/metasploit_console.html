@@ -1,0 +1,257 @@
+{% extends "dashboard/base.html" %}
+{% block title %}Metasploit script{% endblock title %}
+
+
+{% block content %}  
+	<div class="row">
+
+		<div class="col">
+			<form method="post" class="form-group text-left">
+
+				<div class="mt-5 py-2 p-3">
+					<h1 class="border-bottom">Console Metasploit</h1>
+				</div>
+
+				<div class="mt-2 py-2 p-3">
+					<p class="py-2">Status console Metasploit : {{status_connection}}</p>
+				</div>
+
+				<div class="mt-1 py-2 p-3">
+					{% csrf_token %}
+					<button type="submit" name="run_script" class="btn btn-primary btn-lg">Run connection</button>
+				</div>
+			</form>
+
+			{% if flag_connection %}
+
+				<form method="post" class="form-group text-left ">
+					<div class="mt-4 py-2 p-3">
+						<h1 class="border-bottom">Choisissez le type de module</h1>
+					</div>
+					<div class="mt-2 py-2  bg-primary bg-gradient rounded-3 p-3">
+						{{type_module}}
+					</div>
+
+					<div class="mt-2 py-2 p-3">
+						<h1 class="border-bottom">Navigation Metasploit</h1>
+						<p class="py-2">Pour voir l'ensemble des modules associé à la sélection précédente, cliquez sur le bouton ci-dessous</p>
+						{% csrf_token %}
+						<button type="submit" name="run_display_module" class="btn btn-primary btn-lg mt-4">Run list display</button>
+					</div>
+				</form>
+
+				{% if flag_choice %}
+
+					<form method="post" class="form-group text-left">
+						<div class="mt-4 py-2 p-3 bg-primary bg-gradient rounded-3" >
+							<p class="py-2"> Champ de recherche :</p>
+							{% csrf_token %}
+							{{champ_de_recherche}}
+						</div>
+						<br>
+						<div class=" py-2 p-3 mt-2">
+							<button type="submit" name="run_search" class="btn btn-primary btn-lg" >Search</button>
+						</div>
+					</form>
+					<div class="mt-2 py-2 p-3">
+						<p class="py-2 mt-2">Modules disponibles : </p>
+					</div>
+
+					<div class="overflow-auto border border-dark p-3 list-unstyled" style="max-width: 80%; max-height: 250px;">
+						{% if flag_search %}
+							{% for module in new_list %}
+								<li>{{module}}</li>
+							{% endfor %}
+						{% else %}
+							{% for module in list_of_module %}
+								<li>{{module}}</li>
+							{% endfor %}
+						{% endif %}
+					</div>
+				{% endif %}
+			{% endif %}
+		</div>
+
+		<div class="col">
+			{% if flag_search %}
+				<form method="post" class="form-group text-left ">
+					<div class="mt-5 py-2 p-3">
+						<h1 class="border-bottom">Module choisi</h1>
+					</div>
+					<div class="mt-2 py-2  bg-primary bg-gradient rounded-3 p-3" >
+						<p class="py-2">Veuillez indiquer le chemin absolu du module à utiliser</p>
+						{% csrf_token %}
+						{{champ_du_run}}
+					</div>
+					<div class="mt-2 py-2 p-3">
+						<button type="submit" name="run_run" class="btn btn-primary btn-lg mt-2">Run module</button>
+					</div>
+				</form>
+
+			{% endif %}
+			{% if flag_run %}
+
+				<div class="mt-5 py-2 p-3">
+					<h1 class="border-bottom" >Détails de l'exploit</h1>
+					{{module_description}}
+				</div>
+
+				<div class="mt-5 py-2 p-3">
+					<h1 class="border-bottom" >Options possibles</h1>
+					{{module_options}}
+				</div>
+
+				<div class="mt-5 py-2 p-3">
+					<h1 class="border-bottom">Options manquantes</h1>
+					{{module_missing_required}}
+				</div>
+
+				<div class="mt-5 py-2 p-3">
+					<h1 class="border-bottom">Options paramétrées</h1>
+					<pre>{{module_running_config | pprint}}</pre>
+				</div>
+
+				<form method="post" class="form-group text-left">
+					<div class="mt-2 py-2 p-3">
+						<h1 class="border-bottom" >Options à modifier</h1>
+					</div>
+					<div class="mt-2 py-2 p-3 bg-primary bg-gradient rounded-3">
+
+
+						<p class="py-2">Entrez le nom de l'option</p>
+						<div class="mt-2 py-2">
+							{% csrf_token %}
+							{{champ_de_l_option}}
+						</div>
+
+						<p class="py-2 mt-2">Entrez sa nouvelle valeur</p>
+						<div class="mt-2 py-2">
+							{% csrf_token %}
+							{{champ_de_l_arg_de_option}}
+						</div>
+
+
+						<p class="py-2 mt-2">Entrez son type (par défaut, si rien n'est coché : STR)</p>
+						<div class="form-check mt-2">
+							{% csrf_token %}
+							{{type_de_var}}
+						</div>
+						<br>
+					</div>
+					<div class="mt-2 py-2 p-3">
+						{% csrf_token %}
+						<button type="submit" name="run_option" class="btn btn-primary btn-lg mt-2">Change option</button>
+					</div>
+				</form>
+
+			{% endif %}
+
+			{% if flag_auxiliary_ready_to_run %}
+				<form method="post" class="form-group text-left ">
+					<div class="mt-5 py-2">
+						<br>
+						{% csrf_token %}
+						<button type="submit" name="run_auxiliary" class="btn btn-primary btn-lg mt-2">HACK !!!</button>
+					</div>
+				</form>
+			{% endif %}
+
+		</div>
+
+		<div class="col">
+
+			{% if flag_option %}
+
+				<div class="mt-5 py-2 p-3">
+					<h1 class="border-bottom">Payloads disponibles</h1>
+				</div>
+				<div class="overflow-auto border border-dark p-3 list-unstyled" style="max-width: 80%; max-height: 200px;">
+					{% for payload in module_targetpayload %}
+						<li>{{payload}}</li>
+					{% endfor %}
+				</div>
+
+
+				<form method="post" class="form-group text-left inline">
+					<div class="mt-5 py-2 p-3">
+						<h1 class="border-bottom">Choisir le payload</h1>
+					</div>
+					<div class="mt-2 py-2 p-3 bg-primary bg-gradient rounded-3">
+						<p class="py-2">Veuillez indiquer le chemin absolu du payload à utiliser</p>
+							{% csrf_token %}
+							{{champ_du_payload}}
+					</div>
+					<div class="mt-2 py-2 p-3">
+						<button type="submit" name="run_payload_choice" class="btn btn-primary btn-lg mt-2">Run Payload</button>
+					</div>
+				</form>
+
+			{% endif %}
+
+
+
+			{% if flag_payload %}
+				<div class="mt-2 py-2">
+					<form method="post" class="form-group text-left">
+						<div class="mt-5 py-2 p-3">
+							<h1 class="border-bottom" >Options paramétrées</h1>
+							<pre>{{payload_runoptions | pprint}}</pre>
+						</div>
+
+						<div class="mt-5 py-2 p-3">
+							<h1 class="border-bottom">Options manquantes</h1>
+							{{payload_missing_required}}
+						</div>
+
+						<div class="mt-5 py-2 p-3">
+							<h1 class="border-bottom">Option à modifier</h1>
+						</div>
+
+						<div class="mt-2 py-2  bg-primary bg-gradient rounded-3 p-3">
+							<p class="py-2">Entrez le nom de l'option</p>
+							<div class="mt-2 py-2">
+								{% csrf_token %}
+								{{champ_de_la_config_payload}}
+							</div>
+
+							<p class="py-2 mt-2">Entrez sa nouvelle valeur</p>
+							<div class="mt-2 py-2">
+								{% csrf_token %}
+								{{champ_de_la_val_de_la_config_payload}}
+							</div>
+
+							<p class="py-2 mt-2">Entrez son type (par défaut, si rien n'est coché : STR)</p>
+							{% csrf_token %}
+							{{type_de_var_payload}}
+							<br>
+						</div>
+						<div class="mt-2 py-2 p-3">
+							<button type="submit" name="run_payload_option" class="btn btn-primary btn-lg mt-2">Change option</button>
+						</div>
+
+			{% endif %}
+
+						{% if flag_payload_value %}
+							<div class="mt-5 py-2 p-3">
+								<br>
+								<button type="submit" name="run_exploit" class="btn btn-primary btn-lg mt-2">HACK !!!</button>
+							</div>
+						{% endif %}
+					</form>
+
+					{% if flag_error %}
+
+					<div class="mt-5 py-2">
+						<h1 class="border-bottom">Message important</h1>
+						{{error}}
+					</div>
+
+					{% endif %}
+				</div>
+		</div>
+
+	</div>
+{% endblock content %}
+
+
+
